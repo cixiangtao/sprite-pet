@@ -7,6 +7,7 @@
 ## Commands
 
 - `pnpm dev`: run the interactive browser demo.
+- `pnpm build:demo`: build the GitHub Pages artifact into `demo-dist`.
 - `pnpm check`: run lint, formatting, type checking, tests, and the library build.
 - `pnpm test:browser`: build and verify the demo in Chromium.
 - `pnpm verify:package`: pack the library and verify it from a fresh consumer.
@@ -16,6 +17,7 @@
 
 - Keep the runtime browser-only and framework-agnostic.
 - Do not bundle or publish third-party pet artwork.
+- Keep the demo deployable under the `/sprite-pet/` GitHub Pages repository path.
 - Preserve the documented 8x9 v1 and 8x11 v2 atlas contracts.
 - Keep public APIs typed and documented with JSDoc.
 - Prefer named exports and avoid global side effects.

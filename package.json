@@ -11,7 +11,7 @@
     "typescript",
     "web"
   ],
-  "homepage": "https://github.com/cixiangtao/sprite-pet#readme",
+  "homepage": "https://cixiangtao.github.io/sprite-pet/",
   "bugs": {
     "url": "https://github.com/cixiangtao/sprite-pet/issues"
   },
@@ -42,7 +42,7 @@
   },
   "scripts": {
     "build": "tsdown",
-    "build:demo": "vite build demo --outDir ../demo-dist --emptyOutDir",
+    "build:demo": "vite build demo --outDir ../demo-dist --emptyOutDir --base=./",
     "check": "pnpm lint && pnpm type-check && pnpm test && pnpm build",
     "dev": "vite demo --open",
     "format": "oxfmt .",

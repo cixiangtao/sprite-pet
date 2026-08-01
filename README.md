@@ -7,6 +7,9 @@ animation rows, and supports 16 pointer-facing poses for extended atlases.
 `sprite-pet` ships no character artwork. You provide the files and remain responsible for permission
 to use and distribute them.
 
+[Open the live demo](https://cixiangtao.github.io/sprite-pet/) to try the generated sample or load a
+local `pet.json + spritesheet` pair without uploading either file.
+
 ## Features
 
 - Browser-native Canvas renderer with no runtime dependencies
