@@ -81,6 +81,40 @@ export interface SpritePetRendererOptions {
   animations?: Partial<Record<SpritePetState, Partial<SpriteAnimationDefinition>>>;
 }
 
+/** A viewport-relative point in CSS pixels. */
+export interface SpritePetPosition {
+  x: number;
+  y: number;
+}
+
+/** Interaction and viewport constraints for a floating pet widget. */
+export interface SpritePetFloatingOptions {
+  /** Allows pointer dragging from the pet surface. @defaultValue true */
+  draggable?: boolean;
+  /** Shows a resize affordance and enables pointer or keyboard resizing. @defaultValue true */
+  resizable?: boolean;
+  /** Initial top-left viewport position. Defaults to the bottom-right corner. */
+  position?: SpritePetPosition;
+  /** Smallest permitted CSS width. @defaultValue 96 */
+  minWidth?: number;
+  /** Largest permitted CSS width before viewport constraints are applied. @defaultValue 576 */
+  maxWidth?: number;
+  /** Minimum distance from the viewport edge in CSS pixels. @defaultValue 16 */
+  viewportMargin?: number;
+  /** Stacking order used while floating. @defaultValue 2147483000 */
+  zIndex?: number;
+}
+
+/** Options for the DOM-owning pet widget. */
+export interface SpritePetWidgetOptions extends Omit<SpritePetRendererOptions, "canvas"> {
+  /** Existing canvas to enhance. A new canvas is created when omitted. */
+  canvas?: HTMLCanvasElement;
+  /** Mount target for a new canvas, or an explicit target when moving an existing canvas. */
+  container?: HTMLElement;
+  /** Enables the draggable and resizable viewport layer. @defaultValue false */
+  floating?: boolean | SpritePetFloatingOptions;
+}
+
 /** Observable renderer state for UI bindings and diagnostics. */
 export interface SpritePetSnapshot {
   state: SpritePetState;
@@ -88,4 +122,12 @@ export interface SpritePetSnapshot {
   playing: boolean;
   lookDirection: number | null;
   version: SpritePetVersion;
+}
+
+/** Combined render and placement state exposed by {@link SpritePetWidget}. */
+export interface SpritePetWidgetSnapshot extends SpritePetSnapshot {
+  floating: boolean;
+  position: SpritePetPosition;
+  width: number;
+  height: number;
 }

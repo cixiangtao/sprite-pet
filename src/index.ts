@@ -18,16 +18,21 @@ export {
 } from "./loader.js";
 export { parseSpritePetManifest, resolveSpritePetVersion } from "./manifest.js";
 export { SpritePetRenderer } from "./renderer.js";
+export { SpritePetWidget } from "./widget.js";
 export type {
   LoadSpritePetOptions,
   SpriteAnimationDefinition,
   SpritePetFileBundle,
   SpritePetFit,
+  SpritePetFloatingOptions,
   SpritePetLayout,
   SpritePetManifest,
+  SpritePetPosition,
   SpritePetRendererOptions,
   SpritePetSnapshot,
   SpritePetSource,
   SpritePetState,
   SpritePetVersion,
+  SpritePetWidgetOptions,
+  SpritePetWidgetSnapshot,
 } from "./types.js";

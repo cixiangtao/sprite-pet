@@ -119,6 +119,56 @@ test("renders, animates, and follows the pointer in Chromium", async () => {
     await page.waitForFunction(
       () => document.querySelector("canvas")?.dataset.lookDirection === "90",
     );
+
+    const widget = page.locator(".sprite-pet-widget");
+    await page.getByRole("button", { name: "Float pet", exact: true }).click();
+    assert.equal(await widget.getAttribute("data-floating"), "true");
+    assert.equal(await widget.evaluate((element) => getComputedStyle(element).position), "fixed");
+
+    const floatingBounds = await widget.boundingBox();
+    assert.ok(floatingBounds);
+    await page.mouse.move(
+      floatingBounds.x + floatingBounds.width / 2,
+      floatingBounds.y + floatingBounds.height / 2,
+    );
+    await page.mouse.down();
+    await page.mouse.move(
+      floatingBounds.x + floatingBounds.width / 2 - 96,
+      floatingBounds.y + floatingBounds.height / 2 - 72,
+    );
+    await page.mouse.up();
+    const draggedBounds = await widget.boundingBox();
+    assert.ok(draggedBounds);
+    assert.ok(draggedBounds.x < floatingBounds.x - 80);
+    assert.ok(draggedBounds.y < floatingBounds.y - 56);
+
+    const resizeHandle = page.getByRole("slider", { name: "Resize pet" });
+    const resizeBounds = await resizeHandle.boundingBox();
+    assert.ok(resizeBounds);
+    await page.mouse.move(resizeBounds.x + resizeBounds.width / 2, resizeBounds.y + 14);
+    await page.mouse.down();
+    await page.mouse.move(resizeBounds.x - 48, resizeBounds.y - 48);
+    await page.mouse.up();
+    const resizedBounds = await widget.boundingBox();
+    assert.ok(resizedBounds);
+    assert.ok(resizedBounds.width < draggedBounds.width - 32);
+    assert.ok(Math.abs(resizedBounds.width / resizedBounds.height - 192 / 208) < 0.01);
+
+    await resizeHandle.focus();
+    const keyboardWidth = (await widget.boundingBox())?.width;
+    assert.ok(keyboardWidth);
+    await resizeHandle.press("ArrowRight");
+    const keyboardResizedWidth = (await widget.boundingBox())?.width;
+    assert.ok(keyboardResizedWidth);
+    assert.ok(keyboardResizedWidth > keyboardWidth);
+
+    await page.getByRole("button", { name: "Dock preview", exact: true }).click();
+    assert.equal(await widget.getAttribute("data-floating"), "false");
+    assert.equal(
+      await widget.evaluate((element) => getComputedStyle(element).position),
+      "relative",
+    );
+    assert.equal(await canvas.evaluate((element) => element.closest("#stage") !== null), true);
   } finally {
     await browser.close();
   }

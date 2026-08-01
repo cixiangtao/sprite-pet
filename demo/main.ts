@@ -2,7 +2,7 @@ import {
   DEFAULT_ANIMATIONS,
   SPRITE_PET_LAYOUT,
   SPRITE_PET_STATES,
-  SpritePetRenderer,
+  SpritePetWidget,
   loadSpritePet,
   loadSpritePetFiles,
   type SpritePetSource,
@@ -32,6 +32,9 @@ const playbackToggle = document.querySelector<HTMLButtonElement>("#playback-togg
 const currentFrame = document.querySelector<HTMLElement>("#current-frame");
 const timeline = document.querySelector<HTMLElement>("#timeline-frames");
 const copyFeedback = document.querySelector<HTMLElement>("#copy-feedback");
+const floatingToggle = document.querySelector<HTMLButtonElement>("#floating-toggle");
+const floatingToggleLabel = document.querySelector<HTMLElement>("#floating-toggle span");
+const floatingPlaceholder = document.querySelector<HTMLElement>("#floating-placeholder");
 
 if (
   canvas === null ||
@@ -54,7 +57,10 @@ if (
   playbackToggle === null ||
   currentFrame === null ||
   timeline === null ||
-  copyFeedback === null
+  copyFeedback === null ||
+  floatingToggle === null ||
+  floatingToggleLabel === null ||
+  floatingPlaceholder === null
 ) {
   throw new Error("The demo page is missing a required element.");
 }
@@ -74,7 +80,7 @@ const stateLabels: Record<SpritePetState, string> = {
 const sampleId = "generated-sample";
 const installCommand = "pnpm add sprite-pet";
 
-let renderer: SpritePetRenderer | null = null;
+let renderer: SpritePetWidget | null = null;
 let builtInPets: BuiltInPet[] = [];
 
 const petButtons = new Map<string, HTMLButtonElement>();
@@ -198,14 +204,19 @@ const getVisibleFrameOverrides = (source: SpritePetSource) => {
 };
 
 const mountSource = (source: SpritePetSource) => {
+  const previousSnapshot = renderer?.getSnapshot();
   renderer?.destroy();
   const animationOverrides = getVisibleFrameOverrides(source);
-  renderer = new SpritePetRenderer({
+  renderer = new SpritePetWidget({
     canvas,
     source,
-    width: Math.min(320, Math.max(240, stage.clientWidth * 0.52)),
+    width: previousSnapshot?.width ?? Math.min(320, Math.max(240, stage.clientWidth * 0.52)),
     initialState: "idle",
     imageSmoothing: false,
+    floating:
+      previousSnapshot?.floating === true
+        ? { position: previousSnapshot.position, minWidth: 120, maxWidth: 520 }
+        : false,
     ...(animationOverrides === undefined ? {} : { animations: animationOverrides }),
   });
   updateStateButtons("idle");
@@ -218,6 +229,17 @@ const mountSource = (source: SpritePetSource) => {
   cursorHint.hidden = source.version < 2;
   setStatus(`${source.manifest.displayName} · v${source.version} atlas`);
   setPetDescription(source.manifest.description ?? "Portable sprite-pet atlas bundle.");
+  syncFloatingUi();
+};
+
+const syncFloatingUi = () => {
+  const floating = renderer?.getSnapshot().floating ?? false;
+  floatingToggle.dataset.floating = String(floating);
+  floatingToggle.setAttribute("aria-pressed", String(floating));
+  floatingToggle.setAttribute("aria-label", floating ? "Dock preview" : "Float pet");
+  floatingToggleLabel.textContent = floating ? "Dock preview" : "Float pet";
+  floatingPlaceholder.hidden = !floating;
+  stage.dataset.floating = String(floating);
 };
 
 const loadSelectedPet = async () => {
@@ -345,6 +367,7 @@ for (const [row, state] of SPRITE_PET_STATES.entries()) {
 }
 
 stage.addEventListener("pointermove", (event) => {
+  if (renderer?.getSnapshot().floating) return;
   if (renderer?.lookAt(event.clientX, event.clientY)) {
     const direction = renderer.getSnapshot().lookDirection;
     canvas.dataset.lookDirection = String(direction);
@@ -352,8 +375,28 @@ stage.addEventListener("pointermove", (event) => {
 });
 
 stage.addEventListener("pointerleave", () => {
+  if (renderer?.getSnapshot().floating) return;
   renderer?.clearLookDirection();
   delete canvas.dataset.lookDirection;
+});
+
+globalThis.addEventListener("pointermove", (event) => {
+  if (!renderer?.getSnapshot().floating) return;
+  if (renderer.lookAt(event.clientX, event.clientY)) {
+    canvas.dataset.lookDirection = String(renderer.getSnapshot().lookDirection);
+  }
+});
+
+floatingToggle.addEventListener("click", () => {
+  if (renderer === null) return;
+  const { floating } = renderer.getSnapshot();
+  renderer.setFloating(floating ? false : { minWidth: 120, maxWidth: 520 });
+  syncFloatingUi();
+  setStatus(
+    floating
+      ? `${renderer.source.manifest.displayName} · inline preview`
+      : `${renderer.source.manifest.displayName} · floating and draggable`,
+  );
 });
 
 playbackToggle.addEventListener("click", () => {

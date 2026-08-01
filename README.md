@@ -15,6 +15,7 @@ sample, or a local `pet.json + spritesheet` pair without uploading either file.
 ## Features
 
 - Browser-native Canvas renderer with no runtime dependencies
+- Optional floating widget with viewport-safe dragging and proportional resizing
 - Built-in demo gallery generated from portable pet bundles
 - Remote URL and local browser-file loaders
 - Exact validation for 8x9 v1 and 8x11 v2 atlases
@@ -39,21 +40,14 @@ public/pets/momo/
 └── spritesheet.webp
 ```
 
-```html
-<canvas id="pet"></canvas>
-```
-
 ```ts
-import { SpritePetRenderer, loadSpritePet } from "sprite-pet";
-
-const canvas = document.querySelector<HTMLCanvasElement>("#pet");
-if (canvas === null) throw new Error("Missing pet canvas");
+import { SpritePetWidget, loadSpritePet } from "sprite-pet";
 
 const source = await loadSpritePet("/pets/momo/pet.json");
-const pet = new SpritePetRenderer({
-  canvas,
+const pet = new SpritePetWidget({
   source,
   width: 192,
+  floating: true,
 });
 
 pet.setState("working");
@@ -62,7 +56,33 @@ window.addEventListener("pointermove", (event) => {
 });
 ```
 
-Call `pet.destroy()` when the canvas is removed.
+The floating pet starts near the bottom-right of the viewport. Drag the pet itself to move it and
+use its bottom-right handle to resize it. Call `pet.destroy()` when it is no longer needed.
+
+### Inline or floating
+
+Floating mode is explicit and can be changed without recreating the renderer:
+
+```ts
+const pet = new SpritePetWidget({
+  container: document.querySelector<HTMLElement>("#pet-slot")!,
+  source,
+  floating: false,
+});
+
+pet.setFloating({
+  position: { x: 24, y: 24 },
+  minWidth: 120,
+  maxWidth: 480,
+});
+
+pet.moveTo(80, 120);
+pet.resize(256);
+pet.setFloating(false);
+```
+
+Pointer dragging is constrained to the visible viewport. Resizing preserves the pet's initial
+aspect ratio and supports the arrow keys when the resize handle is focused.
 
 ## Local files
 
@@ -132,7 +152,34 @@ For v2, rows 9 and 10 contain 16 clockwise look poses in 22.5-degree steps. `0de
 - `loadSpritePetSource(manifest, spritesheetUrl, options?)` loads an explicit pair.
 - `parseSpritePetManifest(value)` validates untrusted JSON.
 
+### `SpritePetWidget`
+
+`SpritePetWidget` owns a lightweight DOM host and delegates drawing to `SpritePetRenderer`.
+
+- `setFloating(false | options)` switches between inline and floating placement.
+- `moveTo(x, y)` moves the floating widget in viewport CSS pixels.
+- `resize(width)` resizes proportionally within the configured limits.
+- `setState()`, `play()`, `pause()`, `lookAt()`, and the look-direction methods delegate to the
+  renderer.
+- `getSnapshot()` includes renderer state plus `floating`, `position`, `width`, and `height`.
+- `destroy()` removes listeners and owned DOM. A caller-provided canvas is restored to its original
+  position and inline style.
+
+Use `floating: { draggable: false }` or `floating: { resizable: false }` to disable either
+interaction. `minWidth`, `maxWidth`, `viewportMargin`, `position`, and `zIndex` are also configurable.
+
 ### `SpritePetRenderer`
+
+Use the lower-level renderer when your application already owns the canvas and placement behavior:
+
+```ts
+import { SpritePetRenderer } from "sprite-pet";
+
+const canvas = document.querySelector<HTMLCanvasElement>("#pet");
+if (canvas === null) throw new Error("Missing pet canvas");
+
+const renderer = new SpritePetRenderer({ canvas, source, width: 192 });
+```
 
 - `setState(state)` switches and resets a standard animation.
 - `play()` and `pause()` control playback.

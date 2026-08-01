@@ -38,10 +38,11 @@ try {
   await writeFile(
     join(consumerRoot, "smoke.mjs"),
     `import assert from "node:assert/strict";
-import { SPRITE_PET_LAYOUT, getLookCell, parseSpritePetManifest } from "sprite-pet";
+import { SPRITE_PET_LAYOUT, SpritePetWidget, getLookCell, parseSpritePetManifest } from "sprite-pet";
 assert.equal(SPRITE_PET_LAYOUT.cellWidth, 192);
 assert.deepEqual(getLookCell(8), { row: 10, column: 0 });
 assert.equal(parseSpritePetManifest({ id: "pet", displayName: "Pet", spritesheetPath: "pet.webp" }).id, "pet");
+assert.equal(typeof SpritePetWidget, "function");
 `,
   );
   await execute(process.execPath, ["smoke.mjs"], { cwd: consumerRoot });
