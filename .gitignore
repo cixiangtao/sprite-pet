@@ -7,5 +7,6 @@ test-results/
 .playwright-cli/
 output/playwright/
 .impeccable/questions/
+.impeccable/review/
 *.tgz
 .DS_Store
