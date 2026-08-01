@@ -51,6 +51,7 @@
     "lint:fix": "oxlint . --fix && pnpm format",
     "prepack": "pnpm check",
     "release:check": "pnpm check && pnpm build:demo && pnpm test:browser && pnpm verify:package",
+    "sync:pets": "node scripts/sync-built-in-pets.mjs",
     "test": "vitest run",
     "test:browser": "pnpm build && pnpm build:demo && node --test tests/browser.smoke.mjs",
     "type-check": "tsc --noEmit",

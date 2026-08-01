@@ -62,6 +62,38 @@ test("renders, animates, and follows the pointer in Chromium", async () => {
     await canvas.waitFor({ state: "visible" });
     await page.waitForFunction(() => document.querySelector("canvas")?.dataset.ready === "true");
 
+    const builtInPetIds = [
+      "doro",
+      "goku",
+      "guga",
+      "hutao",
+      "ikkun",
+      "ikun-gaara",
+      "ikun-giegie",
+      "ikunchick",
+      "kimlet-hover-clap",
+      "mini-elon",
+      "nimbus",
+      "shinchan",
+      "trump",
+      "usagi",
+    ];
+    const petSelect = page.locator("#built-in-pet");
+    assert.equal(await petSelect.locator("option").count(), builtInPetIds.length + 1);
+
+    const verifyBuiltInPets = async ([petId, ...remainingPetIds]) => {
+      if (petId === undefined) return;
+
+      await petSelect.selectOption(petId);
+      await page.waitForFunction(
+        (expectedPetId) => document.querySelector("canvas")?.dataset.petId === expectedPetId,
+        petId,
+      );
+      assert.equal(await canvas.getAttribute("data-version"), "1");
+      await verifyBuiltInPets(remainingPetIds);
+    };
+    await verifyBuiltInPets(builtInPetIds);
+
     const hasVisiblePixel = await canvas.evaluate((element) => {
       const context = element.getContext("2d");
       if (context === null) return false;
@@ -77,6 +109,9 @@ test("renders, animates, and follows the pointer in Chromium", async () => {
         document.querySelector("#status")?.textContent?.includes("Working"),
       ),
     );
+
+    await petSelect.selectOption("generated-sample");
+    await page.waitForFunction(() => document.querySelector("canvas")?.dataset.version === "2");
 
     const bounds = await canvas.boundingBox();
     assert.ok(bounds);

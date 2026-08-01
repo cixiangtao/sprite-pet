@@ -25,7 +25,8 @@ body {
 }
 
 button,
-input {
+input,
+select {
   font: inherit;
 }
 
@@ -48,7 +49,8 @@ button:hover {
 }
 
 button:focus-visible,
-input:focus-visible {
+input:focus-visible,
+select:focus-visible {
   outline: 3px solid rgb(109 94 252 / 35%);
   outline-offset: 2px;
 }
@@ -59,7 +61,8 @@ button[type="submit"] {
   background: #20231f;
 }
 
-input {
+input,
+select {
   width: 100%;
   min-width: 0;
   min-height: 2.75rem;
@@ -203,6 +206,18 @@ label {
   margin: -0.35rem 0 1rem;
   color: #74756f;
   font-size: 0.85rem;
+}
+
+.pet-description {
+  min-height: 2.6rem;
+  margin-top: 0.75rem;
+  line-height: 1.5;
+}
+
+.asset-notice {
+  color: #6d5efc;
+  font-size: 0.82rem;
+  font-weight: 650;
 }
 
 .file-form {

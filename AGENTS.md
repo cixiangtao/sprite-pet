@@ -16,7 +16,8 @@
 ## Rules
 
 - Keep the runtime browser-only and framework-agnostic.
-- Do not bundle or publish third-party pet artwork.
+- Keep pet artwork out of the npm package. Demo assets require a separate notice and explicit
+  authorization before public redistribution.
 - Keep the demo deployable under the `/sprite-pet/` GitHub Pages repository path.
 - Preserve the documented 8x9 v1 and 8x11 v2 atlas contracts.
 - Keep public APIs typed and documented with JSDoc.

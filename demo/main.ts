@@ -6,12 +6,15 @@ import {
   type SpritePetSource,
   type SpritePetState,
 } from "../src/index.js";
+import { loadBuiltInPetIndex, type BuiltInPet } from "./built-ins.js";
 import { loadSamplePet } from "./sample.js";
 
 const canvas = document.querySelector<HTMLCanvasElement>("#pet-canvas");
 const stage = document.querySelector<HTMLElement>("#stage");
 const status = document.querySelector<HTMLElement>("#status");
 const stateControls = document.querySelector<HTMLElement>("#state-controls");
+const builtInPetSelect = document.querySelector<HTMLSelectElement>("#built-in-pet");
+const builtInPetDescription = document.querySelector<HTMLElement>("#built-in-pet-description");
 const urlForm = document.querySelector<HTMLFormElement>("#url-form");
 const manifestUrl = document.querySelector<HTMLInputElement>("#manifest-url");
 const fileForm = document.querySelector<HTMLFormElement>("#file-form");
@@ -23,6 +26,8 @@ if (
   stage === null ||
   status === null ||
   stateControls === null ||
+  builtInPetSelect === null ||
+  builtInPetDescription === null ||
   urlForm === null ||
   manifestUrl === null ||
   fileForm === null ||
@@ -44,7 +49,10 @@ const stateLabels: Record<SpritePetState, string> = {
   reviewing: "Reviewing",
 };
 
+const sampleId = "generated-sample";
+
 let renderer: SpritePetRenderer | null = null;
+let builtInPets: BuiltInPet[] = [];
 
 const setStatus = (message: string, isError = false) => {
   status.textContent = message;
@@ -68,7 +76,33 @@ const mountSource = (source: SpritePetSource) => {
   updateStateButtons("idle");
   canvas.dataset.ready = "true";
   canvas.dataset.version = String(source.version);
+  canvas.dataset.petId = source.manifest.id;
   setStatus(`${source.manifest.displayName} · v${source.version} atlas`);
+};
+
+const setPetDescription = (description: string) => {
+  builtInPetDescription.textContent = description;
+};
+
+const loadSelectedPet = async () => {
+  builtInPetSelect.disabled = true;
+  try {
+    if (builtInPetSelect.value === sampleId) {
+      setStatus("Generating sample pet…");
+      mountSource(await loadSamplePet());
+      setPetDescription("A generated v2 sample used to demonstrate pointer-facing poses.");
+      return;
+    }
+
+    const pet = builtInPets.find(({ id }) => id === builtInPetSelect.value);
+    if (pet === undefined) throw new Error("The selected built-in pet is unavailable.");
+
+    setStatus(`Loading ${pet.displayName}…`);
+    mountSource(await loadSpritePet(new URL(pet.manifestPath, window.location.href)));
+    setPetDescription(pet.description);
+  } finally {
+    builtInPetSelect.disabled = false;
+  }
 };
 
 for (const state of SPRITE_PET_STATES) {
@@ -129,7 +163,36 @@ fileForm.addEventListener("submit", async (event) => {
 });
 
 try {
-  mountSource(await loadSamplePet());
+  const index = await loadBuiltInPetIndex();
+  builtInPets = index.pets;
+  builtInPetSelect.replaceChildren();
+
+  for (const pet of builtInPets) {
+    const option = document.createElement("option");
+    option.value = pet.id;
+    option.textContent = `${pet.displayName} · v${pet.spriteVersionNumber}`;
+    builtInPetSelect.append(option);
+  }
+
+  const sampleOption = document.createElement("option");
+  sampleOption.value = sampleId;
+  sampleOption.textContent = "Generated sample · v2";
+  builtInPetSelect.append(sampleOption);
+  builtInPetSelect.addEventListener("change", () => {
+    void loadSelectedPet().catch((error: unknown) => {
+      setStatus(error instanceof Error ? error.message : "Unable to load the selected pet.", true);
+    });
+  });
+
+  await loadSelectedPet();
 } catch (error) {
-  setStatus(error instanceof Error ? error.message : "Unable to load the sample pet.", true);
+  setStatus("Built-in gallery unavailable; loading the generated sample.", true);
+  try {
+    mountSource(await loadSamplePet());
+    setPetDescription(
+      "The built-in gallery could not be loaded, so the generated sample is shown.",
+    );
+  } catch {
+    setStatus(error instanceof Error ? error.message : "Unable to load a pet.", true);
+  }
 }

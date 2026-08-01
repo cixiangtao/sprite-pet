@@ -8,6 +8,7 @@
       content="Interactive browser demo for the sprite-pet canvas renderer."
     />
     <title>sprite-pet</title>
+    <link rel="icon" href="./favicon.svg" />
     <link rel="stylesheet" href="/style.css" />
   </head>
   <body>
@@ -17,7 +18,7 @@
         <h1>Bring an animated pet to any web page.</h1>
         <p class="lede">
           Load a portable pet bundle, switch its state, and optionally point a v2 pet toward the
-          cursor. The package ships no character artwork.
+          cursor. Choose one of the built-in demo pets or bring your own files.
         </p>
       </section>
 
@@ -33,6 +34,18 @@
         </div>
 
         <div class="controls">
+          <section class="panel">
+            <h2>Built-in pets</h2>
+            <label for="built-in-pet">Pet</label>
+            <select id="built-in-pet" aria-describedby="built-in-pet-description" disabled>
+              <option>Loading pets…</option>
+            </select>
+            <p class="hint pet-description" id="built-in-pet-description">
+              Loading the built-in pet gallery.
+            </p>
+            <a class="asset-notice" href="./pets/NOTICE.md">Read the pet asset notice</a>
+          </section>
+
           <section class="panel">
             <h2>Animation</h2>
             <div class="state-grid" id="state-controls"></div>

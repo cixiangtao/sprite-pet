@@ -4,15 +4,18 @@ A small, framework-agnostic TypeScript library for rendering animated pets on th
 It loads a portable `pet.json + spritesheet` bundle, handles high-DPI rendering, plays nine standard
 animation rows, and supports 16 pointer-facing poses for extended atlases.
 
-`sprite-pet` ships no character artwork. You provide the files and remain responsible for permission
-to use and distribute them.
+The npm package ships no character artwork. The repository demo includes an optional built-in pet
+gallery whose artwork is excluded from the MIT License and from the npm package; see
+[THIRD_PARTY_ASSETS.md](./THIRD_PARTY_ASSETS.md). You remain responsible for permission to use and
+distribute pet assets.
 
-[Open the live demo](https://cixiangtao.github.io/sprite-pet/) to try the generated sample or load a
-local `pet.json + spritesheet` pair without uploading either file.
+[Open the live demo](https://cixiangtao.github.io/sprite-pet/) to try the pet gallery, the generated
+sample, or a local `pet.json + spritesheet` pair without uploading either file.
 
 ## Features
 
 - Browser-native Canvas renderer with no runtime dependencies
+- Built-in demo gallery generated from portable pet bundles
 - Remote URL and local browser-file loaders
 - Exact validation for 8x9 v1 and 8x11 v2 atlases
 - Nine named animation states with configurable FPS and looping
@@ -157,6 +160,7 @@ new SpritePetRenderer({
 
 ```bash
 pnpm install
+pnpm sync:pets
 pnpm dev
 pnpm check
 pnpm test:browser
@@ -171,5 +175,6 @@ through [SECURITY.md](./SECURITY.md).
 
 ## License
 
-The renderer source is available under the [MIT License](./LICENSE). Pet artwork is not included and
-may have separate terms.
+The renderer source is available under the [MIT License](./LICENSE). Built-in demo artwork is not
+covered by that license; read [THIRD_PARTY_ASSETS.md](./THIRD_PARTY_ASSETS.md) before publishing or
+reusing it.
