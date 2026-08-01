@@ -54,6 +54,9 @@ browser tab rather than being uploaded.
   state, atlas, and built-in pet.
 - The product voice should be concise, technically trustworthy, and approachable to developers who
   are actively making something playful.
+- The Pages experience should use the familiar structure and interaction grammar of a mature
+  open-source developer playground. Clarity and speed take priority over a themed visual metaphor;
+  craft should come from hierarchy, proportion, typography, and precise state design.
 
 ## Evidence on Hand
 
