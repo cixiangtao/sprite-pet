@@ -1,0 +1,70 @@
+{
+  "name": "sprite-pet",
+  "version": "0.1.0",
+  "description": "A framework-agnostic canvas renderer for animated web pets.",
+  "keywords": [
+    "animation",
+    "canvas",
+    "pet",
+    "sprite",
+    "spritesheet",
+    "typescript",
+    "web"
+  ],
+  "homepage": "https://github.com/cixiangtao/sprite-pet#readme",
+  "bugs": {
+    "url": "https://github.com/cixiangtao/sprite-pet/issues"
+  },
+  "license": "MIT",
+  "author": "cixiangtao",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cixiangtao/sprite-pet.git"
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "type": "module",
+  "sideEffects": false,
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "tsdown",
+    "build:demo": "vite build demo --outDir ../demo-dist --emptyOutDir",
+    "check": "pnpm lint && pnpm type-check && pnpm test && pnpm build",
+    "dev": "vite demo --open",
+    "format": "oxfmt .",
+    "format:check": "oxfmt . --check",
+    "lint": "oxlint . && pnpm format:check",
+    "lint:fix": "oxlint . --fix && pnpm format",
+    "prepack": "pnpm check",
+    "release:check": "pnpm check && pnpm build:demo && pnpm test:browser && pnpm verify:package",
+    "test": "vitest run",
+    "test:browser": "pnpm build && pnpm build:demo && node --test tests/browser.smoke.mjs",
+    "type-check": "tsc --noEmit",
+    "verify:package": "pnpm build && node scripts/verify-package.mjs"
+  },
+  "devDependencies": {
+    "@types/node": "^24.10.0",
+    "oxfmt": "^0.61.0",
+    "oxlint": "^1.76.0",
+    "playwright": "1.62.1",
+    "tsdown": "^0.22.14",
+    "typescript": "^5.9.3",
+    "vite": "^8.2.0",
+    "vitest": "^4.1.10"
+  },
+  "packageManager": "pnpm@10.34.5"
+}
