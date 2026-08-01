@@ -15,9 +15,10 @@ so the product must support both integration and asset validation in one workflo
 ## Product Purpose
 
 `sprite-pet` makes portable animated pets easy to preview and render on the web without adopting a
-framework. The Pages experience should prioritize immediate, hands-on play with a working pet while
-still helping developers understand the package and continue to the README for installation and
-complete documentation.
+framework. A pet can live inline with the page or behave like a movable desktop companion floating
+above the page, with an explicit option to switch between those modes. The Pages experience should
+prioritize immediate, hands-on play with a working pet while still helping developers understand the
+package and continue to the README for installation and complete documentation.
 
 Success means a visitor can quickly recognize what the renderer does, try its meaningful states and
 pointer behavior, and understand how their own `pet.json + spritesheet` bundle fits the same model.
@@ -32,6 +33,8 @@ browser tab rather than being uploaded.
 
 - Developers evaluate the renderer through the public GitHub Pages demo, then use the README for
   installation, API details, and atlas documentation.
+- Product developers can mount a pet inline or opt into a fixed floating widget that visitors can
+  drag and resize without adopting a framework.
 - Asset authors switch among the nine standard animation states and, for v2 pets, test 16
   pointer-facing poses.
 - Visitors can select an included pet, load a manifest URL, or select a local `pet.json` and
@@ -41,6 +44,8 @@ browser tab rather than being uploaded.
 
 - The runtime is browser-only, framework-agnostic TypeScript with named exports and no global side
   effects.
+- Floating behavior is an explicit opt-in. It supports runtime mode changes, pointer dragging,
+  proportional resizing, viewport constraints, and complete listener cleanup on destruction.
 - The renderer supports the documented 8x9 v1 and 8x11 v2 atlas contracts. Every cell is 192x208
   pixels and every row contains eight frames.
 - The public demo must remain deployable under the `/sprite-pet/` GitHub Pages repository path.
@@ -75,3 +80,4 @@ browser tab rather than being uploaded.
 3. Keep local experimentation private, direct, and free from upload steps.
 4. Make the exact atlas contract visible through behavior rather than marketing claims.
 5. Keep the public demo expressive while the npm package stays lean and artwork-free.
+6. Keep rendering separate from placement so inline and floating integrations share one renderer.
