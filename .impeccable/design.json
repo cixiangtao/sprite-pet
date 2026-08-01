@@ -1,0 +1,464 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-08-01T14:49:16Z",
+  "title": "Design System: sprite-pet",
+  "extensions": {
+    "colorMeta": {
+      "shell": {
+        "role": "neutral",
+        "displayName": "Cool Shell",
+        "tonalRamp": [
+          "oklch(15% 0.01 255)",
+          "oklch(26% 0.01 255)",
+          "oklch(37% 0.01 255)",
+          "oklch(48% 0.01 255)",
+          "oklch(59% 0.01 255)",
+          "oklch(70% 0.01 255)",
+          "oklch(82% 0.01 255)",
+          "oklch(95% 0.01 255)"
+        ]
+      },
+      "surface": {
+        "role": "neutral",
+        "displayName": "Clean Surface",
+        "tonalRamp": [
+          "oklch(15% 0 0)",
+          "oklch(26% 0 0)",
+          "oklch(37% 0 0)",
+          "oklch(48% 0 0)",
+          "oklch(59% 0 0)",
+          "oklch(70% 0 0)",
+          "oklch(82% 0 0)",
+          "oklch(95% 0 0)"
+        ]
+      },
+      "surface-muted": {
+        "role": "neutral",
+        "displayName": "Muted Surface",
+        "tonalRamp": [
+          "oklch(15% 0.01 255)",
+          "oklch(26% 0.01 255)",
+          "oklch(37% 0.01 255)",
+          "oklch(48% 0.01 255)",
+          "oklch(59% 0.01 255)",
+          "oklch(70% 0.01 255)",
+          "oklch(82% 0.01 255)",
+          "oklch(95% 0.01 255)"
+        ]
+      },
+      "ink": {
+        "role": "neutral",
+        "displayName": "Workbench Ink",
+        "tonalRamp": [
+          "oklch(15% 0.03 255)",
+          "oklch(26% 0.03 255)",
+          "oklch(37% 0.03 255)",
+          "oklch(48% 0.03 255)",
+          "oklch(59% 0.03 255)",
+          "oklch(70% 0.03 255)",
+          "oklch(82% 0.03 255)",
+          "oklch(95% 0.03 255)"
+        ]
+      },
+      "control-ink": {
+        "role": "neutral",
+        "displayName": "Control Slate",
+        "tonalRamp": [
+          "oklch(15% 0.04 255)",
+          "oklch(26% 0.04 255)",
+          "oklch(37% 0.04 255)",
+          "oklch(48% 0.04 255)",
+          "oklch(59% 0.04 255)",
+          "oklch(70% 0.04 255)",
+          "oklch(82% 0.04 255)",
+          "oklch(95% 0.04 255)"
+        ]
+      },
+      "command-ink": {
+        "role": "neutral",
+        "displayName": "Command Ink",
+        "tonalRamp": [
+          "oklch(15% 0.04 255)",
+          "oklch(26% 0.04 255)",
+          "oklch(37% 0.04 255)",
+          "oklch(48% 0.04 255)",
+          "oklch(59% 0.04 255)",
+          "oklch(70% 0.04 255)",
+          "oklch(82% 0.04 255)",
+          "oklch(95% 0.04 255)"
+        ]
+      },
+      "muted": {
+        "role": "neutral",
+        "displayName": "Muted Slate",
+        "tonalRamp": [
+          "oklch(15% 0.025 255)",
+          "oklch(26% 0.025 255)",
+          "oklch(37% 0.025 255)",
+          "oklch(48% 0.025 255)",
+          "oklch(59% 0.025 255)",
+          "oklch(70% 0.025 255)",
+          "oklch(82% 0.025 255)",
+          "oklch(95% 0.025 255)"
+        ]
+      },
+      "quiet": {
+        "role": "neutral",
+        "displayName": "Quiet Slate",
+        "tonalRamp": [
+          "oklch(15% 0.025 255)",
+          "oklch(26% 0.025 255)",
+          "oklch(37% 0.025 255)",
+          "oklch(48% 0.025 255)",
+          "oklch(59% 0.025 255)",
+          "oklch(70% 0.025 255)",
+          "oklch(82% 0.025 255)",
+          "oklch(95% 0.025 255)"
+        ]
+      },
+      "line": {
+        "role": "neutral",
+        "displayName": "Rule Gray",
+        "tonalRamp": [
+          "oklch(15% 0.015 255)",
+          "oklch(26% 0.015 255)",
+          "oklch(37% 0.015 255)",
+          "oklch(48% 0.015 255)",
+          "oklch(59% 0.015 255)",
+          "oklch(70% 0.015 255)",
+          "oklch(82% 0.015 255)",
+          "oklch(95% 0.015 255)"
+        ]
+      },
+      "line-strong": {
+        "role": "neutral",
+        "displayName": "Strong Rule Gray",
+        "tonalRamp": [
+          "oklch(15% 0.02 255)",
+          "oklch(26% 0.02 255)",
+          "oklch(37% 0.02 255)",
+          "oklch(48% 0.02 255)",
+          "oklch(59% 0.02 255)",
+          "oklch(70% 0.02 255)",
+          "oklch(82% 0.02 255)",
+          "oklch(95% 0.02 255)"
+        ]
+      },
+      "stage": {
+        "role": "neutral",
+        "displayName": "Pixel Stage",
+        "tonalRamp": [
+          "oklch(15% 0.03 255)",
+          "oklch(26% 0.03 255)",
+          "oklch(37% 0.03 255)",
+          "oklch(48% 0.03 255)",
+          "oklch(59% 0.03 255)",
+          "oklch(70% 0.03 255)",
+          "oklch(82% 0.03 255)",
+          "oklch(95% 0.03 255)"
+        ]
+      },
+      "stage-grid": {
+        "role": "neutral",
+        "displayName": "Pixel Grid",
+        "tonalRamp": [
+          "oklch(15% 0.03 255)",
+          "oklch(26% 0.03 255)",
+          "oklch(37% 0.03 255)",
+          "oklch(48% 0.03 255)",
+          "oklch(59% 0.03 255)",
+          "oklch(70% 0.03 255)",
+          "oklch(82% 0.03 255)",
+          "oklch(95% 0.03 255)"
+        ]
+      },
+      "indigo": {
+        "role": "primary",
+        "displayName": "Workbench Indigo",
+        "tonalRamp": [
+          "oklch(15% 0.2 285)",
+          "oklch(26% 0.2 285)",
+          "oklch(37% 0.2 285)",
+          "oklch(48% 0.2 285)",
+          "oklch(59% 0.2 285)",
+          "oklch(70% 0.2 285)",
+          "oklch(82% 0.2 285)",
+          "oklch(95% 0.2 285)"
+        ]
+      },
+      "indigo-dark": {
+        "role": "primary",
+        "displayName": "Deep Workbench Indigo",
+        "tonalRamp": [
+          "oklch(15% 0.2 285)",
+          "oklch(26% 0.2 285)",
+          "oklch(37% 0.2 285)",
+          "oklch(48% 0.2 285)",
+          "oklch(59% 0.2 285)",
+          "oklch(70% 0.2 285)",
+          "oklch(82% 0.2 285)",
+          "oklch(95% 0.2 285)"
+        ]
+      },
+      "indigo-soft": {
+        "role": "primary",
+        "displayName": "Selection Wash",
+        "tonalRamp": [
+          "oklch(15% 0.035 285)",
+          "oklch(26% 0.035 285)",
+          "oklch(37% 0.035 285)",
+          "oklch(48% 0.035 285)",
+          "oklch(59% 0.035 285)",
+          "oklch(70% 0.035 285)",
+          "oklch(82% 0.035 285)",
+          "oklch(95% 0.035 285)"
+        ]
+      },
+      "selection-line": {
+        "role": "primary",
+        "displayName": "Selection Line",
+        "tonalRamp": [
+          "oklch(15% 0.09 285)",
+          "oklch(26% 0.09 285)",
+          "oklch(37% 0.09 285)",
+          "oklch(48% 0.09 285)",
+          "oklch(59% 0.09 285)",
+          "oklch(70% 0.09 285)",
+          "oklch(82% 0.09 285)",
+          "oklch(95% 0.09 285)"
+        ]
+      },
+      "green": {
+        "role": "semantic",
+        "displayName": "Ready Emerald",
+        "tonalRamp": [
+          "oklch(15% 0.13 155)",
+          "oklch(26% 0.13 155)",
+          "oklch(37% 0.13 155)",
+          "oklch(48% 0.13 155)",
+          "oklch(59% 0.13 155)",
+          "oklch(70% 0.13 155)",
+          "oklch(82% 0.13 155)",
+          "oklch(95% 0.13 155)"
+        ]
+      },
+      "green-soft": {
+        "role": "semantic",
+        "displayName": "Ready Wash",
+        "tonalRamp": [
+          "oklch(15% 0.035 155)",
+          "oklch(26% 0.035 155)",
+          "oklch(37% 0.035 155)",
+          "oklch(48% 0.035 155)",
+          "oklch(59% 0.035 155)",
+          "oklch(70% 0.035 155)",
+          "oklch(82% 0.035 155)",
+          "oklch(95% 0.035 155)"
+        ]
+      },
+      "red": {
+        "role": "semantic",
+        "displayName": "Error Crimson",
+        "tonalRamp": [
+          "oklch(15% 0.16 15)",
+          "oklch(26% 0.16 15)",
+          "oklch(37% 0.16 15)",
+          "oklch(48% 0.16 15)",
+          "oklch(59% 0.16 15)",
+          "oklch(70% 0.16 15)",
+          "oklch(82% 0.16 15)",
+          "oklch(95% 0.16 15)"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "brand": { "displayName": "Brand", "purpose": "Product name in the rail only." },
+      "display": {
+        "displayName": "Display",
+        "purpose": "Documentation handoff headings after the operational surface."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Readable product explanation and supporting prose."
+      },
+      "ui": {
+        "displayName": "UI",
+        "purpose": "Pane headings, controls, labels, and compact instructions."
+      },
+      "data": {
+        "displayName": "Data",
+        "purpose": "Commands, versions, dimensions, rows, frames, and exact values."
+      }
+    },
+    "shadows": [
+      {
+        "name": "rendered-artifact",
+        "value": "drop-shadow(0 1.3rem 1.4rem rgb(0 0 0 / 28%))",
+        "purpose": "Separates sprite pixels from the dark preview stage."
+      },
+      {
+        "name": "ready-signal",
+        "value": "0 2px 7px rgb(33 134 90 / 28%)",
+        "purpose": "Marks successful live status."
+      },
+      {
+        "name": "error-signal",
+        "value": "0 2px 7px rgb(180 35 63 / 24%)",
+        "purpose": "Marks a source or loading failure."
+      },
+      {
+        "name": "current-frame",
+        "value": "0 3px 10px rgb(81 69 223 / 18%)",
+        "purpose": "Identifies the active frame in playback."
+      }
+    ],
+    "motion": [
+      {
+        "name": "control-color",
+        "value": "140ms ease-out",
+        "purpose": "Selection and hover changes on compact workbench controls."
+      },
+      {
+        "name": "command-color",
+        "value": "160ms ease-out",
+        "purpose": "Border and fill feedback on install commands."
+      },
+      {
+        "name": "frame-current",
+        "value": "110ms ease-out",
+        "purpose": "Fast current-frame border and shadow feedback."
+      },
+      {
+        "name": "pet-ready",
+        "value": "520ms cubic-bezier(0.16, 1, 0.3, 1)",
+        "purpose": "One-time source-ready reveal for the rendered pet."
+      }
+    ],
+    "breakpoints": [
+      { "name": "workbench-reflow", "value": "60rem" },
+      { "name": "stack", "value": "48rem" },
+      { "name": "compact", "value": "30rem" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Install Command",
+      "kind": "button",
+      "refersTo": "install-command",
+      "description": "A copyable package command for rails and documentation handoffs.",
+      "html": "<button class=\"ds-install-command\" type=\"button\"><code>pnpm add sprite-pet</code><svg aria-hidden=\"true\" viewBox=\"0 0 24 24\"><rect x=\"8\" y=\"8\" width=\"11\" height=\"11\" rx=\"2\"></rect><path d=\"M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2\"></path></svg></button>",
+      "css": ".ds-install-command { display: inline-flex; min-height: 2.5rem; align-items: center; justify-content: space-between; gap: 1rem; border: 1px solid var(--line-strong, #bcc7d6); border-radius: 8px; padding: 0.55rem 0.7rem; color: #263247; background: var(--surface, #fff); cursor: pointer; transition: border-color 160ms ease-out, background-color 160ms ease-out; } .ds-install-command code { font-family: ui-monospace, \"SFMono-Regular\", Consolas, monospace; font-size: 0.79rem; } .ds-install-command svg { width: 1rem; height: 1rem; fill: none; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; stroke-width: 1.8; } .ds-install-command:hover { border-color: #8e99aa; background: #f8f9fb; } .ds-install-command:active { background: var(--surface-muted, #f1f4f8); } .ds-install-command:focus-visible { outline: 3px solid rgb(103 92 245 / 32%); outline-offset: 2px; }"
+    },
+    {
+      "name": "Primary Action",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "The committed action for loading a source or continuing to documentation.",
+      "html": "<button class=\"ds-primary-action\" type=\"button\">Load manifest<svg aria-hidden=\"true\" viewBox=\"0 0 24 24\"><path d=\"M5 12h14M13 6l6 6-6 6\"></path></svg></button>",
+      "css": ".ds-primary-action { display: inline-flex; min-height: 2.5rem; align-items: center; justify-content: space-between; gap: 1rem; border: 1px solid var(--indigo, #675cf5); border-radius: 7px; padding: 0.55rem 0.75rem; color: #fff; background: var(--indigo, #675cf5); font-family: ui-sans-serif, system-ui, sans-serif; font-size: 0.72rem; font-weight: 750; cursor: pointer; transition: border-color 140ms ease-out, background-color 140ms ease-out; } .ds-primary-action svg { width: 1rem; height: 1rem; fill: none; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; stroke-width: 1.8; } .ds-primary-action:hover { border-color: var(--indigo-dark, #5145df); background: var(--indigo-dark, #5145df); } .ds-primary-action:active { filter: brightness(0.96); } .ds-primary-action:focus-visible { outline: 3px solid rgb(103 92 245 / 32%); outline-offset: 2px; }"
+    },
+    {
+      "name": "Pet Option",
+      "kind": "button",
+      "refersTo": "pet-option-selected",
+      "description": "A source row with thumbnail, atlas metadata, and explicit selected state.",
+      "html": "<button class=\"ds-pet-option\" type=\"button\" aria-pressed=\"true\"><span class=\"ds-pet-thumbnail\">S</span><span class=\"ds-pet-copy\"><strong>Generated sample</strong><small>v2 · pointer poses</small></span><span class=\"ds-selection-marker\" aria-hidden=\"true\"></span></button>",
+      "css": ".ds-pet-option { display: grid; width: 100%; min-height: 3.6rem; align-items: center; gap: 0.65rem; grid-template-columns: 2.75rem minmax(0, 1fr) 0.6rem; border: 1px solid transparent; border-radius: 9px; padding: 0.35rem 0.45rem; text-align: left; color: var(--ink, #101828); background: transparent; font-family: ui-sans-serif, system-ui, sans-serif; cursor: pointer; transition: border-color 140ms ease-out, background-color 140ms ease-out; } .ds-pet-option:hover { background: var(--surface-muted, #f1f4f8); } .ds-pet-option[aria-pressed=\"true\"] { border-color: #a9a2ff; background: var(--indigo-soft, #efeeff); } .ds-pet-option:active { filter: brightness(0.98); } .ds-pet-option:focus-visible { outline: 3px solid rgb(103 92 245 / 32%); outline-offset: 2px; } .ds-pet-thumbnail { display: grid; width: 2.75rem; height: 2.75rem; place-items: center; border: 1px solid #bdb7ff; border-radius: 8px; color: var(--indigo-dark, #5145df); background: var(--indigo-soft, #efeeff); font-family: ui-monospace, \"SFMono-Regular\", Consolas, monospace; font-size: 0.9rem; font-weight: 800; } .ds-pet-copy { min-width: 0; } .ds-pet-copy strong, .ds-pet-copy small { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; } .ds-pet-copy strong { font-size: 0.78rem; } .ds-pet-copy small { margin-top: 0.16rem; color: var(--quiet, #778197); font-size: 0.65rem; } .ds-selection-marker { width: 0.48rem; height: 0.48rem; border-radius: 50%; background: var(--indigo, #675cf5); }"
+    },
+    {
+      "name": "State Button",
+      "kind": "button",
+      "refersTo": "state-button",
+      "description": "A compact atlas-row control that keeps state name and frame contract visible.",
+      "html": "<button class=\"ds-state-button\" type=\"button\" aria-pressed=\"true\"><span class=\"ds-state-row\">01</span><strong>Idle</strong><small>8 frames</small><span class=\"ds-state-marker\" aria-hidden=\"true\"></span></button>",
+      "css": ".ds-state-button { display: grid; width: 100%; min-height: 2.8rem; align-items: center; gap: 0.55rem; grid-template-columns: 1.7rem minmax(0, 1fr) auto 0.5rem; border: 1px solid var(--line, #d9e0ea); border-radius: 8px; padding: 0.45rem 0.55rem; text-align: left; color: var(--ink, #101828); background: var(--surface, #fff); font-family: ui-sans-serif, system-ui, sans-serif; cursor: pointer; transition: border-color 140ms ease-out, background-color 140ms ease-out; } .ds-state-button:hover { border-color: var(--line-strong, #bcc7d6); background: var(--surface-muted, #f1f4f8); } .ds-state-button[aria-pressed=\"true\"] { border-color: #a9a2ff; background: var(--indigo-soft, #efeeff); } .ds-state-button:active { filter: brightness(0.98); } .ds-state-button:focus-visible { outline: 3px solid rgb(103 92 245 / 32%); outline-offset: 2px; } .ds-state-row, .ds-state-button small { color: var(--quiet, #778197); font-family: ui-monospace, \"SFMono-Regular\", Consolas, monospace; font-size: 0.62rem; } .ds-state-button strong { overflow: hidden; font-size: 0.74rem; text-overflow: ellipsis; white-space: nowrap; } .ds-state-button small { font-size: 0.58rem; } .ds-state-marker { width: 0.48rem; height: 0.48rem; border-radius: 50%; background: var(--indigo, #675cf5); }"
+    },
+    {
+      "name": "Source Disclosure",
+      "kind": "custom",
+      "refersTo": "disclosure",
+      "description": "A progressive disclosure for remote or local source-loading controls.",
+      "html": "<details class=\"ds-source-disclosure\"><summary><svg aria-hidden=\"true\" viewBox=\"0 0 24 24\"><path d=\"M10 13a5 5 0 0 0 7.5.5l2-2a5 5 0 0 0-7-7l-1.15 1.15\"></path><path d=\"M14 11a5 5 0 0 0-7.5-.5l-2 2a5 5 0 0 0 7 7l1.15-1.15\"></path></svg><span>Load from URL</span><svg class=\"ds-chevron\" aria-hidden=\"true\" viewBox=\"0 0 24 24\"><path d=\"m8 10 4 4 4-4\"></path></svg></summary><div class=\"ds-disclosure-body\">Manifest and source controls appear here.</div></details>",
+      "css": ".ds-source-disclosure { border: 1px solid var(--line, #d9e0ea); border-radius: 9px; color: var(--ink, #101828); background: var(--surface, #fff); font-family: ui-sans-serif, system-ui, sans-serif; } .ds-source-disclosure summary { display: grid; min-height: 2.65rem; align-items: center; gap: 0.55rem; grid-template-columns: 1rem minmax(0, 1fr) 0.9rem; padding: 0.55rem 0.65rem; font-size: 0.74rem; font-weight: 700; cursor: pointer; list-style: none; } .ds-source-disclosure summary:hover { background: var(--surface-muted, #f1f4f8); } .ds-source-disclosure summary:focus-visible { outline: 3px solid rgb(103 92 245 / 32%); outline-offset: 2px; } .ds-source-disclosure summary svg { width: 1rem; height: 1rem; fill: none; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; stroke-width: 1.8; } .ds-source-disclosure .ds-chevron { transition: transform 150ms ease-out; } .ds-source-disclosure[open] summary { border-bottom: 1px solid var(--line, #d9e0ea); background: var(--surface-muted, #f1f4f8); } .ds-source-disclosure[open] .ds-chevron { transform: rotate(180deg); } .ds-disclosure-body { padding: 0.75rem; color: var(--muted, #566174); font-size: 0.68rem; line-height: 1.5; }"
+    },
+    {
+      "name": "Manifest Input",
+      "kind": "input",
+      "refersTo": "input",
+      "description": "A compact source field with a persistent technical label.",
+      "html": "<label class=\"ds-field\"><span>Manifest URL</span><input type=\"url\" placeholder=\"https://example.com/pet/pet.json\" /></label>",
+      "css": ".ds-field { display: grid; gap: 0.35rem; color: var(--muted, #566174); font-family: ui-sans-serif, system-ui, sans-serif; font-size: 0.68rem; font-weight: 700; } .ds-field input { width: 100%; min-height: 2.5rem; border: 1px solid var(--line-strong, #bcc7d6); border-radius: 7px; padding: 0.55rem 0.65rem; color: var(--ink, #101828); background: var(--surface, #fff); font: inherit; font-size: 0.72rem; font-weight: 400; } .ds-field input::placeholder { color: #667085; } .ds-field input:hover { border-color: #8e99aa; } .ds-field input:focus-visible { outline: 3px solid rgb(103 92 245 / 32%); outline-offset: 2px; } .ds-field input:active { border-color: var(--indigo, #675cf5); }"
+    },
+    {
+      "name": "Workbench Container",
+      "kind": "card",
+      "refersTo": "workbench",
+      "description": "The shared bordered surface that joins source tools, artifact stage, inspector, and frame evidence.",
+      "html": "<section class=\"ds-workbench\"><aside>Source</aside><div class=\"ds-workbench-stage\">Live artifact</div><aside>Inspector</aside><footer>Eight-frame evidence</footer></section>",
+      "css": ".ds-workbench { display: grid; overflow: hidden; grid-template-areas: \"source stage inspector\" \"frames frames frames\"; grid-template-columns: minmax(8rem, 0.78fr) minmax(14rem, 2.25fr) minmax(9rem, 0.88fr); border: 1px solid var(--line-strong, #bcc7d6); border-radius: 14px; color: var(--ink, #101828); background: var(--surface, #fff); font-family: ui-sans-serif, system-ui, sans-serif; font-size: 0.74rem; font-weight: 700; } .ds-workbench aside { min-height: 9rem; padding: 1rem; } .ds-workbench aside:first-child { grid-area: source; border-right: 1px solid var(--line, #d9e0ea); } .ds-workbench aside:nth-child(3) { grid-area: inspector; border-left: 1px solid var(--line, #d9e0ea); } .ds-workbench-stage { display: grid; min-height: 9rem; grid-area: stage; place-items: center; color: #c4ccdb; background-color: var(--stage, #0c111d); background-image: conic-gradient(from 90deg at 1px 1px, #101725 25%, #0c111d 0 50%, #101725 0 75%, #0c111d 0); background-size: 1rem 1rem; } .ds-workbench footer { grid-area: frames; border-top: 1px solid var(--line-strong, #bcc7d6); padding: 0.75rem 1rem; color: var(--quiet, #778197); font-family: ui-monospace, \"SFMono-Regular\", Consolas, monospace; font-size: 0.67rem; } @media (max-width: 42rem) { .ds-workbench { grid-template-areas: \"stage\" \"source\" \"inspector\" \"frames\"; grid-template-columns: 1fr; } .ds-workbench aside:first-child, .ds-workbench aside:nth-child(3) { border-top: 1px solid var(--line, #d9e0ea); border-right: 0; border-left: 0; } }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Open Workbench",
+    "overview": "The Open Workbench is a precise, approachable environment for developers who need to see an atlas work before they trust it. Its cool-light shell and contiguous white panes make the interface feel like a mature browser tool, while the dark pixel stage gives the animated artifact a clear place of consequence.\n\nThe system is compact without feeling cramped. Crisp dividers, measured controls, restrained indigo selection, and explicit emerald or red status feedback make relationships legible without turning the product into a themed dashboard. Brand character comes from proportion, exact state design, and the contrast between quiet tooling and vivid pixel artwork.",
+    "keyCharacteristics": [
+      "Cool-light application shell with contiguous white working surfaces.",
+      "Dark, gridded stages that isolate and dignify pixel artwork.",
+      "Indigo for selection and action; emerald and red only for operational status.",
+      "Dense, exact controls supported by generous space around the primary artifact.",
+      "Crisp rules and tonal layering instead of decorative surface effects."
+    ],
+    "rules": [
+      {
+        "name": "The One Accent Rule",
+        "body": "Indigo is the only interactive accent; semantic green and red communicate state and never compete for navigation or selection.",
+        "section": "colors"
+      },
+      {
+        "name": "The Artifact Contrast Rule",
+        "body": "Pixel artwork belongs on the dark stage; controls and explanatory content stay on light surfaces.",
+        "section": "colors"
+      },
+      {
+        "name": "The Functional Mono Rule",
+        "body": "Use monospace only when the content is executable, numeric, versioned, or structurally exact; prose and ordinary labels remain system UI.",
+        "section": "typography"
+      },
+      {
+        "name": "The Singular Brand Face Rule",
+        "body": "Avenir Next is a product-name accent, not a heading system.",
+        "section": "typography"
+      },
+      {
+        "name": "The Contiguous Tool Rule",
+        "body": "Related controls and previews share one bordered working surface, with dividers carrying hierarchy inside it.",
+        "section": "layout"
+      },
+      {
+        "name": "The Artifact-First Reflow Rule",
+        "body": "On narrow screens, place the live artifact before its controls while keeping the controls in their causal order.",
+        "section": "layout"
+      },
+      {
+        "name": "The Flat-by-Default Rule",
+        "body": "Resting surfaces do not cast shadows; depth appears only where live state or the artifact itself needs separation.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "Do let the live artifact dominate any operational surface built from this system.",
+      "Do use contiguous light panes and one-pixel rules to show relationships between tools.",
+      "Do reserve Workbench Indigo for action, selection, focus, and current playback state.",
+      "Do keep pixel artwork crisp and place it on a dark, low-contrast grid when it needs inspection.",
+      "Do pair exact atlas facts with monospace while keeping explanatory language in system UI.",
+      "Do keep motion short and state-driven, and honor reduced-motion preferences for ornamental transitions."
+    ],
+    "donts": [
+      "Don't turn the interface into a generic marketing hero before the working artifact appears.",
+      "Don't scatter related controls into elevated cards or decorate every surface with shadows.",
+      "Don't use Avenir Next beyond the product brand or use monospace as a general interface voice.",
+      "Don't use emerald or crimson as competing action colors.",
+      "Don't smooth pixel canvases, crop exact frame evidence, or hide operational errors in transient decoration."
+    ]
+  }
+}
