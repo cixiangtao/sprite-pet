@@ -7,6 +7,7 @@ import { promisify } from "node:util";
 
 const execute = promisify(execFile);
 const packageRoot = new URL("..", import.meta.url);
+const sourceManifest = JSON.parse(await readFile(new URL("package.json", packageRoot), "utf8"));
 const temporaryRoot = await mkdtemp(join(tmpdir(), "sprite-pet-package-"));
 
 try {
@@ -50,8 +51,9 @@ assert.equal(typeof SpritePetWidget, "function");
   const packedManifest = JSON.parse(
     await readFile(join(consumerRoot, "node_modules", "sprite-pet", "package.json"), "utf8"),
   );
+  assert.equal(packedManifest.name, sourceManifest.name);
   assert.equal(packedManifest.license, "MIT");
-  assert.equal(packedManifest.version, "0.1.0");
+  assert.equal(packedManifest.version, sourceManifest.version);
 } finally {
   await rm(temporaryRoot, { recursive: true, force: true });
 }
