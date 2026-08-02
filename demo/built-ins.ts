@@ -2,7 +2,6 @@ export interface BuiltInPet {
   id: string;
   displayName: string;
   description: string;
-  spriteVersionNumber: 1 | 2;
   manifestPath: string;
 }
 
@@ -18,7 +17,6 @@ const isBuiltInPet = (value: unknown): value is BuiltInPet => {
     typeof pet.id === "string" &&
     typeof pet.displayName === "string" &&
     typeof pet.description === "string" &&
-    (pet.spriteVersionNumber === 1 || pet.spriteVersionNumber === 2) &&
     typeof pet.manifestPath === "string"
   );
 };

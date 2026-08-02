@@ -1,5 +1,5 @@
-import { DEFAULT_ANIMATIONS, LOOK_DIRECTION_STEP, SPRITE_PET_LAYOUT } from "./constants.js";
-import { getLookCell, getLookDegrees, getLookDirectionIndex } from "./direction.js";
+import { DEFAULT_ANIMATIONS, SPRITE_PET_LAYOUT } from "./constants.js";
+import { getLookDegrees, normalizeDirection } from "./direction.js";
 import type {
   SpriteAnimationDefinition,
   SpritePetFit,
@@ -33,6 +33,12 @@ const mergeAnimations = (
   });
 
   return Object.fromEntries(entries) as Record<SpritePetState, SpriteAnimationDefinition>;
+};
+
+const getPointerState = (degrees: number): SpritePetState | null => {
+  if (degrees === 0 || degrees === 180) return null;
+
+  return degrees < 180 ? "move-right" : "move-left";
 };
 
 /**
@@ -142,14 +148,13 @@ export class SpritePetRenderer {
   }
 
   /**
-   * Selects the nearest v2 look cell using clockwise degrees where 0 points up.
+   * Points the pet in the nearest available direction using clockwise degrees where 0 points up.
    *
-   * @returns `false` for a v1 atlas, otherwise `true` after rendering the direction.
+   * The standard left or right movement animation is used for horizontal targets. A vertical
+   * target keeps the current animation.
    */
   setLookDirection(degrees: number) {
-    if (this.source.version < 2) return false;
-
-    this.#lookDirection = getLookDirectionIndex(degrees);
+    this.#lookDirection = normalizeDirection(degrees);
     this.render();
     return true;
   }
@@ -162,7 +167,7 @@ export class SpritePetRenderer {
     return this.setLookDirection(getLookDegrees(originX, originY, clientX, clientY));
   }
 
-  /** Clears a v2 look pose and returns to the current standard animation. */
+  /** Clears a pointer-facing pose and returns to the current standard animation. */
   clearLookDirection() {
     if (this.#lookDirection === null) return;
     this.#lookDirection = null;
@@ -178,8 +183,9 @@ export class SpritePetRenderer {
       return;
     }
 
-    const { row, column } = getLookCell(this.#lookDirection);
-    this.#drawCell(row, column);
+    const pointerState = getPointerState(this.#lookDirection);
+    const animation = this.#animations[pointerState ?? this.#state];
+    this.#drawCell(animation.row, this.#frame % animation.frameCount);
   }
 
   /** Returns a stable snapshot suitable for controls, diagnostics, and tests. */
@@ -188,9 +194,7 @@ export class SpritePetRenderer {
       state: this.#state,
       frame: this.#frame,
       playing: this.#playing,
-      lookDirection:
-        this.#lookDirection === null ? null : this.#lookDirection * LOOK_DIRECTION_STEP,
-      version: this.source.version,
+      lookDirection: this.#lookDirection,
     };
   }
 
@@ -204,23 +208,25 @@ export class SpritePetRenderer {
   readonly #tick = (timestamp: number) => {
     if (!this.#playing) return;
 
-    if (this.#lookDirection === null) {
-      const animation = this.#animations[this.#state];
-      const frameDuration = 1000 / animation.fps;
-      const lastFrameAt = this.#lastFrameAt ?? timestamp;
-      const elapsed = timestamp - lastFrameAt;
+    const animation =
+      this.#lookDirection === null
+        ? this.#animations[this.#state]
+        : this.#animations[getPointerState(this.#lookDirection) ?? this.#state];
 
-      if (elapsed >= frameDuration) {
-        const elapsedFrames = Math.max(1, Math.floor(elapsed / frameDuration));
-        const nextFrame = this.#frame + elapsedFrames;
-        this.#frame = animation.loop
-          ? nextFrame % animation.frameCount
-          : Math.min(nextFrame, animation.frameCount - 1);
-        this.#lastFrameAt = timestamp - (elapsed % frameDuration);
-        this.render();
-      } else if (this.#lastFrameAt === null) {
-        this.#lastFrameAt = timestamp;
-      }
+    const frameDuration = 1000 / animation.fps;
+    const lastFrameAt = this.#lastFrameAt ?? timestamp;
+    const elapsed = timestamp - lastFrameAt;
+
+    if (elapsed >= frameDuration) {
+      const elapsedFrames = Math.max(1, Math.floor(elapsed / frameDuration));
+      const nextFrame = this.#frame + elapsedFrames;
+      this.#frame = animation.loop
+        ? nextFrame % animation.frameCount
+        : Math.min(nextFrame, animation.frameCount - 1);
+      this.#lastFrameAt = timestamp - (elapsed % frameDuration);
+      this.render();
+    } else if (this.#lastFrameAt === null) {
+      this.#lastFrameAt = timestamp;
     }
 
     this.#animationFrame = requestAnimationFrame(this.#tick);

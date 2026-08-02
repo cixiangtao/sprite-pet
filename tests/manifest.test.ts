@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { parseSpritePetManifest, resolveSpritePetVersion } from "../src/index.js";
+import { parseSpritePetManifest, validateSpritePetDimensions } from "../src/index.js";
 
 const manifest = {
   id: "momo",
@@ -19,23 +19,16 @@ describe("pet manifests", () => {
     );
   });
 
-  it("infers v1 and v2 from exact atlas dimensions", () => {
-    expect(resolveSpritePetVersion(manifest, 1536, 1872)).toBe(1);
-    expect(resolveSpritePetVersion(manifest, 1536, 2288)).toBe(2);
-  });
-
-  it("rejects a declared version that conflicts with the image", () => {
-    expect(() =>
-      resolveSpritePetVersion({ ...manifest, spriteVersionNumber: 2 }, 1536, 1872),
-    ).toThrow("Manifest declares v2, but the spritesheet dimensions match v1.");
+  it("accepts the exact 8x9 atlas dimensions", () => {
+    expect(() => validateSpritePetDimensions(1536, 1872)).not.toThrow();
   });
 
   it("rejects unsupported geometry", () => {
-    expect(() => resolveSpritePetVersion(manifest, 1024, 1872)).toThrow(
+    expect(() => validateSpritePetDimensions(1024, 1872)).toThrow(
       "Spritesheet width must be 1536px",
     );
-    expect(() => resolveSpritePetVersion(manifest, 1536, 2000)).toThrow(
-      "Spritesheet height must be 1872px (v1) or 2288px (v2)",
+    expect(() => validateSpritePetDimensions(1536, 2288)).toThrow(
+      "Spritesheet height must be 1872px",
     );
   });
 });

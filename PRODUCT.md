@@ -35,8 +35,8 @@ browser tab rather than being uploaded.
   installation, API details, and atlas documentation.
 - Product developers can mount a pet inline or opt into a fixed floating widget that visitors can
   drag and resize without adopting a framework.
-- Asset authors switch among the nine standard animation states and, for v2 pets, test 16
-  pointer-facing poses.
+- Asset authors switch among the nine standard animation states and test pointer following through
+  the standard left/right movement rows.
 - Visitors can select an included pet, load a manifest URL, or select a local `pet.json` and
   spritesheet pair.
 
@@ -46,8 +46,8 @@ browser tab rather than being uploaded.
   effects.
 - Floating behavior is an explicit opt-in. It supports runtime mode changes, pointer dragging,
   proportional resizing, viewport constraints, and complete listener cleanup on destruction.
-- The renderer supports the documented 8x9 v1 and 8x11 v2 atlas contracts. Every cell is 192x208
-  pixels and every row contains eight frames.
+- The renderer supports one documented 8x9 atlas contract. Every cell is 192x208 pixels and every
+  row contains eight frames.
 - The public demo must remain deployable under the `/sprite-pet/` GitHub Pages repository path.
 - Included pet artwork may be displayed in the public Pages demo under MIT authorization from the
   repository owner, but pet artwork remains excluded from the npm package.
@@ -55,8 +55,8 @@ browser tab rather than being uploaded.
 
 ## Brand Commitments
 
-- Preserve the product name `sprite-pet` and the terminology `pet.json`, `spritesheet`, v1, v2,
-  state, atlas, and built-in pet.
+- Preserve the product name `sprite-pet` and the terminology `pet.json`, `spritesheet`, state,
+  atlas, and built-in pet.
 - The product voice should be concise, technically trustworthy, and approachable to developers who
   are actively making something playful.
 - The Pages experience should use the familiar structure and interaction grammar of a mature
@@ -68,7 +68,7 @@ browser tab rather than being uploaded.
 - A working interactive demo exists in `demo/`.
 - Built-in pet manifests and spritesheets exist under `demo/public/pets/` and are authorized for the
   public Pages experience.
-- A generated v2 sample demonstrates pointer-facing poses without relying on included artwork.
+- The built-in pets demonstrate pointer following through their standard movement rows.
 - The README contains installation, quick-start, bundle-format, atlas, and API documentation.
 - There are no testimonials, customer logos, usage metrics, benchmarks, or external endorsements;
   future pages must not fabricate them.

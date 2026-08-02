@@ -2,15 +2,15 @@
 
 A small, framework-agnostic TypeScript library for rendering animated pets on the web with Canvas.
 It loads a portable `pet.json + spritesheet` bundle, handles high-DPI rendering, plays nine standard
-animation rows, and supports 16 pointer-facing poses for extended atlases.
+animation rows, and follows the pointer through the left/right movement rows.
 
 The npm package ships no character artwork. The repository demo includes an optional built-in pet
 gallery whose artwork is excluded from the MIT License and from the npm package; see
 [THIRD_PARTY_ASSETS.md](./THIRD_PARTY_ASSETS.md). You remain responsible for permission to use and
 distribute pet assets.
 
-[Open the live demo](https://cixiangtao.github.io/sprite-pet/) to try the pet gallery, the generated
-sample, or a local `pet.json + spritesheet` pair without uploading either file.
+[Open the live demo](https://cixiangtao.github.io/sprite-pet/) to try the pet gallery or a local
+`pet.json + spritesheet` pair without uploading either file.
 
 ## Features
 
@@ -18,9 +18,9 @@ sample, or a local `pet.json + spritesheet` pair without uploading either file.
 - Optional floating widget with viewport-safe dragging and proportional resizing
 - Built-in demo gallery generated from portable pet bundles
 - Remote URL and local browser-file loaders
-- Exact validation for 8x9 v1 and 8x11 v2 atlases
+- Exact validation for the 8x9 atlas contract
 - Nine named animation states with configurable FPS and looping
-- 16 clockwise look directions for v2 pets
+- Pointer following for every pet through the standard left/right movement animations
 - Device-pixel-ratio-aware output and configurable sizing
 - ESM bundle and TypeScript declarations built with tsdown
 
@@ -109,22 +109,13 @@ See `pnpm dev` for a complete local-file picker.
   "id": "momo",
   "displayName": "Momo",
   "description": "A tiny animated companion.",
-  "spritesheetPath": "spritesheet.webp",
-  "spriteVersionNumber": 2
+  "spritesheetPath": "spritesheet.webp"
 }
 ```
 
-`spriteVersionNumber` may be omitted for a v1 image. The renderer infers the version from exact image
-dimensions.
-
 ### Atlas geometry
 
-Every cell is `192x208`, and every row contains 8 columns.
-
-| Version | Image size  | Rows | Capability                     |
-| ------- | ----------- | ---- | ------------------------------ |
-| v1      | `1536x1872` | 9    | Standard animations            |
-| v2      | `1536x2288` | 11   | Standard animations + 16 looks |
+The spritesheet is exactly `1536x1872`: 8 columns by 9 rows. Every cell is `192x208`.
 
 Standard rows:
 
@@ -140,8 +131,7 @@ Standard rows:
 | 7   | `working`    |
 | 8   | `reviewing`  |
 
-For v2, rows 9 and 10 contain 16 clockwise look poses in 22.5-degree steps. `0deg` points up,
-`90deg` points screen-right, `180deg` points down, and `270deg` points screen-left.
+Pointer following reuses the `move-right` and `move-left` rows, so no extra atlas data is required.
 
 ## API
 
@@ -184,8 +174,8 @@ const renderer = new SpritePetRenderer({ canvas, source, width: 192 });
 - `setState(state)` switches and resets a standard animation.
 - `play()` and `pause()` control playback.
 - `resize(width, height?)` updates CSS size and the high-DPI backing store.
-- `setLookDirection(degrees)` renders a v2 look pose.
-- `lookAt(clientX, clientY)` points a v2 pet toward a viewport coordinate.
+- `setLookDirection(degrees)` selects the left or right movement animation for horizontal targets.
+- `lookAt(clientX, clientY)` points a pet toward a viewport coordinate.
 - `clearLookDirection()` returns to the current animation.
 - `getSnapshot()` exposes state for UI bindings and diagnostics.
 - `destroy()` stops playback and clears the canvas.

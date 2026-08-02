@@ -79,7 +79,7 @@ test("renders, animates, and follows the pointer in Chromium", async () => {
       "usagi",
     ];
     const petSelect = page.locator("#built-in-pet");
-    assert.equal(await petSelect.locator("option").count(), builtInPetIds.length + 1);
+    assert.equal(await petSelect.locator("option").count(), builtInPetIds.length);
 
     const verifyBuiltInPets = async ([petId, ...remainingPetIds]) => {
       if (petId === undefined) return;
@@ -89,7 +89,16 @@ test("renders, animates, and follows the pointer in Chromium", async () => {
         (expectedPetId) => document.querySelector("canvas")?.dataset.petId === expectedPetId,
         petId,
       );
-      assert.equal(await canvas.getAttribute("data-version"), "1");
+      const bounds = await canvas.boundingBox();
+      assert.ok(bounds);
+      await page.mouse.move(bounds.x + bounds.width, bounds.y + bounds.height / 2);
+      await page.waitForFunction(
+        () => document.querySelector("canvas")?.dataset.lookDirection === "90",
+      );
+      await page.mouse.move(bounds.x, bounds.y + bounds.height / 2);
+      await page.waitForFunction(
+        () => document.querySelector("canvas")?.dataset.lookDirection === "270",
+      );
       await verifyBuiltInPets(remainingPetIds);
     };
     await verifyBuiltInPets(builtInPetIds);
@@ -109,9 +118,6 @@ test("renders, animates, and follows the pointer in Chromium", async () => {
         document.querySelector("#status")?.textContent?.includes("Working"),
       ),
     );
-
-    await petSelect.selectOption("generated-sample");
-    await page.waitForFunction(() => document.querySelector("canvas")?.dataset.version === "2");
 
     const bounds = await canvas.boundingBox();
     assert.ok(bounds);
@@ -185,7 +191,7 @@ test("renders, animates, and follows the pointer in Chromium", async () => {
 });
 
 test(
-  "loads a real local v1 pet bundle without uploading it",
+  "loads a real local pet bundle without uploading it",
   { skip: localPetFixture === undefined },
   async () => {
     assert.ok(localPetFixture);
@@ -198,8 +204,8 @@ test(
         .locator("#spritesheet-file")
         .setInputFiles(join(localPetFixture, "spritesheet.webp"));
       await page.getByRole("button", { name: "Use files", exact: true }).click();
-      await page.waitForFunction(() => document.querySelector("canvas")?.dataset.version === "1");
-      assert.match((await page.locator("#status").textContent()) ?? "", /· v1 atlas/);
+      await page.waitForFunction(() => document.querySelector("canvas")?.dataset.ready === "true");
+      assert.match((await page.locator("#status").textContent()) ?? "", /· 8×9 atlas/);
 
       await page.getByRole("button", { name: "Working", exact: true }).click();
       await page.waitForFunction(() =>

@@ -360,11 +360,6 @@ a:focus-visible {
   place-items: center;
 }
 
-.pet-thumbnail--generated {
-  border-color: #bdb7ff;
-  background: var(--indigo-soft);
-}
-
 .pet-option__copy {
   min-width: 0;
 }

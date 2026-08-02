@@ -1,4 +1,4 @@
-import { parseSpritePetManifest, resolveSpritePetVersion } from "./manifest.js";
+import { parseSpritePetManifest, validateSpritePetDimensions } from "./manifest.js";
 import type {
   LoadSpritePetOptions,
   SpritePetFileBundle,
@@ -37,14 +37,13 @@ export const loadSpritePetSource = async (
 ): Promise<SpritePetSource> => {
   const manifest = parseSpritePetManifest(manifestValue);
   const image = await loadImage(spritesheetUrl, options);
-  const version = resolveSpritePetVersion(manifest, image.naturalWidth, image.naturalHeight);
+  validateSpritePetDimensions(image.naturalWidth, image.naturalHeight);
 
   return {
     manifest,
     image,
     imageWidth: image.naturalWidth,
     imageHeight: image.naturalHeight,
-    version,
     spritesheetUrl,
   };
 };

@@ -1,22 +1,12 @@
-export {
-  DEFAULT_ANIMATIONS,
-  LOOK_DIRECTION_STEP,
-  SPRITE_PET_LAYOUT,
-  SPRITE_PET_STATES,
-} from "./constants.js";
-export {
-  getLookCell,
-  getLookDegrees,
-  getLookDirectionIndex,
-  normalizeDirection,
-} from "./direction.js";
+export { DEFAULT_ANIMATIONS, SPRITE_PET_LAYOUT, SPRITE_PET_STATES } from "./constants.js";
+export { getLookDegrees, normalizeDirection } from "./direction.js";
 export {
   defineSpritePetManifest,
   loadSpritePet,
   loadSpritePetFiles,
   loadSpritePetSource,
 } from "./loader.js";
-export { parseSpritePetManifest, resolveSpritePetVersion } from "./manifest.js";
+export { parseSpritePetManifest, validateSpritePetDimensions } from "./manifest.js";
 export { SpritePetRenderer } from "./renderer.js";
 export { SpritePetWidget } from "./widget.js";
 export type {
@@ -32,7 +22,6 @@ export type {
   SpritePetSnapshot,
   SpritePetSource,
   SpritePetState,
-  SpritePetVersion,
   SpritePetWidgetOptions,
   SpritePetWidgetSnapshot,
 } from "./types.js";

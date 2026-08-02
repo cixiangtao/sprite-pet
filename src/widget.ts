@@ -281,17 +281,17 @@ export class SpritePetWidget {
     this.renderer.pause();
   }
 
-  /** Points a v2 pet toward a viewport coordinate. */
+  /** Points the pet toward a viewport coordinate using its left/right movement animations. */
   lookAt(clientX: number, clientY: number) {
     return this.renderer.lookAt(clientX, clientY);
   }
 
-  /** Selects a v2 look pose in clockwise degrees where zero points up. */
+  /** Selects a left/right movement animation in clockwise degrees where zero points up. */
   setLookDirection(degrees: number) {
     return this.renderer.setLookDirection(degrees);
   }
 
-  /** Returns from a v2 look pose to the current standard animation. */
+  /** Returns from a pointer-facing pose to the current standard animation. */
   clearLookDirection() {
     this.renderer.clearLookDirection();
   }

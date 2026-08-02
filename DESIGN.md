@@ -180,7 +180,7 @@ The palette is a cool technical neutral field with one operational indigo accent
 **Brand Font:** Avenir Next (with Avenir and system sans-serif fallbacks)
 **Label/Mono Font:** UI monospace (with SFMono-Regular and Consolas fallbacks)
 
-**Character:** The system type stack keeps the workbench native, compact, and immediately readable. Avenir Next appears only in the product brand; monospace is reserved for commands, dimensions, row and frame numbers, versions, and other machine-readable data.
+**Character:** The system type stack keeps the workbench native, compact, and immediately readable. Avenir Next appears only in the product brand; monospace is reserved for commands, dimensions, row and frame numbers, and other machine-readable data.
 
 ### Hierarchy
 
@@ -244,7 +244,7 @@ Pixel canvases and thumbnails preserve hard edges through pixelated rendering. T
 
 - **Style:** Pet and state rows begin neutral, gain a muted hover fill, and use Selection Wash plus Selection Line when pressed.
 - **State:** A small circular marker repeats the same indigo selection signal at the far edge.
-- **Content:** Human labels use system UI; row numbers, versions, and frame counts use data type.
+- **Content:** Human labels use system UI; row numbers, dimensions, and frame counts use data type.
 
 ### Cards / Containers
 
@@ -271,7 +271,7 @@ Expandable source tools look like ordinary bordered controls at rest. Opening a 
 
 ### Live Status
 
-Status stays attached below the artifact. The dot, message, atlas dimensions, and version present one continuous operational readout, with emerald for readiness and crimson for failure.
+Status stays attached below the artifact. The dot, message, atlas dimensions, and grid present one continuous operational readout, with emerald for readiness and crimson for failure.
 
 ## Do's and Don'ts
 

@@ -10,16 +10,12 @@ export type SpritePetState =
   | "working"
   | "reviewing";
 
-/** The supported atlas contracts. Version 2 adds two rows with 16 look directions. */
-export type SpritePetVersion = 1 | 2;
-
 /** Portable metadata stored next to a pet spritesheet. */
 export interface SpritePetManifest {
   id: string;
   displayName: string;
   description?: string;
   spritesheetPath: string;
-  spriteVersionNumber?: SpritePetVersion;
   kind?: string;
 }
 
@@ -28,8 +24,7 @@ export interface SpritePetLayout {
   cellWidth: number;
   cellHeight: number;
   columns: number;
-  standardRows: number;
-  extendedRows: number;
+  rows: number;
 }
 
 /** Defines how one row advances while the renderer is playing. */
@@ -47,7 +42,6 @@ export interface SpritePetSource {
   image: CanvasImageSource;
   imageWidth: number;
   imageHeight: number;
-  version: SpritePetVersion;
   spritesheetUrl?: string;
 }
 
@@ -121,7 +115,6 @@ export interface SpritePetSnapshot {
   frame: number;
   playing: boolean;
   lookDirection: number | null;
-  version: SpritePetVersion;
 }
 
 /** Combined render and placement state exposed by {@link SpritePetWidget}. */

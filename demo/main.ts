@@ -9,7 +9,6 @@ import {
   type SpritePetState,
 } from "../src/index.js";
 import { loadBuiltInPetIndex, type BuiltInPet } from "./built-ins.js";
-import { loadSamplePet } from "./sample.js";
 
 const canvas = document.querySelector<HTMLCanvasElement>("#pet-canvas");
 const stage = document.querySelector<HTMLElement>("#stage");
@@ -26,7 +25,6 @@ const fileForm = document.querySelector<HTMLFormElement>("#file-form");
 const manifestFile = document.querySelector<HTMLInputElement>("#manifest-file");
 const spritesheetFile = document.querySelector<HTMLInputElement>("#spritesheet-file");
 const atlasSize = document.querySelector<HTMLElement>("#atlas-size");
-const atlasVersion = document.querySelector<HTMLElement>("#atlas-version");
 const cursorHint = document.querySelector<HTMLElement>(".cursor-hint");
 const playbackToggle = document.querySelector<HTMLButtonElement>("#playback-toggle");
 const currentFrame = document.querySelector<HTMLElement>("#current-frame");
@@ -52,7 +50,6 @@ if (
   manifestFile === null ||
   spritesheetFile === null ||
   atlasSize === null ||
-  atlasVersion === null ||
   cursorHint === null ||
   playbackToggle === null ||
   currentFrame === null ||
@@ -77,7 +74,6 @@ const stateLabels: Record<SpritePetState, string> = {
   reviewing: "Reviewing",
 };
 
-const sampleId = "generated-sample";
 const installCommand = "pnpm add sprite-pet";
 const demoFloatingOptions = { minWidth: 120, maxWidth: 520 } as const;
 
@@ -225,15 +221,14 @@ const mountSource = (source: SpritePetSource) => {
   updateStateButtons("idle");
   renderTimeline(source, "idle");
   canvas.dataset.ready = "true";
-  canvas.dataset.version = String(source.version);
   canvas.dataset.petId = source.manifest.id;
   atlasSize.textContent = `${source.imageWidth} × ${source.imageHeight}`;
-  atlasVersion.textContent = `v${source.version}`;
-  cursorHint.hidden = source.version < 2;
+  cursorHint.hidden = false;
+  delete canvas.dataset.lookDirection;
   setStatus(
     renderer.getSnapshot().floating
       ? `${source.manifest.displayName} · floating and draggable`
-      : `${source.manifest.displayName} · v${source.version} atlas`,
+      : `${source.manifest.displayName} · 8×9 atlas`,
   );
   setPetDescription(source.manifest.description ?? "Portable sprite-pet atlas bundle.");
   syncFloatingUi();
@@ -252,14 +247,6 @@ const syncFloatingUi = () => {
 const loadSelectedPet = async () => {
   setSourceLoading(true);
   try {
-    if (builtInPetSelect.value === sampleId) {
-      setStatus("Generating sample pet…");
-      mountSource(await loadSamplePet());
-      setPetDescription("A generated v2 sample used to demonstrate pointer-facing poses.");
-      updatePetButtons();
-      return;
-    }
-
     const pet = builtInPets.find(({ id }) => id === builtInPetSelect.value);
     if (pet === undefined) throw new Error("The selected built-in pet is unavailable.");
 
@@ -276,22 +263,22 @@ const createBuiltInPetButton = (pet: BuiltInPet) => {
   const button = document.createElement("button");
   button.className = "pet-option";
   button.type = "button";
-  button.setAttribute("aria-label", `${pet.displayName}, v${pet.spriteVersionNumber} atlas`);
+  button.setAttribute("aria-label", `${pet.displayName}, 8 by 9 atlas`);
 
   const thumbnail = document.createElement("span");
   thumbnail.className = "pet-thumbnail";
   const manifestPath = new URL(pet.manifestPath, window.location.href);
   const spritesheetPath = new URL("./spritesheet.webp", manifestPath);
   thumbnail.style.backgroundImage = `url("${spritesheetPath.href}")`;
-  thumbnail.style.backgroundSize = `800% ${pet.spriteVersionNumber === 2 ? 1100 : 900}%`;
+  thumbnail.style.backgroundSize = "800% 900%";
 
   const copy = document.createElement("span");
   copy.className = "pet-option__copy";
   const name = document.createElement("strong");
   name.textContent = pet.displayName;
-  const version = document.createElement("small");
-  version.textContent = `v${pet.spriteVersionNumber} atlas`;
-  copy.append(name, version);
+  const contract = document.createElement("small");
+  contract.textContent = "8×9 atlas";
+  copy.append(name, contract);
 
   const marker = document.createElement("span");
   marker.className = "selection-marker";
@@ -306,40 +293,6 @@ const createBuiltInPetButton = (pet: BuiltInPet) => {
     });
   });
   petButtons.set(pet.id, button);
-  return button;
-};
-
-const createSampleButton = () => {
-  const button = document.createElement("button");
-  button.className = "pet-option";
-  button.type = "button";
-  button.setAttribute("aria-label", "Generated sample, v2 atlas");
-
-  const thumbnail = document.createElement("span");
-  thumbnail.className = "pet-thumbnail pet-thumbnail--generated";
-  thumbnail.textContent = "S";
-
-  const copy = document.createElement("span");
-  copy.className = "pet-option__copy";
-  const name = document.createElement("strong");
-  name.textContent = "Generated sample";
-  const version = document.createElement("small");
-  version.textContent = "v2 · pointer poses";
-  copy.append(name, version);
-
-  const marker = document.createElement("span");
-  marker.className = "selection-marker";
-  marker.setAttribute("aria-hidden", "true");
-
-  button.append(thumbnail, copy, marker);
-  button.addEventListener("click", () => {
-    builtInPetSelect.value = sampleId;
-    updatePetButtons();
-    void loadSelectedPet().catch((error: unknown) => {
-      setStatus(error instanceof Error ? error.message : "Unable to load the sample pet.", true);
-    });
-  });
-  petButtons.set(sampleId, button);
   return button;
 };
 
@@ -492,41 +445,24 @@ try {
   builtInPetSelect.replaceChildren();
   builtInPetList.replaceChildren();
 
-  const sampleOption = document.createElement("option");
-  sampleOption.value = sampleId;
-  sampleOption.textContent = "Generated sample · v2";
-  builtInPetSelect.append(sampleOption);
-  builtInPetList.append(createSampleButton());
-
   for (const pet of builtInPets) {
     const option = document.createElement("option");
     option.value = pet.id;
-    option.textContent = `${pet.displayName} · v${pet.spriteVersionNumber}`;
+    option.textContent = pet.displayName;
     builtInPetSelect.append(option);
     builtInPetList.append(createBuiltInPetButton(pet));
   }
-  sourceCount.textContent = String(builtInPets.length + 1);
-  builtInPetSelect.value = sampleId;
+  sourceCount.textContent = String(builtInPets.length);
+  const firstPet = builtInPets[0];
+  if (firstPet === undefined) throw new Error("The built-in gallery is empty.");
+  builtInPetSelect.value = firstPet.id;
 
   await loadSelectedPet();
 } catch (error) {
-  sourceCount.textContent = "1";
+  sourceCount.textContent = "0";
   builtInPetSelect.replaceChildren();
-  const sampleOption = document.createElement("option");
-  sampleOption.value = sampleId;
-  sampleOption.textContent = "Generated sample · v2";
-  builtInPetSelect.append(sampleOption);
-  builtInPetList.replaceChildren(createSampleButton());
-  setStatus("Built-in gallery unavailable; loading the generated sample.", true);
-  try {
-    mountSource(await loadSamplePet());
-    setPetDescription(
-      "The built-in gallery could not be loaded, so the generated sample is shown.",
-    );
-    updatePetButtons();
-  } catch {
-    setStatus(error instanceof Error ? error.message : "Unable to load a pet.", true);
-  }
+  builtInPetList.replaceChildren();
+  setStatus(error instanceof Error ? error.message : "Unable to load the built-in gallery.", true);
 }
 
 syncPlaybackUi();

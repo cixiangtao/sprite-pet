@@ -27,11 +27,6 @@ const readPet = async (directoryName) => {
     throw new Error(`Pet id ${manifest.id} does not match directory ${directoryName}.`);
   }
 
-  const version = manifest.spriteVersionNumber ?? 1;
-  if (version !== 1 && version !== 2) {
-    throw new Error(`Unsupported sprite version for ${manifest.id}: ${version}`);
-  }
-
   const destinationDirectory = join(destinationRoot, manifest.id);
   const bundledManifest = {
     ...manifest,
@@ -54,7 +49,6 @@ const readPet = async (directoryName) => {
     id: manifest.id,
     displayName: manifest.displayName,
     description: bundledManifest.description,
-    spriteVersionNumber: version,
     manifestPath: `./pets/${manifest.id}/pet.json`,
   };
 };

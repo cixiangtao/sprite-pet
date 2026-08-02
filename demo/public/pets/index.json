@@ -4,98 +4,84 @@
       "id": "doro",
       "displayName": "Doro",
       "description": "A tiny white chibi pet with pink hair, purple eyes, and a side rose ribbon.",
-      "spriteVersionNumber": 1,
       "manifestPath": "./pets/doro/pet.json"
     },
     {
       "id": "goku",
       "displayName": "Goku",
       "description": "A cute compact web pet based on a spiky-haired orange-gi martial arts hero.",
-      "spriteVersionNumber": 1,
       "manifestPath": "./pets/goku/pet.json"
     },
     {
       "id": "guga",
       "displayName": "咕嘎",
       "description": "A rounder and cuter chibi penguin hoodie girl pet with a softer face and friendlier proportions.",
-      "spriteVersionNumber": 1,
       "manifestPath": "./pets/guga/pet.json"
     },
     {
       "id": "hutao",
       "displayName": "胡桃",
       "description": "胡桃是《原神》中的五星火元素角色，使用长柄武器，是璃月「往生堂」第七十七代堂主。她性格古灵精怪、活泼俏皮，喜欢作诗和恶作剧，但对生死有着成熟豁达的理解。外形以黑红服饰、礼帽和梅花装饰为特色，神秘又可爱。",
-      "spriteVersionNumber": 1,
       "manifestPath": "./pets/hutao/pet.json"
     },
     {
       "id": "ikkun",
       "displayName": "ikkun",
       "description": "灰色刘海、圆眼红腮、穿黑色背带裤和白色背带的团雀风数字宠物。.",
-      "spriteVersionNumber": 1,
       "manifestPath": "./pets/ikkun/pet.json"
     },
     {
       "id": "ikun-gaara",
       "displayName": "ikun-gaara",
       "description": "A compact ninja duck pet with silver hair, red cheeks, black outfit, backpack straps, and open-toe sandals based on the provided reference art.",
-      "spriteVersionNumber": 1,
       "manifestPath": "./pets/ikun-gaara/pet.json"
     },
     {
       "id": "ikun-giegie",
       "displayName": "ikun-giegie",
       "description": "A sporty yellow duck web pet with silver bangs, round glasses, red cheeks, black athletic outfit, high-top sneakers, and a woven backpack.",
-      "spriteVersionNumber": 1,
       "manifestPath": "./pets/ikun-giegie/pet.json"
     },
     {
       "id": "ikunchick",
       "displayName": "ikunchick",
       "description": "A tiny basketball chick digital pet based closely on the provided IKun chick reference.",
-      "spriteVersionNumber": 1,
       "manifestPath": "./pets/ikunchick/pet.json"
     },
     {
       "id": "kimlet-hover-clap",
       "displayName": "Kimlet Hover Clap",
       "description": "A chibi digital pet inspired by Kim Jong Un with a round face, high-fade hairstyle, dark buttoned suit, and a clapping hover animation.",
-      "spriteVersionNumber": 1,
       "manifestPath": "./pets/kimlet-hover-clap/pet.json"
     },
     {
       "id": "mini-elon",
       "displayName": "Mini Elon",
       "description": "What did you get done today?",
-      "spriteVersionNumber": 1,
       "manifestPath": "./pets/mini-elon/pet.json"
     },
     {
       "id": "nimbus",
       "displayName": "Nimbus",
       "description": "A tiny chibi martial-arts kid riding a golden cloud companion.",
-      "spriteVersionNumber": 1,
       "manifestPath": "./pets/nimbus/pet.json"
     },
     {
       "id": "shinchan",
       "displayName": "Shinchan",
       "description": "A tiny mischievous kindergarten-boy companion in a red shirt and yellow shorts.",
-      "spriteVersionNumber": 1,
       "manifestPath": "./pets/shinchan/pet.json"
     },
     {
       "id": "trump",
       "displayName": "Trump",
       "description": "A small smooth-edged digital pet caricature inspired by Donald Trump.",
-      "spriteVersionNumber": 1,
       "manifestPath": "./pets/trump/pet.json"
     },
     {
       "id": "usagi",
       "displayName": "Usagi",
       "description": "A round cream bunny web pet with long upright ears, blush cheeks, tiny paws, and a cute catlike mouth.",
-      "spriteVersionNumber": 1,
       "manifestPath": "./pets/usagi/pet.json"
     }
   ]
