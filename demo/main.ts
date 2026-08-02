@@ -79,6 +79,7 @@ const stateLabels: Record<SpritePetState, string> = {
 
 const sampleId = "generated-sample";
 const installCommand = "pnpm add sprite-pet";
+const demoFloatingOptions = { minWidth: 120, maxWidth: 520 } as const;
 
 let renderer: SpritePetWidget | null = null;
 let builtInPets: BuiltInPet[] = [];
@@ -214,9 +215,11 @@ const mountSource = (source: SpritePetSource) => {
     initialState: "idle",
     imageSmoothing: false,
     floating:
-      previousSnapshot?.floating === true
-        ? { position: previousSnapshot.position, minWidth: 120, maxWidth: 520 }
-        : false,
+      previousSnapshot === undefined
+        ? demoFloatingOptions
+        : previousSnapshot.floating
+          ? { ...demoFloatingOptions, position: previousSnapshot.position }
+          : false,
     ...(animationOverrides === undefined ? {} : { animations: animationOverrides }),
   });
   updateStateButtons("idle");
@@ -227,7 +230,11 @@ const mountSource = (source: SpritePetSource) => {
   atlasSize.textContent = `${source.imageWidth} × ${source.imageHeight}`;
   atlasVersion.textContent = `v${source.version}`;
   cursorHint.hidden = source.version < 2;
-  setStatus(`${source.manifest.displayName} · v${source.version} atlas`);
+  setStatus(
+    renderer.getSnapshot().floating
+      ? `${source.manifest.displayName} · floating and draggable`
+      : `${source.manifest.displayName} · v${source.version} atlas`,
+  );
   setPetDescription(source.manifest.description ?? "Portable sprite-pet atlas bundle.");
   syncFloatingUi();
 };
@@ -390,7 +397,7 @@ globalThis.addEventListener("pointermove", (event) => {
 floatingToggle.addEventListener("click", () => {
   if (renderer === null) return;
   const { floating } = renderer.getSnapshot();
-  renderer.setFloating(floating ? false : { minWidth: 120, maxWidth: 520 });
+  renderer.setFloating(floating ? false : demoFloatingOptions);
   syncFloatingUi();
   setStatus(
     floating

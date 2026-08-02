@@ -121,9 +121,14 @@ test("renders, animates, and follows the pointer in Chromium", async () => {
     );
 
     const widget = page.locator(".sprite-pet-widget");
-    await page.getByRole("button", { name: "Float pet", exact: true }).click();
     assert.equal(await widget.getAttribute("data-floating"), "true");
     assert.equal(await widget.evaluate((element) => getComputedStyle(element).position), "fixed");
+    assert.equal(
+      await page
+        .getByRole("button", { name: "Dock preview", exact: true })
+        .getAttribute("aria-pressed"),
+      "true",
+    );
 
     const floatingBounds = await widget.boundingBox();
     assert.ok(floatingBounds);
@@ -169,6 +174,11 @@ test("renders, animates, and follows the pointer in Chromium", async () => {
       "relative",
     );
     assert.equal(await canvas.evaluate((element) => element.closest("#stage") !== null), true);
+
+    await page.getByRole("button", { name: "Float pet", exact: true }).click();
+    assert.equal(await widget.getAttribute("data-floating"), "true");
+    await page.getByRole("button", { name: "Dock preview", exact: true }).click();
+    assert.equal(await widget.getAttribute("data-floating"), "false");
   } finally {
     await browser.close();
   }
