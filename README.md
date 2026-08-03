@@ -1,28 +1,57 @@
 # sprite-pet
 
-A small, framework-agnostic TypeScript library for rendering animated pets on the web with Canvas.
-It loads a portable `pet.json + spritesheet` bundle, handles high-DPI rendering, plays nine standard
-animation rows, and follows the pointer through the left/right movement rows.
+A small, framework-agnostic TypeScript runtime for animated pets on the web. It separates semantic
+browser behavior from source-atlas state names, preserves exact frame timing, and includes both a
+CSS sprite runtime and the original high-DPI Canvas renderer.
 
-The npm package ships no character artwork. The repository demo includes an optional built-in pet
-gallery whose artwork is excluded from the MIT License and from the npm package; see
+The npm package ships no character artwork. The repository keeps optional downloadable pets under
+`pets/`; their artwork is excluded from the MIT License and from the npm package. See
 [THIRD_PARTY_ASSETS.md](./THIRD_PARTY_ASSETS.md). You remain responsible for permission to use and
 distribute pet assets.
 
-[Open the live demo](https://cixiangtao.github.io/sprite-pet/) to try the pet gallery or a local
-`pet.json + spritesheet` pair without uploading either file.
+[Open the live demo](https://cixiangtao.github.io/sprite-pet/) to choose a pet, trigger behavior,
+inspect its source-state mapping, and try floating, dragging, and resizing.
 
 ## Features
 
-- Browser-native Canvas renderer with no runtime dependencies
-- Optional floating widget with viewport-safe dragging and proportional resizing
-- Built-in demo gallery generated from portable pet bundles
-- Remote URL and local browser-file loaders
+- Semantic behavior machine for idle, active, hover, click, drag, sleep, surprise, and celebration
+- Browser-native CSS sprite and Canvas renderers with no runtime dependencies
+- Codex atlas adapter with directional clips and nonuniform source frame timing
+- DOM interaction runtime with pointer tracking, dragging, sizing, and complete cleanup
+- Existing floating Canvas widget with viewport-safe dragging and proportional resizing
+- Downloadable built-in pet gallery generated from portable pet bundles
+- Remote URL and local browser-file loaders for the Canvas API
 - Exact validation for the 8x9 atlas contract
 - Nine named animation states with configurable FPS and looping
 - Pointer following for every pet through the standard left/right movement animations
 - Device-pixel-ratio-aware output and configurable sizing
 - ESM bundle and TypeScript declarations built with tsdown
+
+## Download a pet
+
+The website packages each built-in pet as a ZIP containing `pet.json`, `spritesheet.webp`, and
+`NOTICE.md`. These downloads are optional website assets; installing `sprite-pet` never installs
+character artwork.
+
+| Pet               | Download                                                                                              |
+| ----------------- | ----------------------------------------------------------------------------------------------------- |
+| Doro              | [doro.zip](https://cixiangtao.github.io/sprite-pet/pets/downloads/doro.zip)                           |
+| Goku              | [goku.zip](https://cixiangtao.github.io/sprite-pet/pets/downloads/goku.zip)                           |
+| 咕嘎              | [guga.zip](https://cixiangtao.github.io/sprite-pet/pets/downloads/guga.zip)                           |
+| 胡桃              | [hutao.zip](https://cixiangtao.github.io/sprite-pet/pets/downloads/hutao.zip)                         |
+| ikkun             | [ikkun.zip](https://cixiangtao.github.io/sprite-pet/pets/downloads/ikkun.zip)                         |
+| ikun-gaara        | [ikun-gaara.zip](https://cixiangtao.github.io/sprite-pet/pets/downloads/ikun-gaara.zip)               |
+| ikun-giegie       | [ikun-giegie.zip](https://cixiangtao.github.io/sprite-pet/pets/downloads/ikun-giegie.zip)             |
+| ikunchick         | [ikunchick.zip](https://cixiangtao.github.io/sprite-pet/pets/downloads/ikunchick.zip)                 |
+| Kimlet Hover Clap | [kimlet-hover-clap.zip](https://cixiangtao.github.io/sprite-pet/pets/downloads/kimlet-hover-clap.zip) |
+| Mini Elon         | [mini-elon.zip](https://cixiangtao.github.io/sprite-pet/pets/downloads/mini-elon.zip)                 |
+| Nimbus            | [nimbus.zip](https://cixiangtao.github.io/sprite-pet/pets/downloads/nimbus.zip)                       |
+| Shinchan          | [shinchan.zip](https://cixiangtao.github.io/sprite-pet/pets/downloads/shinchan.zip)                   |
+| Trump             | [trump.zip](https://cixiangtao.github.io/sprite-pet/pets/downloads/trump.zip)                         |
+| Usagi             | [usagi.zip](https://cixiangtao.github.io/sprite-pet/pets/downloads/usagi.zip)                         |
+
+The source folders are available in [`pets/`](./pets/). Download availability is not a license
+grant; review the included notice before reuse.
 
 ## Install
 
@@ -30,7 +59,7 @@ distribute pet assets.
 pnpm add sprite-pet
 ```
 
-## Quick start
+## Behavior runtime
 
 Place the manifest and image on the same host:
 
@@ -40,24 +69,50 @@ public/pets/momo/
 └── spritesheet.webp
 ```
 
+```html
+<div id="pet-shell">
+  <span id="pet-sprite"></span>
+</div>
+```
+
+```ts
+import { PetRuntime, loadCodexPet } from "sprite-pet";
+
+const spec = await loadCodexPet("/pets/momo/pet.json");
+const interactionElement = document.querySelector<HTMLElement>("#pet-shell");
+const spriteElement = document.querySelector<HTMLElement>("#pet-sprite");
+if (interactionElement === null || spriteElement === null) throw new Error("Missing pet host");
+
+const pet = new PetRuntime({
+  spec,
+  interactionElement,
+  spriteElement,
+  onDragMove: ({ deltaX, deltaY }) => {
+    // The host owns placement; move the shell using the drag delta.
+  },
+});
+
+pet.start();
+pet.trigger("celebrate");
+```
+
+`PetRuntime` owns behavior, pointer listeners, and animation rendering, but it deliberately leaves
+layout and persistence to the host. Call `pet.destroy()` when the host is removed.
+
+## Canvas widget
+
+The existing Canvas API remains supported:
+
 ```ts
 import { SpritePetWidget, loadSpritePet } from "sprite-pet";
 
 const source = await loadSpritePet("/pets/momo/pet.json");
-const pet = new SpritePetWidget({
-  source,
-  width: 192,
-  floating: true,
-});
-
+const pet = new SpritePetWidget({ source, width: 192, floating: true });
 pet.setState("working");
-window.addEventListener("pointermove", (event) => {
-  pet.lookAt(event.clientX, event.clientY);
-});
 ```
 
-The floating pet starts near the bottom-right of the viewport. Drag the pet itself to move it and
-use its bottom-right handle to resize it. Call `pet.destroy()` when it is no longer needed.
+The floating widget starts near the bottom-right of the viewport. Drag the pet itself to move it
+and use its bottom-right handle to resize it.
 
 ### Inline or floating
 
@@ -98,7 +153,8 @@ const source = await loadSpritePetFiles({
 });
 ```
 
-See `pnpm dev` for a complete local-file picker.
+The loader API remains available for applications that provide their own file picker. The current
+demo focuses on behavior and direct manipulation rather than file inspection.
 
 ## Bundle format
 
@@ -134,6 +190,20 @@ Standard rows:
 Pointer following reuses the `move-right` and `move-left` rows, so no extra atlas data is required.
 
 ## API
+
+### Behavior and Codex adaptation
+
+- `loadCodexPet(manifestUrl, options?)` validates a Codex `pet.json`, its exact 8x9 image size,
+  directional rows, and original per-frame durations.
+- `adaptCodexPet(manifest, options?)` converts an already-loaded manifest into a
+  `UnifiedPetSpec`.
+- `PetBehaviorMachine` is a pure event-driven state machine for deterministic host integration and
+  testing.
+- `CssSpriteRenderer` renders a behavior snapshot into one existing DOM element.
+- `PetRuntime` connects the behavior machine, CSS renderer, pointer input, dragging, and live
+  proportional sizing.
+- `getRenderedPetSize()`, `getPetScaleForSize()`, and `normalizePetScale()` support hosts that
+  own their own placement UI.
 
 ### Loading
 
@@ -204,6 +274,10 @@ pnpm test:browser
 pnpm verify:package
 ```
 
+`pnpm dev` merges the bundled demo catalog with valid packages found under
+`${CODEX_HOME:-~/.codex}/pets`. This local route exists only in the development server; local pet
+artwork is not copied into `demo-dist` or the npm package.
+
 `pnpm release:check` runs the full local readiness gate. The project uses tsdown, TypeScript,
 Oxlint, Oxfmt, Vitest, Vite, and a real Chromium smoke test.
 
@@ -212,6 +286,6 @@ through [SECURITY.md](./SECURITY.md).
 
 ## License
 
-The renderer source is available under the [MIT License](./LICENSE). Built-in demo artwork is not
+The renderer source is available under the [MIT License](./LICENSE). Downloadable pet artwork is not
 covered by that license; read [THIRD_PARTY_ASSETS.md](./THIRD_PARTY_ASSETS.md) before publishing or
 reusing it.

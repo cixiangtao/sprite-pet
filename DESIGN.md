@@ -1,293 +1,252 @@
 ---
 name: "sprite-pet"
-description: "A cool-light developer workbench that puts live sprite proof ahead of explanation."
+description: "A daylight behavior stage where the pet demonstrates the runtime through direct manipulation."
 colors:
-  shell: "#f6f8fb"
+  page: "#f7f8fb"
   surface: "#ffffff"
   surface-muted: "#f1f4f8"
-  ink: "#101828"
+  ink: "#182230"
   control-ink: "#344054"
-  command-ink: "#263247"
   muted: "#566174"
   quiet: "#778197"
   line: "#d9e0ea"
   line-strong: "#bcc7d6"
-  stage: "#f8fafc"
-  stage-grid: "#edf1f6"
-  indigo: "#675cf5"
-  indigo-dark: "#5145df"
-  indigo-soft: "#efeeff"
-  selection-line: "#a9a2ff"
+  accent: "#675cf5"
+  accent-dark: "#5145df"
+  accent-soft: "#efeeff"
   green: "#21865a"
   green-soft: "#eaf8f1"
-  red: "#b4233f"
 typography:
-  brand:
-    fontFamily: '"Avenir Next", Avenir, ui-sans-serif, system-ui, sans-serif'
-    fontSize: "1.08rem"
-    fontWeight: 750
-    lineHeight: "normal"
-    letterSpacing: "-0.025em"
   display:
-    fontFamily: 'ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif'
-    fontSize: "clamp(2rem, 4vw, 3.8rem)"
-    fontWeight: 700
-    lineHeight: 1
-    letterSpacing: "-0.035em"
+    fontFamily: 'Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif'
+    fontSize: "clamp(3rem, 7vw, 6.6rem)"
+    fontWeight: 760
+    lineHeight: 0.95
+    letterSpacing: "-0.07em"
+  display-tablet:
+    fontFamily: 'Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif'
+    fontSize: "clamp(3.2rem, 15vw, 5.8rem)"
+    fontWeight: 760
+    lineHeight: 0.95
+    letterSpacing: "-0.07em"
+  display-mobile:
+    fontFamily: 'Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif'
+    fontSize: "clamp(3rem, 13.2vw, 4.8rem)"
+    fontWeight: 760
+    lineHeight: 0.95
+    letterSpacing: "-0.06em"
   body:
-    fontFamily: 'ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif'
-    fontSize: "0.98rem"
+    fontFamily: 'Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif'
+    fontSize: "clamp(1rem, 1.6vw, 1.22rem)"
     fontWeight: 400
-    lineHeight: 1.7
+    lineHeight: 1.8
     letterSpacing: "normal"
-  ui:
-    fontFamily: 'ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif'
-    fontSize: "0.74rem"
-    fontWeight: 700
-    lineHeight: 1.45
+  eyebrow:
+    fontFamily: 'Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif'
+    fontSize: "0.78rem"
+    fontWeight: 720
+    lineHeight: "normal"
+    letterSpacing: "0.16em"
+  section:
+    fontFamily: 'Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif'
+    fontSize: "0.92rem"
+    fontWeight: 650
+    lineHeight: "normal"
+    letterSpacing: "0.02em"
+  control:
+    fontFamily: 'Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif'
+    fontSize: "0.9rem"
+    fontWeight: 650
+    lineHeight: "normal"
+    letterSpacing: "normal"
+  hint:
+    fontFamily: 'Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif'
+    fontSize: "0.8rem"
+    fontWeight: 400
+    lineHeight: "normal"
     letterSpacing: "normal"
   data:
-    fontFamily: 'ui-monospace, "SFMono-Regular", Consolas, monospace'
-    fontSize: "0.67rem"
+    fontFamily: 'Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif'
+    fontSize: "0.75rem"
+    fontWeight: 400
+    lineHeight: "normal"
+    letterSpacing: "normal"
+  arrow:
+    fontFamily: 'Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif'
+    fontSize: "1.25rem"
     fontWeight: 400
     lineHeight: "normal"
     letterSpacing: "normal"
 rounded:
-  field: "7px"
-  control: "8px"
-  option: "9px"
-  panel: "14px"
+  handle: "6px"
+  compact: "8px"
+  option: "15px"
+  control: "18px"
+  mobile-card: "26px"
+  habitat: "34px"
   pill: "999px"
 spacing:
-  xs: "0.35rem"
-  sm: "0.55rem"
-  md: "0.75rem"
-  lg: "1rem"
-  xl: "2rem"
+  xs: "0.25rem"
+  sm: "0.6rem"
+  md: "1rem"
+  lg: "2rem"
+  xl: "3rem"
 components:
-  install-command:
+  behavior-chip:
     backgroundColor: "{colors.surface}"
-    textColor: "{colors.command-ink}"
-    typography: "{typography.data}"
+    textColor: "{colors.control-ink}"
+    typography: "{typography.control}"
+    rounded: "{rounded.pill}"
+    padding: "0.7rem 1rem"
+  mode-toggle:
+    backgroundColor: "{colors.surface}"
+    textColor: "{colors.ink}"
+    typography: "{typography.control}"
     rounded: "{rounded.control}"
-    padding: "0.55rem 0.7rem"
-    height: "2.5rem"
-  button-primary:
-    backgroundColor: "{colors.indigo}"
-    textColor: "{colors.surface}"
-    typography: "{typography.ui}"
-    rounded: "{rounded.field}"
-    padding: "0.55rem 0.75rem"
-    height: "2.5rem"
+    padding: "0.875rem 1rem"
   pet-option:
     backgroundColor: "{colors.surface}"
-    textColor: "{colors.ink}"
-    typography: "{typography.ui}"
+    textColor: "{colors.muted}"
+    typography: "{typography.data}"
     rounded: "{rounded.option}"
-    padding: "0.35rem 0.45rem"
-    height: "3.6rem"
-  pet-option-selected:
-    backgroundColor: "{colors.indigo-soft}"
-    textColor: "{colors.ink}"
-    typography: "{typography.ui}"
-    rounded: "{rounded.option}"
-    padding: "0.35rem 0.45rem"
-    height: "3.6rem"
-  state-button:
+    padding: "0.5rem"
+  mapping-card:
     backgroundColor: "{colors.surface}"
     textColor: "{colors.ink}"
-    typography: "{typography.ui}"
     rounded: "{rounded.control}"
-    padding: "0.45rem 0.55rem"
-    height: "2.8rem"
-  disclosure:
+    padding: "1.125rem 1.25rem"
+  habitat:
     backgroundColor: "{colors.surface}"
     textColor: "{colors.ink}"
-    typography: "{typography.ui}"
-    rounded: "{rounded.option}"
-    padding: "0.55rem 0.65rem"
-  input:
-    backgroundColor: "{colors.surface}"
-    textColor: "{colors.ink}"
-    typography: "{typography.ui}"
-    rounded: "{rounded.field}"
-    padding: "0.55rem 0.65rem"
-    height: "2.5rem"
-  workbench:
-    backgroundColor: "{colors.surface}"
-    textColor: "{colors.ink}"
-    rounded: "{rounded.panel}"
+    rounded: "{rounded.habitat}"
 ---
 
 # Design System: sprite-pet
 
 ## Overview
 
-**Creative North Star: "The Open Workbench"**
+**Creative North Star: "The Daylight Habitat"**
 
-The Open Workbench is a precise, approachable environment for developers who need to see an atlas work before they trust it. Its cool-light shell, contiguous white panes, and pale checker stage make the interface feel like a mature browser tool while keeping the animated artifact visually connected to the surrounding workspace.
+The Daylight Habitat is a bright operating surface where the pet itself proves the runtime. It
+replaces the old atlas-inspector workbench with a behavior-first experience: visitors act, the pet
+responds, and the exact source animation remains visible as supporting evidence.
 
-The system is compact without feeling cramped. Crisp dividers, measured controls, restrained indigo selection, and explicit emerald or red status feedback make relationships legible without turning the product into a themed dashboard. Brand character comes from proportion, exact state design, and the contrast between quiet tooling and vivid pixel artwork.
+The physical scene is a developer trying a playful browser component during an ordinary, well-lit
+workday. That makes the light field intentional rather than theme-dependent. The page declares
+`color-scheme: light` and remains light even when the operating system prefers dark mode.
 
-**Key Characteristics:**
+## Visual character
 
-- Cool-light application shell with contiguous white working surfaces.
-- Pale, gridded stages that isolate pixel artwork without breaking the light visual field.
-- Indigo for selection and action; emerald and red only for operational status.
-- Dense, exact controls supported by generous space around the primary artifact.
-- Crisp rules and tonal layering instead of decorative surface effects.
-
-## Colors
-
-The palette is a cool technical neutral field with one operational indigo accent and narrowly scoped semantic feedback.
-
-### Primary
-
-- **Workbench Indigo:** The sole action and selection color for primary buttons, active controls, focus outlines, and current frames.
-- **Deep Workbench Indigo:** The hover tone for committed actions and interactive links.
-- **Selection Wash:** A pale background that keeps selected list rows legible without overpowering their content.
-- **Selection Line:** A quiet border that joins selected controls to the indigo family.
-
-### Neutral
-
-- **Cool Shell:** The page field around the tool.
-- **Clean Surface:** The contiguous pane and control surface.
-- **Muted Surface:** Hover, expanded, and secondary-area fill.
-- **Workbench Ink:** Primary labels and content.
-- **Control Slate:** Strong secondary control text and compact facts.
-- **Command Ink:** Install-command text against a white control.
-- **Muted Slate:** Explanatory text and ordinary metadata.
-- **Quiet Slate:** Subordinate labels, frame counts, and captions.
-- **Rule Gray / Strong Rule Gray:** Structural dividers; the stronger value closes major containers and regions.
-- **Pixel Stage / Pixel Grid:** The pale preview field and its low-contrast checker pattern.
-
-### Status
-
-- **Ready Emerald:** Successful readiness, privacy reassurance, and exact-contract confirmation.
-- **Ready Wash:** Copied-command confirmation without introducing another action color.
-- **Error Crimson:** Load and source failures in the status rail.
-
-### Named Rules
-
-**The One Accent Rule.** Indigo is the only interactive accent; semantic green and red communicate state and never compete for navigation or selection.
-
-**The Artifact Contrast Rule.** Pixel artwork belongs on a pale checker stage that reveals transparent edges while keeping the entire workbench visibly light.
-
-## Typography
-
-**Display Font:** System UI sans-serif
-**Body Font:** System UI sans-serif
-**Brand Font:** Avenir Next (with Avenir and system sans-serif fallbacks)
-**Label/Mono Font:** UI monospace (with SFMono-Regular and Consolas fallbacks)
-
-**Character:** The system type stack keeps the workbench native, compact, and immediately readable. Avenir Next appears only in the product brand; monospace is reserved for commands, dimensions, row and frame numbers, and other machine-readable data.
-
-### Hierarchy
-
-- **Display:** A tightly tracked system heading for the documentation handoff, never the opening frame of the tool.
-- **Brand:** A compact, confident product signature limited to the rail.
-- **Body:** Calm explanatory copy with generous leading and a practical reading width.
-- **UI:** Dense pane headings, button labels, and short supporting instructions.
-- **Data:** Compact commands and exact atlas facts that benefit from aligned technical forms.
-
-### Named Rules
-
-**The Functional Mono Rule.** Use monospace only when the content is executable, numeric, versioned, or structurally exact; prose and ordinary labels remain system UI.
-
-**The Singular Brand Face Rule.** Avenir Next is a product-name accent, not a heading system.
+- Cool daylight page field with low-opacity indigo and green atmosphere.
+- White glass-like controls with cool gray borders and restrained shadows.
+- Near-black typography with a very large, tightly tracked Chinese headline.
+- Indigo for action, focus, and selection; green only for live and enabled state.
+- Pixel artwork remains crisp and colorful without a dark inspection stage.
 
 ## Layout
 
-The system uses one broad application shell capped at 94rem, with fluid outer gutters and compact pane padding. Operational surfaces favor contiguous regions separated by rules rather than floating cards. A dominant artifact region may take roughly twice the width of its adjacent inspectors, while narrow control panes keep lists dense and scannable.
+Desktop uses a two-part stage: the promise, behavior controls, pet library, and source mapping occupy
+the left; one dominant habitat occupies the right. The shell is capped at 1180px and vertically
+centered in the first viewport.
 
-At 60rem, secondary inspectors move below the main working row. At 48rem, the live artifact becomes the first stacked region, followed by source controls, state controls, and horizontally scrollable frame content. At 30rem, metadata stacks and secondary state details may collapse. Responsive reflow preserves the relationship between source, artifact, state, and exact data; it does not shrink the live proof into a thumbnail.
+Below 880px, the experience becomes a single column. The complete operating story stays in order:
+promise, triggers, floating mode, picker, source mapping, then habitat. The pet library scrolls
+horizontally rather than widening the page. Below 520px, metadata stacks and the habitat uses the
+mobile corner token.
 
-Spacing follows a compact rhythm for controls and a larger two-step rhythm between major regions. Dense items use the small spacing tokens; panels use the large token; major handoffs rely on fluid whitespace rather than extra card chrome.
+### Named rules
 
-### Named Rules
+**Behavior Before Contract.** Visitors meet actions before atlas terminology. The mapping card
+explains the contract only after the pet can be operated.
 
-**The Contiguous Tool Rule.** Related controls and previews share one bordered working surface, with dividers carrying hierarchy inside it.
+**One Dominant Habitat.** Never duplicate the live pet into several preview panes. Picker thumbnails
+are navigation, not secondary stages.
 
-**The Artifact-First Reflow Rule.** On narrow screens, place the live artifact before its controls while keeping the controls in their causal order.
+**No Horizontal Page Drift.** Narrow screens may scroll the pet picker, but the document itself must
+remain within the viewport.
 
-## Elevation & Depth
+## Type
 
-The system is flat and structural by default. Surface hierarchy comes from cool tonal shifts, crisp borders, and the pale checker stage rather than card shadows. Small shadows are reserved for active operational signals: the live status dot, the current frame, and the rendered pet itself.
+The system uses the native UI sans stack so Chinese and Latin text share one practical voice. The
+headline supplies character through scale, weight, and tight tracking instead of a separate display
+family. Uppercase product labeling uses wide tracking; source states remain ordinary sans text so
+they stay approachable rather than turning the page into a diagnostic console.
 
-### Shadow Vocabulary
+The three responsive display sizes are intentional tokens because line breaks are part of the
+composition. Supporting copy uses generous leading; controls and facts remain compact.
 
-- **Rendered Artifact:** A soft drop shadow separates sprite pixels from the stage without smoothing them.
-- **Ready Signal:** A compact emerald glow makes live status visible at a glance.
-- **Error Signal:** A compact crimson glow preserves the same status geometry on failure.
-- **Current Frame:** A restrained indigo shadow marks playback position without lifting every frame cell.
+## Color and state
 
-### Named Rules
+The palette is restrained: cool neutrals plus indigo. Green appears only when a pet is live or
+floating mode is enabled.
 
-**The Flat-by-Default Rule.** Resting surfaces do not cast shadows; depth appears only where live state or the artifact itself needs separation.
-
-## Shapes
-
-The form language is gently squared and tool-like. Fields use the tightest corners, ordinary controls use a slightly softer radius, selectable rows and disclosures gain one additional step, and the outer workbench receives the broadest corner. Pills are reserved for compact counts or current-value badges; status markers remain circular. One-pixel borders define most silhouettes.
-
-Pixel canvases and thumbnails preserve hard edges through pixelated rendering. The stage clips its contents to the containing workbench instead of introducing a second decorative frame.
+- `page` owns the full viewport.
+- `surface` owns controls, mapping, and habitat.
+- `accent` marks selected pets, focus, arrows, and interactive hover.
+- `accent-soft` is the selected/hover wash.
+- `green` and `green-soft` indicate a running pet or enabled switch.
+- Borders carry most component structure; shadows belong to the habitat and selected pet only.
 
 ## Components
 
-### Buttons
+### Behavior chips
 
-- **Shape:** Compact rounded rectangles with one-pixel borders and control-density padding.
-- **Primary:** White text on Workbench Indigo; hover moves to Deep Workbench Indigo without displacement.
-- **Hover / Focus:** Color transitions are short and ease out; keyboard focus uses a visible indigo outline outside the control.
-- **Secondary:** Install-command controls stay white with a strong neutral border and use Ready Wash only after copying.
+Pill buttons are lightweight semantic triggers. Hover and focus move them one pixel upward, change
+the border to indigo, and apply the accent wash. They never look like primary navigation.
 
-### Selectable Rows
+### Floating-mode switch
 
-- **Style:** Pet and state rows begin neutral, gain a muted hover fill, and use Selection Wash plus Selection Line when pressed.
-- **State:** A small circular marker repeats the same indigo selection signal at the far edge.
-- **Content:** Human labels use system UI; row numbers, dimensions, and frame counts use data type.
+The switch is a full-width explanatory row rather than a bare toggle. Its copy names the mode and
+its consequence; the control turns green only when enabled. The status word may disappear on narrow
+screens, but the switch geometry and accessible checked state remain.
 
-### Cards / Containers
+### Pet picker
 
-- **Corner Style:** Major containers use the broad panel shape; internal regions meet edge-to-edge.
-- **Background:** Clean Surface for controls and panes, Pixel Stage for artwork.
-- **Shadow Strategy:** Flat at rest; see Elevation & Depth for state-only exceptions.
-- **Border:** Strong rules close the workbench and timeline, while ordinary rules divide panes and groups.
-- **Internal Padding:** Compact and consistent around working controls.
+Pet options expose one atlas frame at 48×52 CSS pixels. The row scrolls horizontally, selected state
+uses an indigo border and wash, and every option keeps its human-readable label. Local and bundled
+catalog entries use exactly the same visual treatment.
 
-### Inputs / Fields
+### Source mapping
 
-- **Style:** White fill, strong neutral stroke, tight rounded corners, and system UI text.
-- **Focus:** The shared external indigo outline applies without shifting layout.
-- **Error / Disabled:** Errors are reported in the persistent status rail; disabled source options retain their geometry and lower opacity.
+The mapping card reads left to right from original Codex animation to semantic web behavior. It is
+evidence, not a control. Long source names truncate instead of resizing the composition.
 
-### Navigation
+### Habitat
 
-- **Style:** A compact sticky product rail places the brand first, install command next to documentation access, and repository access last. Text links are neutral at rest and use Deep Workbench Indigo on hover.
-- **Mobile:** The rail becomes static, descriptive copy wraps to a second row, and low-priority text links yield before the install command.
+The habitat is the strongest container: a large white-to-cool gradient surface with a 34px corner,
+one strong border, and a broad cool shadow. Indigo and green ambient circles keep the empty field
+alive without competing with the sprite. Metadata stays attached below the stage.
 
-### Source Disclosure
+### Direct manipulation
 
-Expandable source tools look like ordinary bordered controls at rest. Opening a tool changes the summary to Muted Surface, adds a dividing rule, and reveals a compact form; the chevron rotates while reduced-motion preferences suppress the ornamental transition.
+The pet shell owns hover, click, and drag input. A bottom-right resize handle becomes visible on
+hover, keyboard focus, touch devices, or during resizing. Floating mode removes the habitat chrome,
+keeps the page readable below, and makes only the pet accept pointer input.
 
-### Live Status
+## Motion and accessibility
 
-Status stays attached below the artifact. The dot, message, atlas dimensions, and grid present one continuous operational readout, with emerald for readiness and crimson for failure.
+- Control transitions use 120–180ms timing.
+- Pet position uses an 80ms linear transition to keep dragging connected without feeling rigid.
+- Reduced-motion preference collapses ornamental transitions and animation frame progression.
+- All controls have visible focus outlines and semantic labels.
+- Resize supports arrow keys plus Home and End.
+- Escape exits floating mode.
+- Light theme, contrast, and focus are invariant across system theme preferences.
 
-## Do's and Don'ts
+## Do and don't
 
-### Do:
+### Do
 
-- **Do** let the live artifact dominate any operational surface built from this system.
-- **Do** use contiguous light panes and one-pixel rules to show relationships between tools.
-- **Do** reserve Workbench Indigo for action, selection, focus, and current playback state.
-- **Do** keep pixel artwork crisp and place it on a pale, low-contrast grid when it needs inspection.
-- **Do** pair exact atlas facts with monospace while keeping explanatory language in system UI.
-- **Do** keep motion short and state-driven, and honor reduced-motion preferences for ornamental transitions.
+- Let direct pet behavior lead the page.
+- Keep the source-state mapping visible and truthful.
+- Use one bright habitat and allow pixel art to provide most of the color.
+- Keep local-pet discovery development-only and visually identical to bundled pets.
+- Preserve responsive line breaks and horizontal picker containment.
 
-### Don't:
+### Don't
 
-- **Don't** turn the interface into a generic marketing hero before the working artifact appears.
-- **Don't** scatter related controls into elevated cards or decorate every surface with shadows.
-- **Don't** use Avenir Next beyond the product brand or use monospace as a general interface voice.
-- **Don't** use emerald or crimson as competing action colors.
-- **Don't** smooth pixel canvases, crop exact frame evidence, or hide operational errors in transient decoration.
+- Reintroduce the three-pane atlas workbench as the opening experience.
+- Add a dark-theme media override; this surface is intentionally light.
+- Turn green into a general action color.
+- Smooth, crop, or recolor the pet artwork.
+- Hide placement ownership inside the runtime; the host owns page position.

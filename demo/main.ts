@@ -1,468 +1,360 @@
+import { CODEX_ATLAS, loadCodexPet, PetRuntime, type PetBehavior } from "../src/index.js";
 import {
-  DEFAULT_ANIMATIONS,
-  SPRITE_PET_LAYOUT,
-  SPRITE_PET_STATES,
-  SpritePetWidget,
-  loadSpritePet,
-  loadSpritePetFiles,
-  type SpritePetSource,
-  type SpritePetState,
-} from "../src/index.js";
-import { loadBuiltInPetIndex, type BuiltInPet } from "./built-ins.js";
+  getCatalogDownloadUrl,
+  getCatalogSpritesheetUrl,
+  loadPetCatalog,
+  mergePetCatalogs,
+  type PetCatalogEntry,
+} from "./catalog.js";
+import {
+  clampPetPosition,
+  getFloatingDockPosition,
+  movePetPosition,
+  type PetPosition,
+} from "./pet-position";
+import { clampPetWidth, getResizedPetWidth, type PetResizeSession } from "./pet-resize";
 
-const canvas = document.querySelector<HTMLCanvasElement>("#pet-canvas");
-const stage = document.querySelector<HTMLElement>("#stage");
-const status = document.querySelector<HTMLElement>("#status");
-const stateControls = document.querySelector<HTMLElement>("#state-controls");
-const activeStateValue = document.querySelector<HTMLElement>("#active-state-value");
-const builtInPetSelect = document.querySelector<HTMLSelectElement>("#built-in-pet");
-const builtInPetList = document.querySelector<HTMLElement>("#built-in-pet-list");
-const builtInPetDescription = document.querySelector<HTMLElement>("#built-in-pet-description");
-const sourceCount = document.querySelector<HTMLElement>("#source-count");
-const urlForm = document.querySelector<HTMLFormElement>("#url-form");
-const manifestUrl = document.querySelector<HTMLInputElement>("#manifest-url");
-const fileForm = document.querySelector<HTMLFormElement>("#file-form");
-const manifestFile = document.querySelector<HTMLInputElement>("#manifest-file");
-const spritesheetFile = document.querySelector<HTMLInputElement>("#spritesheet-file");
-const atlasSize = document.querySelector<HTMLElement>("#atlas-size");
-const cursorHint = document.querySelector<HTMLElement>(".cursor-hint");
-const playbackToggle = document.querySelector<HTMLButtonElement>("#playback-toggle");
-const currentFrame = document.querySelector<HTMLElement>("#current-frame");
-const timeline = document.querySelector<HTMLElement>("#timeline-frames");
-const copyFeedback = document.querySelector<HTMLElement>("#copy-feedback");
-const floatingToggle = document.querySelector<HTMLButtonElement>("#floating-toggle");
-const floatingToggleLabel = document.querySelector<HTMLElement>("#floating-toggle span");
-const floatingPlaceholder = document.querySelector<HTMLElement>("#floating-placeholder");
+const FLOATING_MODE_STORAGE_KEY = "sprite-pet-page-floating";
+const FLOATING_VIEWPORT_MARGIN = 24;
+const PET_SCALE_STORAGE_KEY = "sprite-pet-scale";
+const DEFAULT_PET_SCALE = 1;
+const MIN_PET_WIDTH = 80;
+const MAX_PET_WIDTH = 224;
+const PET_WIDTH_KEYBOARD_STEP = 8;
 
-if (
-  canvas === null ||
-  stage === null ||
-  status === null ||
-  stateControls === null ||
-  activeStateValue === null ||
-  builtInPetSelect === null ||
-  builtInPetList === null ||
-  builtInPetDescription === null ||
-  sourceCount === null ||
-  urlForm === null ||
-  manifestUrl === null ||
-  fileForm === null ||
-  manifestFile === null ||
-  spritesheetFile === null ||
-  atlasSize === null ||
-  cursorHint === null ||
-  playbackToggle === null ||
-  currentFrame === null ||
-  timeline === null ||
-  copyFeedback === null ||
-  floatingToggle === null ||
-  floatingToggleLabel === null ||
-  floatingPlaceholder === null
-) {
-  throw new Error("The demo page is missing a required element.");
-}
-
-const stateLabels: Record<SpritePetState, string> = {
-  idle: "Idle",
-  "move-right": "Move right",
-  "move-left": "Move left",
-  wave: "Wave",
-  jump: "Jump",
-  failure: "Failure",
-  waiting: "Waiting",
-  working: "Working",
-  reviewing: "Reviewing",
+const getElement = <ElementType extends HTMLElement>(id: string) => {
+  const element = document.getElementById(id);
+  if (element === null) throw new Error(`Missing demo element #${id}.`);
+  return element as ElementType;
 };
 
-const installCommand = "pnpm add sprite-pet";
-const demoFloatingOptions = { minWidth: 120, maxWidth: 520 } as const;
+const behaviorLabels = {
+  idle: "待机",
+  active: "活动",
+  hover: "关注你",
+  click: "回应点击",
+  drag: "跟随拖动",
+  sleep: "休息",
+  surprised: "受惊",
+  celebrate: "庆祝",
+} as const satisfies Record<PetBehavior, string>;
 
-let renderer: SpritePetWidget | null = null;
-let builtInPets: BuiltInPet[] = [];
+const petCard = getElement<HTMLElement>("pet-card");
+const petStage = getElement<HTMLDivElement>("pet-stage");
+const petShell = getElement<HTMLDivElement>("pet-shell");
+const petInteractionTarget = getElement<HTMLButtonElement>("pet-interaction-target");
+const petSprite = getElement<HTMLSpanElement>("pet-sprite");
+const petResizeHandle = getElement<HTMLButtonElement>("pet-resize-handle");
+const petName = getElement<HTMLElement>("pet-name");
+const petCount = getElement<HTMLElement>("pet-count");
+const petPicker = getElement<HTMLDivElement>("pet-picker");
+const petHint = getElement<HTMLElement>("pet-hint");
+const petDownload = getElement<HTMLAnchorElement>("pet-download");
+const floatingToggle = getElement<HTMLButtonElement>("floating-toggle");
+const floatingStatus = getElement<HTMLElement>("floating-status");
+const behaviorState = getElement<HTMLElement>("behavior-state");
+const sourceState = getElement<HTMLElement>("source-state");
+let position: PetPosition = { x: 0, y: 0 };
+let runtime: PetRuntime | undefined;
+let activationSequence = 0;
+let floatingMode = false;
+let petScale = DEFAULT_PET_SCALE;
+let resizeSession: (PetResizeSession & { pointerId: number }) | undefined;
+let bundledPetsById = new Map<string, PetCatalogEntry>();
 
-const petButtons = new Map<string, HTMLButtonElement>();
-const stateButtons = new Map<SpritePetState, HTMLButtonElement>();
-
-const timelineFrames = Array.from({ length: SPRITE_PET_LAYOUT.columns }, (_value, frame) => {
-  const element = document.createElement("div");
-  element.className = "frame-cell";
-  element.dataset.frame = String(frame);
-  element.setAttribute("role", "img");
-  element.setAttribute("aria-label", `Frame ${frame + 1}`);
-
-  const frameNumber = document.createElement("span");
-  frameNumber.textContent = String(frame + 1).padStart(2, "0");
-
-  const frameCanvas = document.createElement("canvas");
-  frameCanvas.width = SPRITE_PET_LAYOUT.cellWidth;
-  frameCanvas.height = SPRITE_PET_LAYOUT.cellHeight;
-  frameCanvas.setAttribute("aria-hidden", "true");
-
-  element.append(frameNumber, frameCanvas);
-  timeline.append(element);
-  return { canvas: frameCanvas, element };
-});
-
-const setStatus = (message: string, isError = false) => {
-  status.textContent = message;
-  status.dataset.tone = isError ? "error" : "ready";
-  status.parentElement?.setAttribute("data-tone", isError ? "error" : "ready");
+const getStageAndPetSizes = () => {
+  const stageRect = petStage.getBoundingClientRect();
+  const shellRect = petShell.getBoundingClientRect();
+  return {
+    stage: { width: stageRect.width, height: stageRect.height },
+    pet: { width: shellRect.width, height: shellRect.height },
+  };
 };
 
-const setPetDescription = (description: string) => {
-  builtInPetDescription.textContent = description;
+const applyPosition = (nextPosition: PetPosition) => {
+  position = nextPosition;
+  petShell.style.translate = `${position.x}px ${position.y}px`;
 };
 
-const setSourceLoading = (isLoading: boolean) => {
-  builtInPetSelect.disabled = isLoading;
-  for (const button of petButtons.values()) button.disabled = isLoading;
+const updatePosition = (deltaX: number, deltaY: number) => {
+  const { stage, pet } = getStageAndPetSizes();
+  applyPosition(movePetPosition(position, { x: deltaX, y: deltaY }, stage, pet));
 };
 
-const updatePetButtons = () => {
-  for (const [petId, button] of petButtons) {
-    button.setAttribute("aria-pressed", String(petId === builtInPetSelect.value));
-  }
-};
-
-const updateStateButtons = (state: SpritePetState) => {
-  activeStateValue.textContent = stateLabels[state];
-  for (const [buttonState, button] of stateButtons) {
-    button.setAttribute("aria-pressed", String(buttonState === state));
-  }
-};
-
-const renderTimeline = (source: SpritePetSource, state: SpritePetState) => {
-  const row = DEFAULT_ANIMATIONS[state].row;
-  for (const [frame, frameView] of timelineFrames.entries()) {
-    const context = frameView.canvas.getContext("2d");
-    if (context === null) continue;
-
-    context.imageSmoothingEnabled = false;
-    context.clearRect(0, 0, frameView.canvas.width, frameView.canvas.height);
-    context.drawImage(
-      source.image,
-      frame * SPRITE_PET_LAYOUT.cellWidth,
-      row * SPRITE_PET_LAYOUT.cellHeight,
-      SPRITE_PET_LAYOUT.cellWidth,
-      SPRITE_PET_LAYOUT.cellHeight,
-      0,
-      0,
-      SPRITE_PET_LAYOUT.cellWidth,
-      SPRITE_PET_LAYOUT.cellHeight,
-    );
-  }
-};
-
-const getVisibleFrameOverrides = (source: SpritePetSource) => {
-  const scratch = document.createElement("canvas");
-  scratch.width = SPRITE_PET_LAYOUT.cellWidth;
-  scratch.height = SPRITE_PET_LAYOUT.cellHeight;
-  const context = scratch.getContext("2d", { willReadFrequently: true });
-  if (context === null) return undefined;
-
-  const overrides: Partial<Record<SpritePetState, { frameCount: number }>> = {};
-  try {
-    for (const state of SPRITE_PET_STATES) {
-      const row = DEFAULT_ANIMATIONS[state].row;
-      let frameCount = SPRITE_PET_LAYOUT.columns;
-
-      while (frameCount > 1) {
-        context.clearRect(0, 0, scratch.width, scratch.height);
-        context.drawImage(
-          source.image,
-          (frameCount - 1) * SPRITE_PET_LAYOUT.cellWidth,
-          row * SPRITE_PET_LAYOUT.cellHeight,
-          SPRITE_PET_LAYOUT.cellWidth,
-          SPRITE_PET_LAYOUT.cellHeight,
-          0,
-          0,
-          SPRITE_PET_LAYOUT.cellWidth,
-          SPRITE_PET_LAYOUT.cellHeight,
-        );
-        const pixels = context.getImageData(0, 0, scratch.width, scratch.height).data;
-        let hasVisiblePixel = false;
-        for (let alpha = 3; alpha < pixels.length; alpha += 4) {
-          if ((pixels[alpha] ?? 0) > 0) {
-            hasVisiblePixel = true;
-            break;
-          }
-        }
-        if (hasVisiblePixel) break;
-        frameCount -= 1;
-      }
-
-      overrides[state] = { frameCount };
-    }
-  } catch {
-    return undefined;
-  }
-
-  return overrides;
-};
-
-const mountSource = (source: SpritePetSource) => {
-  const previousSnapshot = renderer?.getSnapshot();
-  renderer?.destroy();
-  const animationOverrides = getVisibleFrameOverrides(source);
-  renderer = new SpritePetWidget({
-    canvas,
-    source,
-    width: previousSnapshot?.width ?? Math.min(320, Math.max(240, stage.clientWidth * 0.52)),
-    initialState: "idle",
-    imageSmoothing: false,
-    floating:
-      previousSnapshot === undefined
-        ? demoFloatingOptions
-        : previousSnapshot.floating
-          ? { ...demoFloatingOptions, position: previousSnapshot.position }
-          : false,
-    ...(animationOverrides === undefined ? {} : { animations: animationOverrides }),
-  });
-  updateStateButtons("idle");
-  renderTimeline(source, "idle");
-  canvas.dataset.ready = "true";
-  canvas.dataset.petId = source.manifest.id;
-  atlasSize.textContent = `${source.imageWidth} × ${source.imageHeight}`;
-  cursorHint.hidden = false;
-  delete canvas.dataset.lookDirection;
-  setStatus(
-    renderer.getSnapshot().floating
-      ? `${source.manifest.displayName} · floating and draggable`
-      : `${source.manifest.displayName} · 8×9 atlas`,
+const resetPetPosition = () => {
+  const { stage, pet } = getStageAndPetSizes();
+  applyPosition(
+    floatingMode ? getFloatingDockPosition(stage, pet, FLOATING_VIEWPORT_MARGIN) : { x: 0, y: 0 },
   );
-  setPetDescription(source.manifest.description ?? "Portable sprite-pet atlas bundle.");
-  syncFloatingUi();
 };
 
-const syncFloatingUi = () => {
-  const floating = renderer?.getSnapshot().floating ?? false;
-  floatingToggle.dataset.floating = String(floating);
-  floatingToggle.setAttribute("aria-pressed", String(floating));
-  floatingToggle.setAttribute("aria-label", floating ? "Dock preview" : "Float pet");
-  floatingToggleLabel.textContent = floating ? "Dock preview" : "Float pet";
-  floatingPlaceholder.hidden = !floating;
-  stage.dataset.floating = String(floating);
+const clampPetToStage = () => {
+  const { stage, pet } = getStageAndPetSizes();
+  applyPosition(clampPetPosition(position, stage, pet));
 };
 
-const loadSelectedPet = async () => {
-  setSourceLoading(true);
+const storeFloatingMode = (enabled: boolean) => {
   try {
-    const pet = builtInPets.find(({ id }) => id === builtInPetSelect.value);
-    if (pet === undefined) throw new Error("The selected built-in pet is unavailable.");
-
-    setStatus(`Loading ${pet.displayName}…`);
-    mountSource(await loadSpritePet(new URL(pet.manifestPath, window.location.href)));
-    setPetDescription(pet.description);
-    updatePetButtons();
-  } finally {
-    setSourceLoading(false);
+    window.localStorage.setItem(FLOATING_MODE_STORAGE_KEY, String(enabled));
+  } catch {
+    // Storage can be unavailable in privacy-restricted embeds; the switch still works for this page.
   }
 };
 
-const createBuiltInPetButton = (pet: BuiltInPet) => {
-  const button = document.createElement("button");
-  button.className = "pet-option";
-  button.type = "button";
-  button.setAttribute("aria-label", `${pet.displayName}, 8 by 9 atlas`);
+const readFloatingMode = () => {
+  try {
+    return window.localStorage.getItem(FLOATING_MODE_STORAGE_KEY) === "true";
+  } catch {
+    return false;
+  }
+};
 
-  const thumbnail = document.createElement("span");
-  thumbnail.className = "pet-thumbnail";
-  const manifestPath = new URL(pet.manifestPath, window.location.href);
-  const spritesheetPath = new URL("./spritesheet.webp", manifestPath);
-  thumbnail.style.backgroundImage = `url("${spritesheetPath.href}")`;
-  thumbnail.style.backgroundSize = "800% 900%";
+const setFloatingMode = (enabled: boolean, persist = true) => {
+  floatingMode = enabled;
+  document.body.classList.toggle("page-floating-mode", enabled);
+  floatingToggle.setAttribute("aria-checked", String(enabled));
+  floatingStatus.textContent = enabled ? "开启" : "关闭";
+  if (persist) storeFloatingMode(enabled);
+  requestAnimationFrame(resetPetPosition);
+};
 
-  const copy = document.createElement("span");
-  copy.className = "pet-option__copy";
-  const name = document.createElement("strong");
-  name.textContent = pet.displayName;
-  const contract = document.createElement("small");
-  contract.textContent = "8×9 atlas";
-  copy.append(name, contract);
+const clampPetScale = (scale: number) => {
+  if (!Number.isFinite(scale)) return DEFAULT_PET_SCALE;
+  return (
+    clampPetWidth(scale * CODEX_ATLAS.frameWidth, MIN_PET_WIDTH, MAX_PET_WIDTH) /
+    CODEX_ATLAS.frameWidth
+  );
+};
 
-  const marker = document.createElement("span");
-  marker.className = "selection-marker";
-  marker.setAttribute("aria-hidden", "true");
+const storePetScale = (scale: number) => {
+  try {
+    window.localStorage.setItem(PET_SCALE_STORAGE_KEY, String(scale));
+  } catch {
+    // The live size control remains available when browser storage is restricted.
+  }
+};
 
-  button.append(thumbnail, copy, marker);
-  button.addEventListener("click", () => {
-    builtInPetSelect.value = pet.id;
-    updatePetButtons();
-    void loadSelectedPet().catch((error: unknown) => {
-      setStatus(error instanceof Error ? error.message : "Unable to load the selected pet.", true);
+const readPetScale = () => {
+  try {
+    const storedScale = window.localStorage.getItem(PET_SCALE_STORAGE_KEY);
+    return storedScale === null ? DEFAULT_PET_SCALE : clampPetScale(Number(storedScale));
+  } catch {
+    return DEFAULT_PET_SCALE;
+  }
+};
+
+const setPetScale = (scale: number, persist = true) => {
+  petScale = clampPetScale(scale);
+  const renderedWidth = Math.round(petScale * CODEX_ATLAS.frameWidth);
+  petResizeHandle.setAttribute("aria-label", `调节宠物大小，当前 ${renderedWidth} 像素`);
+  petResizeHandle.title = `${renderedWidth}px`;
+  if (persist) storePetScale(petScale);
+  if (runtime === undefined) return;
+
+  runtime.setScale(petScale);
+  requestAnimationFrame(clampPetToStage);
+};
+
+const updateSelectedPet = (selectedId: string) => {
+  for (const option of petPicker.querySelectorAll<HTMLButtonElement>("[data-pet-id]")) {
+    const selected = option.dataset.petId === selectedId;
+    option.classList.toggle("is-selected", selected);
+    option.setAttribute("aria-pressed", String(selected));
+  }
+};
+
+const updatePetDownload = (entry: PetCatalogEntry) => {
+  const bundledEntry = bundledPetsById.get(entry.id);
+  const isBundledEntry = bundledEntry?.manifestPath === entry.manifestPath;
+  petDownload.hidden = !isBundledEntry;
+  if (!isBundledEntry) {
+    petDownload.removeAttribute("href");
+    petDownload.removeAttribute("download");
+    petDownload.removeAttribute("aria-label");
+    return;
+  }
+
+  petDownload.href = getCatalogDownloadUrl(entry, window.location.href);
+  petDownload.download = `${entry.id}.zip`;
+  petDownload.setAttribute("aria-label", `下载 ${entry.displayName} 宠物包`);
+};
+
+const activatePet = async (entry: PetCatalogEntry) => {
+  const sequence = ++activationSequence;
+  petCard.dataset.loading = "true";
+  petHint.textContent = `正在唤醒 ${entry.displayName}…`;
+
+  try {
+    const manifestUrl = new URL(entry.manifestPath, window.location.href).toString();
+    const spec = await loadCodexPet(manifestUrl);
+    if (sequence !== activationSequence) return;
+
+    runtime?.destroy();
+    petSprite.removeAttribute("style");
+    petName.textContent = spec.displayName;
+    petInteractionTarget.setAttribute("aria-label", `与 ${spec.displayName} 互动`);
+    updatePetDownload(entry);
+    petHint.textContent = "试试靠近、点击、拖动，或调节右下角大小";
+    sourceState.textContent = "idle";
+    behaviorState.textContent = behaviorLabels.idle;
+
+    runtime = new PetRuntime({
+      spec,
+      interactionElement: petShell,
+      spriteElement: petSprite,
+      reducedMotion: window.matchMedia("(prefers-reduced-motion: reduce)").matches,
+      scale: petScale,
+      onDragMove: ({ deltaX, deltaY }) => updatePosition(deltaX, deltaY),
+      onStateChange: ({ behavior }) => {
+        behaviorState.textContent = behaviorLabels[behavior];
+        requestAnimationFrame(() => {
+          sourceState.textContent = petSprite.dataset.sourceState ?? "idle";
+        });
+      },
     });
-  });
-  petButtons.set(pet.id, button);
+    runtime.start();
+    resetPetPosition();
+    updateSelectedPet(entry.id);
+
+    const pageUrl = new URL(window.location.href);
+    pageUrl.searchParams.set("pet", entry.id);
+    window.history.replaceState(null, "", pageUrl);
+    Object.assign(window, { petRuntime: runtime });
+  } catch (error) {
+    if (sequence !== activationSequence) return;
+    petHint.textContent = error instanceof Error ? error.message : "宠物加载失败。";
+    console.error(error);
+  } finally {
+    if (sequence === activationSequence) delete petCard.dataset.loading;
+  }
+};
+
+const createPetOption = (entry: PetCatalogEntry) => {
+  const button = document.createElement("button");
+  button.type = "button";
+  button.className = "pet-option";
+  button.dataset.petId = entry.id;
+  button.setAttribute("aria-pressed", "false");
+  button.title = entry.description;
+
+  const preview = document.createElement("span");
+  preview.className = "pet-option-preview";
+  preview.style.backgroundImage = `url("${getCatalogSpritesheetUrl(entry, window.location.href)}")`;
+  preview.setAttribute("aria-hidden", "true");
+
+  const label = document.createElement("span");
+  label.className = "pet-option-label";
+  label.textContent = entry.displayName;
+  button.append(preview, label);
+  button.addEventListener("click", () => void activatePet(entry));
   return button;
 };
 
-for (const [row, state] of SPRITE_PET_STATES.entries()) {
-  const button = document.createElement("button");
-  button.className = "state-button";
-  button.type = "button";
-  button.dataset.state = state;
-  button.setAttribute("aria-label", stateLabels[state]);
-  button.setAttribute("aria-pressed", String(state === "idle"));
-
-  const rowNumber = document.createElement("span");
-  rowNumber.className = "state-row";
-  rowNumber.textContent = String(row + 1).padStart(2, "0");
-  const label = document.createElement("strong");
-  label.textContent = stateLabels[state];
-  const frameCount = document.createElement("small");
-  frameCount.textContent = "8 frames";
-  const marker = document.createElement("span");
-  marker.className = "selection-marker";
-  marker.setAttribute("aria-hidden", "true");
-
-  button.append(rowNumber, label, frameCount, marker);
-  button.addEventListener("click", () => {
-    renderer?.setState(state);
-    if (renderer !== null) renderTimeline(renderer.source, state);
-    updateStateButtons(state);
-    setStatus(`${renderer?.source.manifest.displayName ?? "Pet"} · ${stateLabels[state]}`);
-  });
-  stateButtons.set(state, button);
-  stateControls.append(button);
-}
-
-stage.addEventListener("pointermove", (event) => {
-  if (renderer?.getSnapshot().floating) return;
-  if (renderer?.lookAt(event.clientX, event.clientY)) {
-    const direction = renderer.getSnapshot().lookDirection;
-    canvas.dataset.lookDirection = String(direction);
-  }
-});
-
-stage.addEventListener("pointerleave", () => {
-  if (renderer?.getSnapshot().floating) return;
-  renderer?.clearLookDirection();
-  delete canvas.dataset.lookDirection;
-});
-
-globalThis.addEventListener("pointermove", (event) => {
-  if (!renderer?.getSnapshot().floating) return;
-  if (renderer.lookAt(event.clientX, event.clientY)) {
-    canvas.dataset.lookDirection = String(renderer.getSnapshot().lookDirection);
-  }
-});
-
-floatingToggle.addEventListener("click", () => {
-  if (renderer === null) return;
-  const { floating } = renderer.getSnapshot();
-  renderer.setFloating(floating ? false : demoFloatingOptions);
-  syncFloatingUi();
-  setStatus(
-    floating
-      ? `${renderer.source.manifest.displayName} · inline preview`
-      : `${renderer.source.manifest.displayName} · floating and draggable`,
-  );
-});
-
-playbackToggle.addEventListener("click", () => {
-  if (renderer === null) return;
-  if (renderer.getSnapshot().playing) renderer.pause();
-  else renderer.play();
-});
-
-urlForm.addEventListener("submit", async (event) => {
-  event.preventDefault();
-  if (manifestUrl.value === "") return;
-
-  setStatus("Loading remote pet…");
+const loadOptionalCatalog = async (url: string) => {
   try {
-    mountSource(await loadSpritePet(manifestUrl.value));
-    builtInPetSelect.value = "";
-    updatePetButtons();
-  } catch (error) {
-    setStatus(error instanceof Error ? error.message : "Unable to load the remote pet.", true);
+    return await loadPetCatalog(url);
+  } catch {
+    return [];
   }
-});
-
-fileForm.addEventListener("submit", async (event) => {
-  event.preventDefault();
-  const selectedManifest = manifestFile.files?.[0];
-  const selectedSpritesheet = spritesheetFile.files?.[0];
-  if (selectedManifest === undefined || selectedSpritesheet === undefined) return;
-
-  setStatus("Reading local pet…");
-  try {
-    mountSource(
-      await loadSpritePetFiles({
-        manifest: selectedManifest,
-        spritesheet: selectedSpritesheet,
-      }),
-    );
-    builtInPetSelect.value = "";
-    updatePetButtons();
-  } catch (error) {
-    setStatus(error instanceof Error ? error.message : "Unable to read the local pet.", true);
-  }
-});
-
-for (const copyButton of document.querySelectorAll<HTMLButtonElement>("[data-copy-install]")) {
-  copyButton.setAttribute("aria-label", `Copy ${installCommand}`);
-  copyButton.addEventListener("click", async () => {
-    try {
-      await navigator.clipboard.writeText(installCommand);
-      copyButton.dataset.copied = "true";
-      copyButton.setAttribute("aria-label", "Copied install command");
-      copyFeedback.textContent = "Copied";
-      globalThis.setTimeout(() => {
-        delete copyButton.dataset.copied;
-        copyButton.setAttribute("aria-label", `Copy ${installCommand}`);
-        copyFeedback.textContent = "";
-      }, 1800);
-    } catch {
-      copyFeedback.textContent = "Copy unavailable";
-    }
-  });
-}
-
-const syncPlaybackUi = () => {
-  const snapshot = renderer?.getSnapshot();
-  if (snapshot !== undefined) {
-    currentFrame.textContent = String(snapshot.frame + 1);
-    playbackToggle.dataset.playing = String(snapshot.playing);
-    playbackToggle.setAttribute("aria-label", snapshot.playing ? "Pause" : "Play");
-    for (const [frame, frameView] of timelineFrames.entries()) {
-      frameView.element.dataset.current = String(frame === snapshot.frame);
-    }
-  }
-  requestAnimationFrame(syncPlaybackUi);
 };
 
-builtInPetSelect.addEventListener("change", () => {
-  updatePetButtons();
-  void loadSelectedPet().catch((error: unknown) => {
-    setStatus(error instanceof Error ? error.message : "Unable to load the selected pet.", true);
-  });
+setFloatingMode(readFloatingMode(), false);
+floatingToggle.addEventListener("click", () => setFloatingMode(!floatingMode));
+setPetScale(readPetScale(), false);
+
+const finishPetResize = (pointerId: number, target?: HTMLButtonElement) => {
+  if (resizeSession?.pointerId !== pointerId) return;
+  resizeSession = undefined;
+  petShell.classList.remove("is-resizing");
+  document.documentElement.classList.remove("pet-resize-active");
+  if (target?.hasPointerCapture(pointerId) === true) target.releasePointerCapture(pointerId);
+};
+
+const updatePetResize = (event: PointerEvent) => {
+  if (resizeSession?.pointerId !== event.pointerId) return;
+  event.preventDefault();
+  event.stopPropagation();
+  const width = getResizedPetWidth(resizeSession, event.clientX, MIN_PET_WIDTH, MAX_PET_WIDTH);
+  setPetScale(width / CODEX_ATLAS.frameWidth);
+};
+
+petResizeHandle.addEventListener("pointerdown", (event) => {
+  if (event.button !== 0) return;
+  event.preventDefault();
+  event.stopPropagation();
+  petResizeHandle.setPointerCapture(event.pointerId);
+  resizeSession = {
+    pointerId: event.pointerId,
+    startPointerX: event.clientX,
+    startWidth: runtime?.size.width ?? petScale * CODEX_ATLAS.frameWidth,
+  };
+  petShell.classList.add("is-resizing");
+  document.documentElement.classList.add("pet-resize-active");
 });
 
-try {
-  const index = await loadBuiltInPetIndex();
-  builtInPets = index.pets;
-  builtInPetSelect.replaceChildren();
-  builtInPetList.replaceChildren();
+petResizeHandle.addEventListener("pointermove", updatePetResize);
+petResizeHandle.addEventListener("pointerup", (event) => {
+  updatePetResize(event);
+  finishPetResize(event.pointerId, petResizeHandle);
+});
+petResizeHandle.addEventListener("pointercancel", (event) => {
+  event.stopPropagation();
+  finishPetResize(event.pointerId, petResizeHandle);
+});
+petResizeHandle.addEventListener("lostpointercapture", (event) => {
+  finishPetResize(event.pointerId);
+});
+petResizeHandle.addEventListener("click", (event) => {
+  event.preventDefault();
+  event.stopPropagation();
+});
+petResizeHandle.addEventListener("keydown", (event) => {
+  const currentWidth = runtime?.size.width ?? petScale * CODEX_ATLAS.frameWidth;
+  const targetWidth =
+    event.key === "Home"
+      ? MIN_PET_WIDTH
+      : event.key === "End"
+        ? MAX_PET_WIDTH
+        : event.key === "ArrowLeft" || event.key === "ArrowDown"
+          ? currentWidth - PET_WIDTH_KEYBOARD_STEP
+          : event.key === "ArrowRight" || event.key === "ArrowUp"
+            ? currentWidth + PET_WIDTH_KEYBOARD_STEP
+            : undefined;
+  if (targetWidth === undefined) return;
+  event.preventDefault();
+  event.stopPropagation();
+  setPetScale(targetWidth / CODEX_ATLAS.frameWidth);
+});
 
-  for (const pet of builtInPets) {
-    const option = document.createElement("option");
-    option.value = pet.id;
-    option.textContent = pet.displayName;
-    builtInPetSelect.append(option);
-    builtInPetList.append(createBuiltInPetButton(pet));
-  }
-  sourceCount.textContent = String(builtInPets.length);
-  const firstPet = builtInPets[0];
-  if (firstPet === undefined) throw new Error("The built-in gallery is empty.");
-  builtInPetSelect.value = firstPet.id;
+window.addEventListener("resize", clampPetToStage);
 
-  await loadSelectedPet();
-} catch (error) {
-  sourceCount.textContent = "0";
-  builtInPetSelect.replaceChildren();
-  builtInPetList.replaceChildren();
-  setStatus(error instanceof Error ? error.message : "Unable to load the built-in gallery.", true);
+window.addEventListener("keydown", (event) => {
+  if (event.key === "Escape" && floatingMode) setFloatingMode(false);
+});
+
+const [localCatalog, bundledCatalog] = await Promise.all([
+  loadOptionalCatalog("/@local-pets/index.json"),
+  loadOptionalCatalog(new URL("./pets/index.json", window.location.href).toString()),
+]);
+const catalog = mergePetCatalogs(bundledCatalog, localCatalog);
+if (catalog.length === 0) throw new Error("没有发现可用的 Codex Pet 资源。");
+
+bundledPetsById = new Map(bundledCatalog.map((entry) => [entry.id, entry]));
+petPicker.replaceChildren(...catalog.map(createPetOption));
+petCount.textContent = `已发现 ${catalog.length} 只`;
+
+const requestedPetId = new URL(window.location.href).searchParams.get("pet");
+const initialPet =
+  catalog.find(({ id }) => id === requestedPetId) ??
+  catalog.find(({ id }) => id === "usagi") ??
+  catalog[0];
+if (initialPet !== undefined) await activatePet(initialPet);
+
+for (const button of document.querySelectorAll<HTMLButtonElement>("[data-trigger]")) {
+  button.addEventListener("click", () => {
+    const behavior = button.dataset.trigger as PetBehavior;
+    runtime?.trigger(behavior);
+  });
 }
 
-syncPlaybackUi();
+window.addEventListener("beforeunload", () => runtime?.destroy(), { once: true });

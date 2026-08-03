@@ -3,7 +3,7 @@ import { homedir } from "node:os";
 import { basename, join, resolve } from "node:path";
 
 const sourceRoot = resolve(process.argv[2] ?? join(homedir(), ".codex", "pets"));
-const destinationRoot = resolve("demo/public/pets");
+const destinationRoot = resolve("pets");
 
 const isRecord = (value) => typeof value === "object" && value !== null && !Array.isArray(value);
 const makeProjectNeutral = (description) => description.replaceAll("Codex pet", "web pet");
@@ -72,4 +72,6 @@ await writeFile(
   "utf8",
 );
 
-console.log(`Copied ${pets.length} pets from ${sourceRoot} to ${basename(destinationRoot)}.`);
+console.log(
+  `Copied ${pets.length} downloadable pets from ${sourceRoot} to ${basename(destinationRoot)}.`,
+);
