@@ -24,6 +24,7 @@ try {
   assert.ok(packed.files.some(({ path }) => path === "dist/index.d.ts"));
   assert.ok(packed.files.some(({ path }) => path === "LICENSE"));
   assert.ok(!packed.files.some(({ path }) => path.startsWith("demo/")));
+  assert.ok(!packed.files.some(({ path }) => path.startsWith("pets/")));
 
   const consumerRoot = join(temporaryRoot, "consumer");
   await mkdir(consumerRoot);
