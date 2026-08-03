@@ -1,12 +1,10 @@
 import assert from "node:assert/strict";
 import { spawn } from "node:child_process";
-import { join } from "node:path";
 import { after, before, test } from "node:test";
 
 import { chromium } from "playwright";
 
 const demoUrl = "http://127.0.0.1:4173";
-const localPetFixture = process.env.SPRITE_PET_FIXTURE_DIR;
 let server;
 
 const waitForServer = async (attempt = 0) => {
@@ -53,166 +51,130 @@ after(() => {
   server?.kill("SIGTERM");
 });
 
-test("renders, animates, and follows the pointer in Chromium", async () => {
+const openGugaDemo = async (browser, viewport = { width: 1280, height: 900 }) => {
+  const page = await browser.newPage({ viewport, colorScheme: "dark" });
+  await page.goto(`${demoUrl}/?pet=guga`);
+  await page.waitForFunction(
+    () => document.querySelector("#pet-sprite")?.dataset.sourceState !== undefined,
+  );
+  return page;
+};
+
+test("keeps the behavior demo light and selects guga from the query", async () => {
   const browser = await chromium.launch({ headless: true });
   try {
-    const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
-    await page.goto(demoUrl);
-    const canvas = page.locator("#pet-canvas");
-    await canvas.waitFor({ state: "visible" });
-    await page.waitForFunction(() => document.querySelector("canvas")?.dataset.ready === "true");
+    const page = await openGugaDemo(browser);
+    const selectedPet = page.locator('.pet-option[data-pet-id="guga"]');
+    const sprite = page.locator("#pet-sprite");
 
-    const builtInPetIds = [
-      "doro",
-      "goku",
-      "guga",
-      "hutao",
-      "ikkun",
-      "ikun-gaara",
-      "ikun-giegie",
-      "ikunchick",
-      "kimlet-hover-clap",
-      "mini-elon",
-      "nimbus",
-      "shinchan",
-      "trump",
-      "usagi",
-    ];
-    const petSelect = page.locator("#built-in-pet");
-    assert.equal(await petSelect.locator("option").count(), builtInPetIds.length);
-
-    const verifyBuiltInPets = async ([petId, ...remainingPetIds]) => {
-      if (petId === undefined) return;
-
-      await petSelect.selectOption(petId);
-      await page.waitForFunction(
-        (expectedPetId) => document.querySelector("canvas")?.dataset.petId === expectedPetId,
-        petId,
-      );
-      const bounds = await canvas.boundingBox();
-      assert.ok(bounds);
-      await page.mouse.move(bounds.x + bounds.width, bounds.y + bounds.height / 2);
-      await page.waitForFunction(
-        () => document.querySelector("canvas")?.dataset.lookDirection === "90",
-      );
-      await page.mouse.move(bounds.x, bounds.y + bounds.height / 2);
-      await page.waitForFunction(
-        () => document.querySelector("canvas")?.dataset.lookDirection === "270",
-      );
-      await verifyBuiltInPets(remainingPetIds);
-    };
-    await verifyBuiltInPets(builtInPetIds);
-
-    const hasVisiblePixel = await canvas.evaluate((element) => {
-      const context = element.getContext("2d");
-      if (context === null) return false;
-      return context
-        .getImageData(0, 0, element.width, element.height)
-        .data.some((value, index) => (index % 4 === 3 ? value > 0 : false));
-    });
-    assert.equal(hasVisiblePixel, true);
-
-    await page.getByRole("button", { name: "Working", exact: true }).click();
-    await assert.doesNotReject(async () =>
-      page.waitForFunction(() =>
-        document.querySelector("#status")?.textContent?.includes("Working"),
-      ),
-    );
-
-    const bounds = await canvas.boundingBox();
-    assert.ok(bounds);
-    await page.mouse.move(bounds.x + bounds.width, bounds.y + bounds.height / 2);
-    await page.waitForFunction(
-      () => document.querySelector("canvas")?.dataset.lookDirection === "90",
-    );
-
-    const widget = page.locator(".sprite-pet-widget");
-    assert.equal(await widget.getAttribute("data-floating"), "true");
-    assert.equal(await widget.evaluate((element) => getComputedStyle(element).position), "fixed");
     assert.equal(
-      await page
-        .getByRole("button", { name: "Dock preview", exact: true })
-        .getAttribute("aria-pressed"),
-      "true",
+      await page.locator("html").evaluate((element) => getComputedStyle(element).colorScheme),
+      "light",
     );
-
-    const floatingBounds = await widget.boundingBox();
-    assert.ok(floatingBounds);
-    await page.mouse.move(
-      floatingBounds.x + floatingBounds.width / 2,
-      floatingBounds.y + floatingBounds.height / 2,
-    );
-    await page.mouse.down();
-    await page.mouse.move(
-      floatingBounds.x + floatingBounds.width / 2 - 96,
-      floatingBounds.y + floatingBounds.height / 2 - 72,
-    );
-    await page.mouse.up();
-    const draggedBounds = await widget.boundingBox();
-    assert.ok(draggedBounds);
-    assert.ok(draggedBounds.x < floatingBounds.x - 80);
-    assert.ok(draggedBounds.y < floatingBounds.y - 56);
-
-    const resizeHandle = page.getByRole("slider", { name: "Resize pet" });
-    const resizeBounds = await resizeHandle.boundingBox();
-    assert.ok(resizeBounds);
-    await page.mouse.move(resizeBounds.x + resizeBounds.width / 2, resizeBounds.y + 14);
-    await page.mouse.down();
-    await page.mouse.move(resizeBounds.x - 48, resizeBounds.y - 48);
-    await page.mouse.up();
-    const resizedBounds = await widget.boundingBox();
-    assert.ok(resizedBounds);
-    assert.ok(resizedBounds.width < draggedBounds.width - 32);
-    assert.ok(Math.abs(resizedBounds.width / resizedBounds.height - 192 / 208) < 0.01);
-
-    await resizeHandle.focus();
-    const keyboardWidth = (await widget.boundingBox())?.width;
-    assert.ok(keyboardWidth);
-    await resizeHandle.press("ArrowRight");
-    const keyboardResizedWidth = (await widget.boundingBox())?.width;
-    assert.ok(keyboardResizedWidth);
-    assert.ok(keyboardResizedWidth > keyboardWidth);
-
-    await page.getByRole("button", { name: "Dock preview", exact: true }).click();
-    assert.equal(await widget.getAttribute("data-floating"), "false");
     assert.equal(
-      await widget.evaluate((element) => getComputedStyle(element).position),
-      "relative",
+      await page.locator("body").evaluate((element) => getComputedStyle(element).backgroundColor),
+      "rgb(247, 248, 251)",
     );
-    assert.equal(await canvas.evaluate((element) => element.closest("#stage") !== null), true);
-
-    await page.getByRole("button", { name: "Float pet", exact: true }).click();
-    assert.equal(await widget.getAttribute("data-floating"), "true");
-    await page.getByRole("button", { name: "Dock preview", exact: true }).click();
-    assert.equal(await widget.getAttribute("data-floating"), "false");
+    assert.equal(await selectedPet.getAttribute("aria-pressed"), "true");
+    assert.equal(await page.locator("#pet-name").textContent(), "咕嘎");
+    assert.match(
+      (await sprite.evaluate((element) => getComputedStyle(element).backgroundImage)) ?? "",
+      /guga\/spritesheet\.webp/,
+    );
+    assert.equal(await sprite.getAttribute("data-source-state"), "idle");
+    assert.equal(await page.locator(".pet-option").count(), 14);
   } finally {
     await browser.close();
   }
 });
 
-test(
-  "loads a real local pet bundle without uploading it",
-  { skip: localPetFixture === undefined },
-  async () => {
-    assert.ok(localPetFixture);
-    const browser = await chromium.launch({ headless: true });
-    try {
-      const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
-      await page.goto(demoUrl);
-      await page.locator("#manifest-file").setInputFiles(join(localPetFixture, "pet.json"));
-      await page
-        .locator("#spritesheet-file")
-        .setInputFiles(join(localPetFixture, "spritesheet.webp"));
-      await page.getByRole("button", { name: "Use files", exact: true }).click();
-      await page.waitForFunction(() => document.querySelector("canvas")?.dataset.ready === "true");
-      assert.match((await page.locator("#status").textContent()) ?? "", /· 8×9 atlas/);
+test("maps behavior and supports floating, dragging, and keyboard resizing", async () => {
+  const browser = await chromium.launch({ headless: true });
+  try {
+    const page = await openGugaDemo(browser);
+    const sprite = page.locator("#pet-sprite");
+    const shell = page.locator("#pet-shell");
 
-      await page.getByRole("button", { name: "Working", exact: true }).click();
-      await page.waitForFunction(() =>
-        document.querySelector("#status")?.textContent?.includes("Working"),
-      );
-    } finally {
-      await browser.close();
-    }
-  },
-);
+    await page.getByRole("button", { name: "让它活动" }).click();
+    await page.waitForFunction(
+      () =>
+        document.querySelector("#pet-sprite")?.dataset.behavior === "active" &&
+        document.querySelector("#pet-sprite")?.dataset.sourceState === "running-right",
+    );
+    assert.equal(await page.locator("#behavior-state").textContent(), "活动");
+    assert.equal(await page.locator("#source-state").textContent(), "running-right");
+
+    const floatingToggle = page.getByRole("switch", { name: /页面悬浮/ });
+    await floatingToggle.click();
+    assert.equal(await floatingToggle.getAttribute("aria-checked"), "true");
+    assert.equal(
+      await page
+        .locator("body")
+        .evaluate((element) => element.classList.contains("page-floating-mode")),
+      true,
+    );
+    await page.waitForFunction(
+      () => document.querySelector("#pet-shell")?.style.translate !== "0px 0px",
+    );
+    await page.waitForTimeout(120);
+
+    const initialBounds = await shell.boundingBox();
+    assert.ok(initialBounds);
+    await page.mouse.move(
+      initialBounds.x + initialBounds.width / 2,
+      initialBounds.y + initialBounds.height / 2,
+    );
+    await page.mouse.down();
+    await page.mouse.move(
+      initialBounds.x + initialBounds.width / 2 - 82,
+      initialBounds.y + initialBounds.height / 2 - 64,
+      { steps: 4 },
+    );
+    await page.mouse.up();
+    await page.waitForTimeout(120);
+    const draggedBounds = await shell.boundingBox();
+    assert.ok(draggedBounds);
+    assert.ok(
+      draggedBounds.x < initialBounds.x - 64,
+      JSON.stringify({ initialBounds, draggedBounds }),
+    );
+    assert.ok(
+      draggedBounds.y < initialBounds.y - 48,
+      JSON.stringify({ initialBounds, draggedBounds }),
+    );
+
+    const resizeHandle = page.getByRole("button", { name: /调节宠物大小/ });
+    await resizeHandle.focus();
+    const widthBeforeKeyboardResize = (await shell.boundingBox())?.width;
+    assert.ok(widthBeforeKeyboardResize);
+    await resizeHandle.press("ArrowRight");
+    const widthAfterKeyboardResize = (await shell.boundingBox())?.width;
+    assert.ok(widthAfterKeyboardResize);
+    assert.ok(widthAfterKeyboardResize > widthBeforeKeyboardResize);
+    assert.equal(await resizeHandle.getAttribute("aria-label"), "调节宠物大小，当前 200 像素");
+
+    await page.keyboard.press("Escape");
+    assert.equal(await floatingToggle.getAttribute("aria-checked"), "false");
+    assert.equal(await sprite.isVisible(), true);
+  } finally {
+    await browser.close();
+  }
+});
+
+test("keeps the complete demo inside a narrow viewport", async () => {
+  const browser = await chromium.launch({ headless: true });
+  try {
+    const page = await openGugaDemo(browser, { width: 390, height: 844 });
+    assert.equal(
+      await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth),
+      true,
+    );
+    assert.equal(
+      await page.getByRole("heading", { name: "让旧雪碧图，拥有新的生活。" }).isVisible(),
+      true,
+    );
+    assert.equal(await page.getByRole("region", { name: "互动宠物演示" }).isVisible(), true);
+  } finally {
+    await browser.close();
+  }
+});

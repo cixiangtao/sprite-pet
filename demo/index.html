@@ -1,266 +1,121 @@
 <!doctype html>
-<html lang="en">
+<html lang="zh-CN">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="color-scheme" content="light" />
+    <meta name="theme-color" content="#f7f8fb" />
     <meta
       name="description"
-      content="Try sprite-pet in the browser, inspect its animation states, and load your own pet atlas without uploading files."
+      content="Try the behavior-driven sprite-pet runtime with local and bundled 8×9 pet atlases."
     />
-    <title>sprite-pet · browser playground</title>
     <link rel="icon" href="./favicon.svg" />
-    <link rel="stylesheet" href="/style.css" />
+    <link rel="stylesheet" href="./style.css" />
+    <title>sprite-pet · behavior runtime</title>
   </head>
   <body>
     <!--
-      THESIS: A live atlas workbench lets the pet prove the renderer and refuses the generic marketing hero.
-      OWN-WORLD: Cool-light shell, contiguous white panes, dark pixel stage, indigo controls, emerald status, crisp rules.
-      STORY: Choose or load a source, watch it perform, inspect nine states and eight real frames, then continue to the README.
-      FIRST VIEWPORT: Source navigator left, dominant live stage center, animation inspector right, contact strip attached below.
-      FORM: Category-standard developer playground; composition B of three; three-pane workbench staging; direction seed 217c0746.
+      THESIS: A living pet stage proves semantic browser behavior and refuses the atlas-inspector workbench.
+      OWN-WORLD: Cool daylight, white glass cards, indigo interaction, green live status, rounded operating controls.
+      STORY: Pick a pet, trigger behavior, observe its source-state mapping, then float, drag, and resize it.
+      FIRST VIEWPORT: Oversized promise and compact controls left; one dominant pet habitat right; picker bridges both.
+      FORM: Accepted runtime-refactor experience; behavior-first split stage; migration branch codex/runtime-refactor.
       FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, and DESIGN.md
     -->
-    <header class="product-rail">
-      <div class="product-rail__inner">
-        <a class="brand" href="./" aria-label="sprite-pet playground home">
-          <img src="./favicon.svg" width="32" height="32" alt="" />
-          <span>sprite-pet</span>
-        </a>
+    <main class="app-shell">
+      <section class="intro" aria-labelledby="page-title">
+        <p class="eyebrow">sprite-pet · behavior runtime</p>
+        <h1 id="page-title">让旧雪碧图，拥有新的生活。</h1>
+        <p class="lede">
+          不再依赖对话状态。它会观察鼠标、回应点击、跟随拖动，也会自己发呆、活跃和休息。
+        </p>
 
-        <p class="rail-summary">Bring an animated pet to any web page.</p>
+        <div class="controls" aria-label="宠物互动">
+          <button type="button" data-trigger="celebrate">一起庆祝</button>
+          <button type="button" data-trigger="surprised">吓它一跳</button>
+          <button type="button" data-trigger="active">让它活动</button>
+        </div>
 
-        <nav class="rail-actions" aria-label="Project links">
-          <button class="install-command" type="button" data-copy-install>
-            <code>pnpm add sprite-pet</code>
-            <svg aria-hidden="true" viewBox="0 0 24 24">
-              <rect x="8" y="8" width="11" height="11" rx="2"></rect>
-              <path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"></path>
-            </svg>
-          </button>
-          <span class="copy-feedback" id="copy-feedback" aria-live="polite"></span>
-          <a href="https://github.com/cixiangtao/sprite-pet#readme">README</a>
-          <a
-            class="icon-link"
-            href="https://github.com/cixiangtao/sprite-pet"
-            aria-label="Open sprite-pet on GitHub"
-          >
-            <svg aria-hidden="true" viewBox="0 0 24 24">
-              <path
-                d="M12 2.5a9.5 9.5 0 0 0-3 18.51c.47.09.64-.2.64-.45v-1.67c-2.62.57-3.17-1.11-3.17-1.11-.43-1.09-1.05-1.38-1.05-1.38-.86-.59.07-.58.07-.58.95.07 1.45.98 1.45.98.85 1.45 2.22 1.03 2.76.79.09-.61.33-1.03.6-1.27-2.09-.24-4.29-1.05-4.29-4.69 0-1.04.37-1.88.98-2.55-.1-.24-.43-1.2.09-2.51 0 0 .8-.26 2.61.97A9 9 0 0 1 12 7.22a9 9 0 0 1 2.38.32c1.81-1.23 2.61-.97 2.61-.97.52 1.31.19 2.27.09 2.51.61.67.98 1.51.98 2.55 0 3.65-2.2 4.44-4.3 4.68.34.29.64.87.64 1.76v2.49c0 .25.17.54.65.45A9.5 9.5 0 0 0 12 2.5Z"
-              ></path>
-            </svg>
-          </a>
-        </nav>
-      </div>
-    </header>
+        <button
+          id="floating-toggle"
+          class="mode-toggle"
+          type="button"
+          role="switch"
+          aria-checked="false"
+        >
+          <span class="mode-toggle-copy">
+            <strong>页面悬浮</strong>
+            <small>让宠物覆盖在当前网页上方</small>
+          </span>
+          <span class="mode-toggle-switch" aria-hidden="true"><span></span></span>
+          <span id="floating-status" class="mode-toggle-status">关闭</span>
+        </button>
 
-    <main class="page-shell">
-      <h1 class="sr-only">sprite-pet browser playground</h1>
-      <section class="workbench" aria-label="Sprite pet atlas workbench">
-        <aside class="source-pane" aria-labelledby="source-heading">
-          <div class="pane-heading">
-            <div>
-              <h2 id="source-heading">Built-in pets</h2>
-              <p>Select a source to inspect.</p>
-            </div>
-            <span class="source-count" id="source-count">—</span>
+        <section class="pet-library" aria-labelledby="pet-library-title">
+          <div class="pet-library-heading">
+            <h2 id="pet-library-title">选择宠物</h2>
+            <span id="pet-count">正在发现本机宠物…</span>
           </div>
-
-          <select
-            class="sr-only"
-            id="built-in-pet"
-            aria-describedby="built-in-pet-description"
-            disabled
-          >
-            <option>Loading pets…</option>
-          </select>
-          <div class="pet-list" id="built-in-pet-list" aria-label="Built-in pet gallery"></div>
-
-          <p class="pet-description" id="built-in-pet-description">
-            Loading the built-in pet gallery.
-          </p>
-
-          <div class="source-tools">
-            <details class="source-tool">
-              <summary>
-                <svg aria-hidden="true" viewBox="0 0 24 24">
-                  <path d="M10 13a5 5 0 0 0 7.5.5l2-2a5 5 0 0 0-7-7l-1.15 1.15"></path>
-                  <path d="M14 11a5 5 0 0 0-7.5-.5l-2 2a5 5 0 0 0 7 7l1.15-1.15"></path>
-                </svg>
-                <span>Load from URL</span>
-                <svg class="chevron" aria-hidden="true" viewBox="0 0 24 24">
-                  <path d="m8 10 4 4 4-4"></path>
-                </svg>
-              </summary>
-              <form id="url-form" class="source-form">
-                <label for="manifest-url">Manifest URL</label>
-                <input
-                  id="manifest-url"
-                  name="manifest-url"
-                  type="url"
-                  placeholder="https://example.com/pet/pet.json"
-                />
-                <button type="submit">Load manifest</button>
-              </form>
-            </details>
-
-            <details class="source-tool">
-              <summary>
-                <svg aria-hidden="true" viewBox="0 0 24 24">
-                  <path
-                    d="M3 6.5A2.5 2.5 0 0 1 5.5 4H9l2 2h7.5A2.5 2.5 0 0 1 21 8.5v9A2.5 2.5 0 0 1 18.5 20h-13A2.5 2.5 0 0 1 3 17.5Z"
-                  ></path>
-                </svg>
-                <span>Load local files</span>
-                <svg class="chevron" aria-hidden="true" viewBox="0 0 24 24">
-                  <path d="m8 10 4 4 4-4"></path>
-                </svg>
-              </summary>
-              <p class="privacy-note">
-                <svg aria-hidden="true" viewBox="0 0 24 24">
-                  <rect x="5" y="10" width="14" height="10" rx="2"></rect>
-                  <path d="M8 10V7a4 4 0 0 1 8 0v3"></path>
-                </svg>
-                Files stay in this browser tab.
-              </p>
-              <form id="file-form" class="source-form file-form">
-                <label>
-                  pet.json
-                  <input id="manifest-file" type="file" accept="application/json,.json" required />
-                </label>
-                <label>
-                  spritesheet
-                  <input id="spritesheet-file" type="file" accept="image/png,image/webp" required />
-                </label>
-                <button type="submit">Use files</button>
-              </form>
-            </details>
-          </div>
-
-          <a class="asset-notice" href="./pets/NOTICE.md">Pet asset notice</a>
-        </aside>
-
-        <section class="preview-pane" aria-label="Live pet preview">
-          <div class="stage" id="stage">
-            <canvas id="pet-canvas" aria-label="Animated pet preview"></canvas>
-            <div class="floating-placeholder" id="floating-placeholder" hidden>
-              <strong>The pet is floating.</strong>
-              <span>Drag it anywhere. Use the corner handle to resize.</span>
-            </div>
-            <div class="cursor-hint" aria-hidden="true">
-              <svg viewBox="0 0 24 24">
-                <path d="m5 3 14 9-7 2-3 7Z"></path>
-              </svg>
-              <span>Move your pointer</span>
-            </div>
-          </div>
-          <div class="stage-status">
-            <div class="status-copy">
-              <span class="status-dot" aria-hidden="true"></span>
-              <span id="status" aria-live="polite">Loading pets…</span>
-            </div>
-            <button class="floating-toggle" id="floating-toggle" type="button" aria-pressed="false">
-              <svg aria-hidden="true" viewBox="0 0 24 24">
-                <path d="M8 3H3v5M16 3h5v5M8 21H3v-5M16 21h5v-5"></path>
-                <path d="M8 8h8v8H8z"></path>
-              </svg>
-              <span>Float pet</span>
-            </button>
-            <dl class="stage-facts">
-              <div>
-                <dt>Atlas</dt>
-                <dd id="atlas-size">—</dd>
-              </div>
-              <div>
-                <dt>Grid</dt>
-                <dd>8 × 9</dd>
-              </div>
-            </dl>
-          </div>
+          <div id="pet-picker" class="pet-picker" aria-label="宠物列表"></div>
         </section>
 
-        <aside class="animation-pane" aria-labelledby="animation-heading">
-          <div class="pane-heading">
-            <div>
-              <h2 id="animation-heading">Animation</h2>
-              <p>Rows in the standard atlas.</p>
-            </div>
-            <span class="state-value" id="active-state-value">Idle</span>
+        <div class="mapping-card">
+          <div>
+            <span>Codex 原动画</span>
+            <strong id="source-state">idle</strong>
           </div>
-          <div class="state-list" id="state-controls"></div>
-
-          <section class="atlas-contract" aria-labelledby="contract-heading">
-            <div class="contract-heading-row">
-              <h3 id="contract-heading">Atlas contract</h3>
-              <span>Exact</span>
-            </div>
-            <dl>
-              <div>
-                <dt>Cell</dt>
-                <dd>192 × 208</dd>
-              </div>
-              <div>
-                <dt>Columns</dt>
-                <dd>8 frames</dd>
-              </div>
-              <div>
-                <dt>Rows</dt>
-                <dd>9 states</dd>
-              </div>
-            </dl>
-          </section>
-        </aside>
-
-        <section class="timeline-pane" aria-labelledby="timeline-heading">
-          <div class="transport">
-            <button id="playback-toggle" class="playback-toggle" type="button" aria-label="Pause">
-              <svg class="play-icon" aria-hidden="true" viewBox="0 0 24 24">
-                <path d="m8 5 11 7-11 7Z"></path>
-              </svg>
-              <svg class="pause-icon" aria-hidden="true" viewBox="0 0 24 24">
-                <path d="M8 5v14M16 5v14"></path>
-              </svg>
-            </button>
-            <div>
-              <h2 id="timeline-heading">Frames</h2>
-              <p><span id="current-frame">1</span> of 8 · live playback</p>
-            </div>
+          <span class="mapping-arrow" aria-hidden="true">→</span>
+          <div>
+            <span>Web 宠物行为</span>
+            <strong id="behavior-state">待机</strong>
           </div>
-          <div class="frame-strip" id="timeline-frames" aria-label="Active animation frames"></div>
-        </section>
+        </div>
       </section>
 
-      <section class="handoff" aria-labelledby="handoff-heading">
-        <div>
-          <h2 id="handoff-heading">Bring the renderer into your project.</h2>
-          <p>
-            The demo proves the browser workflow. Installation, the atlas format, and every typed
-            API live in the project README.
-          </p>
+      <section id="pet-card" class="pet-card" aria-label="互动宠物演示">
+        <div class="ambient-orb ambient-orb-one"></div>
+        <div class="ambient-orb ambient-orb-two"></div>
+        <div id="pet-stage" class="pet-stage">
+          <div id="pet-shell" class="pet-shell" role="group" aria-label="宠物互动与大小调节">
+            <button
+              id="pet-interaction-target"
+              class="pet-interaction-target"
+              type="button"
+              aria-label="与宠物互动"
+              aria-describedby="pet-hint"
+            >
+              <span id="pet-sprite" class="pet-sprite"></span>
+            </button>
+            <span class="pet-resize-hit-target">
+              <button
+                id="pet-resize-handle"
+                class="pet-resize-handle"
+                type="button"
+                aria-label="调节宠物大小"
+              >
+                <svg viewBox="0 0 12 12" aria-hidden="true">
+                  <path
+                    d="M1.75 5V1.75H5M7 10.25h3.25V7M2 2l8 8"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="1.5"
+                  />
+                </svg>
+              </button>
+            </span>
+          </div>
         </div>
-        <div class="handoff-actions">
-          <button class="install-command install-command--large" type="button" data-copy-install>
-            <code>pnpm add sprite-pet</code>
-            <svg aria-hidden="true" viewBox="0 0 24 24">
-              <rect x="8" y="8" width="11" height="11" rx="2"></rect>
-              <path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"></path>
-            </svg>
-          </button>
-          <a class="primary-link" href="https://github.com/cixiangtao/sprite-pet#readme">
-            Read the documentation
-            <svg aria-hidden="true" viewBox="0 0 24 24">
-              <path d="M5 12h14M13 6l6 6-6 6"></path>
-            </svg>
-          </a>
+        <div class="pet-meta">
+          <div>
+            <span class="status-dot"></span>
+            <strong id="pet-name">正在载入…</strong>
+          </div>
+          <p id="pet-hint">试试靠近、点击、拖动，或调节右下角大小</p>
         </div>
       </section>
     </main>
-
-    <footer class="page-footer">
-      <span>MIT renderer · framework-agnostic · browser-only</span>
-      <a href="https://github.com/cixiangtao/sprite-pet">Source on GitHub</a>
-    </footer>
-
     <script type="module" src="/main.ts"></script>
   </body>
 </html>
