@@ -56,8 +56,16 @@ after(() => {
 test("renders, animates, and follows the pointer in Chromium", async () => {
   const browser = await chromium.launch({ headless: true });
   try {
-    const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
+    const page = await browser.newPage({
+      colorScheme: "dark",
+      viewport: { width: 1280, height: 900 },
+    });
     await page.goto(demoUrl);
+    assert.equal(await page.locator('meta[name="color-scheme"]').getAttribute("content"), "light");
+    assert.equal(
+      await page.evaluate(() => getComputedStyle(document.documentElement).colorScheme),
+      "light",
+    );
     const canvas = page.locator("#pet-canvas");
     await canvas.waitFor({ state: "visible" });
     await page.waitForFunction(() => document.querySelector("canvas")?.dataset.ready === "true");
