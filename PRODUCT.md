@@ -9,43 +9,46 @@ web
 ## Users
 
 The primary users are web developers who want to add an animated sprite pet to a browser product.
-These developers are often also the artists or asset authors preparing and testing the pet atlas,
-so the product must support both integration and asset validation in one workflow.
+They need a small runtime that separates the pet's semantic behavior from the source atlas state
+names, while keeping the exact sprite contract easy to validate and integrate.
 
 ## Product Purpose
 
-`sprite-pet` makes portable animated pets easy to preview and render on the web without adopting a
-framework. A pet can live inline with the page or behave like a movable desktop companion floating
-above the page, with an explicit option to switch between those modes. The Pages experience should
-prioritize immediate, hands-on play with a working pet while still helping developers understand the
-package and continue to the README for installation and complete documentation.
+`sprite-pet` makes portable animated pets easy to load, animate, and host on the web without
+adopting a framework. The behavior runtime translates browser interactions such as hover, click, and
+drag into semantic pet behaviors, while adapters preserve the source atlas's own state names and
+frame timing. A pet can live inline with the page or float above it as a movable companion.
 
-Success means a visitor can quickly recognize what the renderer does, try its meaningful states and
-pointer behavior, and understand how their own `pet.json + spritesheet` bundle fits the same model.
+Success means a visitor can choose a pet, trigger meaningful behavior, see which original animation
+is playing, and understand how the same runtime supports inline, floating, draggable, and resizable
+hosts.
 
 ## Positioning
 
-The product combines a dependency-free Canvas renderer with an exact, portable atlas contract and a
-browser-only playground that can load both remote and local pet bundles. Local files stay inside the
-browser tab rather than being uploaded.
+The product combines a behavior state machine, a CSS sprite renderer, Codex atlas adapters, and the
+existing dependency-free Canvas APIs under one exact, portable 8x9 contract. The browser demo proves
+the behavior layer directly; local development can also discover Codex pet packages from the user's
+local pet directory without bundling their artwork.
 
 ## Operating Context
 
 - Developers evaluate the renderer through the public GitHub Pages demo, then use the README for
   installation, API details, and atlas documentation.
-- Product developers can mount a pet inline or opt into a fixed floating widget that visitors can
-  drag and resize without adopting a framework.
-- Asset authors switch among the nine standard animation states and test pointer following through
-  the standard left/right movement rows.
-- Visitors can select an included pet, load a manifest URL, or select a local `pet.json` and
-  spritesheet pair.
+- Product developers can connect semantic behavior to any existing DOM host or continue using the
+  higher-level Canvas widget.
+- Visitors choose an included pet, trigger semantic behavior, observe the source-state mapping, and
+  switch the same pet between staged and page-floating presentation.
+- Local development merges bundled demo pets with valid packages from `~/.codex/pets`; the static
+  Pages build contains only the already-authorized demo assets.
 
 ## Capabilities and Constraints
 
 - The runtime is browser-only, framework-agnostic TypeScript with named exports and no global side
   effects.
-- Floating behavior is an explicit opt-in. It supports runtime mode changes, pointer dragging,
-  proportional resizing, viewport constraints, and complete listener cleanup on destruction.
+- The semantic runtime supports autonomous idle activity, hover, click, drag, sleep, surprise, and
+  celebration without exposing source-state names to the host.
+- Floating presentation is explicit. The demo supports runtime mode changes, pointer dragging,
+  proportional resizing, viewport constraints, persistence, keyboard sizing, and cleanup.
 - The renderer supports one documented 8x9 atlas contract. Every cell is 192x208 pixels and every
   row contains eight frames.
 - The public demo must remain deployable under the `/sprite-pet/` GitHub Pages repository path.
@@ -55,20 +58,19 @@ browser tab rather than being uploaded.
 
 ## Brand Commitments
 
-- Preserve the product name `sprite-pet` and the terminology `pet.json`, `spritesheet`, state,
-  atlas, and built-in pet.
+- Preserve the product name `sprite-pet` and the terminology `pet.json`, `spritesheet`,
+  behavior, source state, atlas, and built-in pet.
 - The product voice should be concise, technically trustworthy, and approachable to developers who
   are actively making something playful.
-- The Pages experience should use the familiar structure and interaction grammar of a mature
-  open-source developer playground. Clarity and speed take priority over a themed visual metaphor;
-  craft should come from hierarchy, proportion, typography, and precise state design.
+- The Pages experience is a daylight behavior stage, not an atlas inspector: the pet leads, the
+  behavior-to-source mapping stays visible, and direct manipulation proves the runtime.
 
 ## Evidence on Hand
 
 - A working interactive demo exists in `demo/`.
 - Built-in pet manifests and spritesheets exist under `demo/public/pets/` and are authorized for the
   public Pages experience.
-- The built-in pets demonstrate pointer following through their standard movement rows.
+- The built-in pets demonstrate semantic behavior mapped onto their original Codex animation rows.
 - The README contains installation, quick-start, bundle-format, atlas, and API documentation.
 - There are no testimonials, customer logos, usage metrics, benchmarks, or external endorsements;
   future pages must not fabricate them.
@@ -76,8 +78,8 @@ browser tab rather than being uploaded.
 ## Product Principles
 
 1. Let the pet prove the renderer before asking visitors to read about it.
-2. Treat asset creation and code integration as two halves of one developer workflow.
-3. Keep local experimentation private, direct, and free from upload steps.
-4. Make the exact atlas contract visible through behavior rather than marketing claims.
+2. Keep behavior names independent from source-atlas state names.
+3. Keep local discovery private and development-only; never leak local artwork into the build.
+4. Make the exact atlas contract visible through behavior rather than an inspector-first UI.
 5. Keep the public demo expressive while the npm package stays lean and artwork-free.
 6. Keep rendering separate from placement so inline and floating integrations share one renderer.
