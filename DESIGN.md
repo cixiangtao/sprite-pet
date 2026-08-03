@@ -12,8 +12,8 @@ colors:
   quiet: "#778197"
   line: "#d9e0ea"
   line-strong: "#bcc7d6"
-  stage: "#0c111d"
-  stage-grid: "#101725"
+  stage: "#f8fafc"
+  stage-grid: "#edf1f6"
   indigo: "#675cf5"
   indigo-dark: "#5145df"
   indigo-soft: "#efeeff"
@@ -125,14 +125,14 @@ components:
 
 **Creative North Star: "The Open Workbench"**
 
-The Open Workbench is a precise, approachable environment for developers who need to see an atlas work before they trust it. Its cool-light shell and contiguous white panes make the interface feel like a mature browser tool, while the dark pixel stage gives the animated artifact a clear place of consequence.
+The Open Workbench is a precise, approachable environment for developers who need to see an atlas work before they trust it. Its cool-light shell, contiguous white panes, and pale checker stage make the interface feel like a mature browser tool while keeping the animated artifact visually connected to the surrounding workspace.
 
 The system is compact without feeling cramped. Crisp dividers, measured controls, restrained indigo selection, and explicit emerald or red status feedback make relationships legible without turning the product into a themed dashboard. Brand character comes from proportion, exact state design, and the contrast between quiet tooling and vivid pixel artwork.
 
 **Key Characteristics:**
 
 - Cool-light application shell with contiguous white working surfaces.
-- Dark, gridded stages that isolate and dignify pixel artwork.
+- Pale, gridded stages that isolate pixel artwork without breaking the light visual field.
 - Indigo for selection and action; emerald and red only for operational status.
 - Dense, exact controls supported by generous space around the primary artifact.
 - Crisp rules and tonal layering instead of decorative surface effects.
@@ -159,7 +159,7 @@ The palette is a cool technical neutral field with one operational indigo accent
 - **Muted Slate:** Explanatory text and ordinary metadata.
 - **Quiet Slate:** Subordinate labels, frame counts, and captions.
 - **Rule Gray / Strong Rule Gray:** Structural dividers; the stronger value closes major containers and regions.
-- **Pixel Stage / Pixel Grid:** The near-black preview field and its low-contrast checker pattern.
+- **Pixel Stage / Pixel Grid:** The pale preview field and its low-contrast checker pattern.
 
 ### Status
 
@@ -171,7 +171,7 @@ The palette is a cool technical neutral field with one operational indigo accent
 
 **The One Accent Rule.** Indigo is the only interactive accent; semantic green and red communicate state and never compete for navigation or selection.
 
-**The Artifact Contrast Rule.** Pixel artwork belongs on the dark stage; controls and explanatory content stay on light surfaces.
+**The Artifact Contrast Rule.** Pixel artwork belongs on a pale checker stage that reveals transparent edges while keeping the entire workbench visibly light.
 
 ## Typography
 
@@ -212,7 +212,7 @@ Spacing follows a compact rhythm for controls and a larger two-step rhythm betwe
 
 ## Elevation & Depth
 
-The system is flat and structural by default. Surface hierarchy comes from cool tonal shifts, crisp borders, and the dark stage rather than card shadows. Small shadows are reserved for active operational signals: the live status dot, the current frame, and the rendered pet itself.
+The system is flat and structural by default. Surface hierarchy comes from cool tonal shifts, crisp borders, and the pale checker stage rather than card shadows. Small shadows are reserved for active operational signals: the live status dot, the current frame, and the rendered pet itself.
 
 ### Shadow Vocabulary
 
@@ -280,7 +280,7 @@ Status stays attached below the artifact. The dot, message, atlas dimensions, an
 - **Do** let the live artifact dominate any operational surface built from this system.
 - **Do** use contiguous light panes and one-pixel rules to show relationships between tools.
 - **Do** reserve Workbench Indigo for action, selection, focus, and current playback state.
-- **Do** keep pixel artwork crisp and place it on a dark, low-contrast grid when it needs inspection.
+- **Do** keep pixel artwork crisp and place it on a pale, low-contrast grid when it needs inspection.
 - **Do** pair exact atlas facts with monospace while keeping explanatory language in system UI.
 - **Do** keep motion short and state-driven, and honor reduced-motion preferences for ornamental transitions.
 

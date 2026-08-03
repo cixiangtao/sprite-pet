@@ -30,7 +30,7 @@ related_targets: ["demo/main.ts", "demo/style.css"]
 ## Chosen direction
 
 - A category-standard, mature open-source developer playground with no added thematic metaphor.
-- Restrained cool-light workbench, dark sprite stage, one indigo action color, emerald success state,
+- Restrained cool-light workbench, pale sprite stage, one indigo action color, emerald success state,
   crisp dividers, compact developer typography, and low visual noise.
 - The memorable moment is a large pet responding immediately while its state and source controls
   remain visibly connected to the preview.
