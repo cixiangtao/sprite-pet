@@ -1,6 +1,6 @@
 {
   "name": "sprite-pet",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "A framework-agnostic browser runtime for animated web pets.",
   "keywords": [
     "animation",
