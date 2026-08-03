@@ -54,10 +54,15 @@ after(() => {
 
 const openGugaDemo = async (browser, viewport = { width: 1280, height: 900 }) => {
   const page = await browser.newPage({ viewport, colorScheme: "dark" });
+  const localCatalogRequests = [];
+  page.on("request", (request) => {
+    if (request.url().includes("/@local-pets/")) localCatalogRequests.push(request.url());
+  });
   await page.goto(`${demoUrl}/?pet=guga`);
   await page.waitForFunction(
     () => document.querySelector("#pet-sprite")?.dataset.sourceState !== undefined,
   );
+  assert.deepEqual(localCatalogRequests, []);
   return page;
 };
 

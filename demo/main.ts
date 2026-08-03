@@ -333,7 +333,7 @@ window.addEventListener("keydown", (event) => {
 });
 
 const [localCatalog, bundledCatalog] = await Promise.all([
-  loadOptionalCatalog("/@local-pets/index.json"),
+  import.meta.env.DEV ? loadOptionalCatalog("/@local-pets/index.json") : Promise.resolve([]),
   loadOptionalCatalog(new URL("./pets/index.json", window.location.href).toString()),
 ]);
 const catalog = mergePetCatalogs(bundledCatalog, localCatalog);
