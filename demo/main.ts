@@ -1,5 +1,6 @@
 import { CODEX_ATLAS, loadCodexPet, PetRuntime, type PetBehavior } from "../src/index.js";
 import {
+  getCatalogDownloadUrl,
   getCatalogSpritesheetUrl,
   loadPetCatalog,
   mergePetCatalogs,
@@ -48,6 +49,7 @@ const petName = getElement<HTMLElement>("pet-name");
 const petCount = getElement<HTMLElement>("pet-count");
 const petPicker = getElement<HTMLDivElement>("pet-picker");
 const petHint = getElement<HTMLElement>("pet-hint");
+const petDownload = getElement<HTMLAnchorElement>("pet-download");
 const floatingToggle = getElement<HTMLButtonElement>("floating-toggle");
 const floatingStatus = getElement<HTMLElement>("floating-status");
 const behaviorState = getElement<HTMLElement>("behavior-state");
@@ -58,6 +60,7 @@ let activationSequence = 0;
 let floatingMode = false;
 let petScale = DEFAULT_PET_SCALE;
 let resizeSession: (PetResizeSession & { pointerId: number }) | undefined;
+let bundledPetsById = new Map<string, PetCatalogEntry>();
 
 const getStageAndPetSizes = () => {
   const stageRect = petStage.getBoundingClientRect();
@@ -160,6 +163,22 @@ const updateSelectedPet = (selectedId: string) => {
   }
 };
 
+const updatePetDownload = (entry: PetCatalogEntry) => {
+  const bundledEntry = bundledPetsById.get(entry.id);
+  const isBundledEntry = bundledEntry?.manifestPath === entry.manifestPath;
+  petDownload.hidden = !isBundledEntry;
+  if (!isBundledEntry) {
+    petDownload.removeAttribute("href");
+    petDownload.removeAttribute("download");
+    petDownload.removeAttribute("aria-label");
+    return;
+  }
+
+  petDownload.href = getCatalogDownloadUrl(entry, window.location.href);
+  petDownload.download = `${entry.id}.zip`;
+  petDownload.setAttribute("aria-label", `下载 ${entry.displayName} 宠物包`);
+};
+
 const activatePet = async (entry: PetCatalogEntry) => {
   const sequence = ++activationSequence;
   petCard.dataset.loading = "true";
@@ -174,6 +193,7 @@ const activatePet = async (entry: PetCatalogEntry) => {
     petSprite.removeAttribute("style");
     petName.textContent = spec.displayName;
     petInteractionTarget.setAttribute("aria-label", `与 ${spec.displayName} 互动`);
+    updatePetDownload(entry);
     petHint.textContent = "试试靠近、点击、拖动，或调节右下角大小";
     sourceState.textContent = "idle";
     behaviorState.textContent = behaviorLabels.idle;
@@ -316,9 +336,10 @@ const [localCatalog, bundledCatalog] = await Promise.all([
   loadOptionalCatalog("/@local-pets/index.json"),
   loadOptionalCatalog(new URL("./pets/index.json", window.location.href).toString()),
 ]);
-const catalog = mergePetCatalogs(localCatalog, bundledCatalog);
+const catalog = mergePetCatalogs(bundledCatalog, localCatalog);
 if (catalog.length === 0) throw new Error("没有发现可用的 Codex Pet 资源。");
 
+bundledPetsById = new Map(bundledCatalog.map((entry) => [entry.id, entry]));
 petPicker.replaceChildren(...catalog.map(createPetOption));
 petCount.textContent = `已发现 ${catalog.length} 只`;
 

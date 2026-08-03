@@ -4,8 +4,8 @@ A small, framework-agnostic TypeScript runtime for animated pets on the web. It 
 browser behavior from source-atlas state names, preserves exact frame timing, and includes both a
 CSS sprite runtime and the original high-DPI Canvas renderer.
 
-The npm package ships no character artwork. The repository demo includes an optional built-in pet
-gallery whose artwork is excluded from the MIT License and from the npm package; see
+The npm package ships no character artwork. The repository keeps optional downloadable pets under
+`pets/`; their artwork is excluded from the MIT License and from the npm package. See
 [THIRD_PARTY_ASSETS.md](./THIRD_PARTY_ASSETS.md). You remain responsible for permission to use and
 distribute pet assets.
 
@@ -19,13 +19,39 @@ inspect its source-state mapping, and try floating, dragging, and resizing.
 - Codex atlas adapter with directional clips and nonuniform source frame timing
 - DOM interaction runtime with pointer tracking, dragging, sizing, and complete cleanup
 - Existing floating Canvas widget with viewport-safe dragging and proportional resizing
-- Built-in demo gallery generated from portable pet bundles
+- Downloadable built-in pet gallery generated from portable pet bundles
 - Remote URL and local browser-file loaders for the Canvas API
 - Exact validation for the 8x9 atlas contract
 - Nine named animation states with configurable FPS and looping
 - Pointer following for every pet through the standard left/right movement animations
 - Device-pixel-ratio-aware output and configurable sizing
 - ESM bundle and TypeScript declarations built with tsdown
+
+## Download a pet
+
+The website packages each built-in pet as a ZIP containing `pet.json`, `spritesheet.webp`, and
+`NOTICE.md`. These downloads are optional website assets; installing `sprite-pet` never installs
+character artwork.
+
+| Pet               | Download                                                                                              |
+| ----------------- | ----------------------------------------------------------------------------------------------------- |
+| Doro              | [doro.zip](https://cixiangtao.github.io/sprite-pet/pets/downloads/doro.zip)                           |
+| Goku              | [goku.zip](https://cixiangtao.github.io/sprite-pet/pets/downloads/goku.zip)                           |
+| 咕嘎              | [guga.zip](https://cixiangtao.github.io/sprite-pet/pets/downloads/guga.zip)                           |
+| 胡桃              | [hutao.zip](https://cixiangtao.github.io/sprite-pet/pets/downloads/hutao.zip)                         |
+| ikkun             | [ikkun.zip](https://cixiangtao.github.io/sprite-pet/pets/downloads/ikkun.zip)                         |
+| ikun-gaara        | [ikun-gaara.zip](https://cixiangtao.github.io/sprite-pet/pets/downloads/ikun-gaara.zip)               |
+| ikun-giegie       | [ikun-giegie.zip](https://cixiangtao.github.io/sprite-pet/pets/downloads/ikun-giegie.zip)             |
+| ikunchick         | [ikunchick.zip](https://cixiangtao.github.io/sprite-pet/pets/downloads/ikunchick.zip)                 |
+| Kimlet Hover Clap | [kimlet-hover-clap.zip](https://cixiangtao.github.io/sprite-pet/pets/downloads/kimlet-hover-clap.zip) |
+| Mini Elon         | [mini-elon.zip](https://cixiangtao.github.io/sprite-pet/pets/downloads/mini-elon.zip)                 |
+| Nimbus            | [nimbus.zip](https://cixiangtao.github.io/sprite-pet/pets/downloads/nimbus.zip)                       |
+| Shinchan          | [shinchan.zip](https://cixiangtao.github.io/sprite-pet/pets/downloads/shinchan.zip)                   |
+| Trump             | [trump.zip](https://cixiangtao.github.io/sprite-pet/pets/downloads/trump.zip)                         |
+| Usagi             | [usagi.zip](https://cixiangtao.github.io/sprite-pet/pets/downloads/usagi.zip)                         |
+
+The source folders are available in [`pets/`](./pets/). Download availability is not a license
+grant; review the included notice before reuse.
 
 ## Install
 
@@ -260,6 +286,6 @@ through [SECURITY.md](./SECURITY.md).
 
 ## License
 
-The renderer source is available under the [MIT License](./LICENSE). Built-in demo artwork is not
+The renderer source is available under the [MIT License](./LICENSE). Downloadable pet artwork is not
 covered by that license; read [THIRD_PARTY_ASSETS.md](./THIRD_PARTY_ASSETS.md) before publishing or
 reusing it.

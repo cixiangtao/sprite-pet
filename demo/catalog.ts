@@ -55,3 +55,7 @@ export const mergePetCatalogs = (...catalogs: readonly PetCatalogEntry[][]) => {
 /** Resolves the spritesheet stored beside a catalog entry's manifest. */
 export const getCatalogSpritesheetUrl = (entry: PetCatalogEntry, baseUrl: string | URL) =>
   new URL("./spritesheet.webp", new URL(entry.manifestPath, baseUrl)).toString();
+
+/** Resolves the website ZIP generated for a bundled pet. */
+export const getCatalogDownloadUrl = (entry: PetCatalogEntry, baseUrl: string | URL) =>
+  new URL(`./pets/downloads/${encodeURIComponent(entry.id)}.zip`, baseUrl).toString();

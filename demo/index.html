@@ -17,7 +17,7 @@
     <!--
       THESIS: A living pet stage proves semantic browser behavior and refuses the atlas-inspector workbench.
       OWN-WORLD: Cool daylight, white glass cards, indigo interaction, green live status, rounded operating controls.
-      STORY: Pick a pet, trigger behavior, observe its source-state mapping, then float, drag, and resize it.
+      STORY: Pick a pet, trigger behavior, observe its source-state mapping, then manipulate or download its portable package.
       FIRST VIEWPORT: Oversized promise and compact controls left; one dominant pet habitat right; picker bridges both.
       FORM: Accepted runtime-refactor experience; behavior-first split stage; migration branch codex/runtime-refactor.
       FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, and DESIGN.md
@@ -108,11 +108,17 @@
           </div>
         </div>
         <div class="pet-meta">
-          <div>
+          <div class="pet-meta__identity">
             <span class="status-dot"></span>
             <strong id="pet-name">正在载入…</strong>
           </div>
-          <p id="pet-hint">试试靠近、点击、拖动，或调节右下角大小</p>
+          <div class="pet-meta__actions">
+            <p id="pet-hint">试试靠近、点击、拖动，或调节右下角大小</p>
+            <a id="pet-download" class="pet-download" href="" download hidden>
+              <span>下载宠物包</span>
+              <span aria-hidden="true">↓</span>
+            </a>
+          </div>
         </div>
       </section>
     </main>

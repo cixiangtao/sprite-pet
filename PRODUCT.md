@@ -52,8 +52,9 @@ local pet directory without bundling their artwork.
 - The renderer supports one documented 8x9 atlas contract. Every cell is 192x208 pixels and every
   row contains eight frames.
 - The public demo must remain deployable under the `/sprite-pet/` GitHub Pages repository path.
-- Included pet artwork may be displayed in the public Pages demo under MIT authorization from the
-  repository owner, but pet artwork remains excluded from the npm package.
+- Included pet artwork may be displayed and offered as individual website downloads at the
+  repository owner's direction, but pet artwork remains excluded from the npm package and carries
+  its own rights notice.
 - Public APIs remain typed and documented with JSDoc.
 
 ## Brand Commitments
@@ -68,8 +69,8 @@ local pet directory without bundling their artwork.
 ## Evidence on Hand
 
 - A working interactive demo exists in `demo/`.
-- Built-in pet manifests and spritesheets exist under `demo/public/pets/` and are authorized for the
-  public Pages experience.
+- Built-in pet manifests and spritesheets exist under `pets/` and are authorized for the public
+  Pages experience and individual ZIP downloads.
 - The built-in pets demonstrate semantic behavior mapped onto their original Codex animation rows.
 - The README contains installation, quick-start, bundle-format, atlas, and API documentation.
 - There are no testimonials, customer logos, usage metrics, benchmarks, or external endorsements;
@@ -81,5 +82,5 @@ local pet directory without bundling their artwork.
 2. Keep behavior names independent from source-atlas state names.
 3. Keep local discovery private and development-only; never leak local artwork into the build.
 4. Make the exact atlas contract visible through behavior rather than an inspector-first UI.
-5. Keep the public demo expressive while the npm package stays lean and artwork-free.
+5. Keep the public demo and pet downloads useful while the npm package stays lean and artwork-free.
 6. Keep rendering separate from placement so inline and floating integrations share one renderer.

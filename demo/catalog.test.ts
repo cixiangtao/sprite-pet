@@ -1,6 +1,7 @@
 import { describe, expect, it, vi } from "vitest";
 
 import {
+  getCatalogDownloadUrl,
   getCatalogSpritesheetUrl,
   loadPetCatalog,
   mergePetCatalogs,
@@ -29,7 +30,7 @@ describe("pet catalog", () => {
     expect(fetcher).toHaveBeenCalledWith("/pets/index.json");
   });
 
-  it("keeps local entries when catalog ids overlap", () => {
+  it("keeps entries from the first catalog when ids overlap", () => {
     const localUsagi = { ...usagi, manifestPath: "/@local-pets/usagi/pet.json" };
     const doro = { ...usagi, id: "doro", displayName: "Doro" };
 
@@ -39,6 +40,12 @@ describe("pet catalog", () => {
   it("resolves a spritesheet beside its manifest", () => {
     expect(getCatalogSpritesheetUrl(usagi, "https://example.com/sprite-pet/")).toBe(
       "https://example.com/sprite-pet/pets/usagi/spritesheet.webp",
+    );
+  });
+
+  it("resolves the generated website download", () => {
+    expect(getCatalogDownloadUrl(usagi, "https://example.com/sprite-pet/?pet=usagi")).toBe(
+      "https://example.com/sprite-pet/pets/downloads/usagi.zip",
     );
   });
 });

@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import { spawn } from "node:child_process";
 import { after, before, test } from "node:test";
 
+import { strFromU8, unzipSync } from "fflate";
 import { chromium } from "playwright";
 
 const demoUrl = "http://127.0.0.1:4173";
@@ -83,6 +84,22 @@ test("keeps the behavior demo light and selects guga from the query", async () =
     );
     assert.equal(await sprite.getAttribute("data-source-state"), "idle");
     assert.equal(await page.locator(".pet-option").count(), 14);
+
+    const download = page.getByRole("link", { name: "下载 咕嘎 宠物包" });
+    assert.equal(await download.getAttribute("href"), `${demoUrl}/pets/downloads/guga.zip`);
+    assert.equal(await download.getAttribute("download"), "guga.zip");
+
+    const archiveResponse = await page.request.get(`${demoUrl}/pets/downloads/guga.zip`);
+    assert.equal(archiveResponse.ok(), true);
+    assert.match(archiveResponse.headers()["content-type"] ?? "", /application\/zip/);
+    const archive = unzipSync(new Uint8Array(await archiveResponse.body()));
+    assert.deepEqual(Object.keys(archive).toSorted(), [
+      "NOTICE.md",
+      "pet.json",
+      "spritesheet.webp",
+    ]);
+    assert.equal(JSON.parse(strFromU8(archive["pet.json"])).id, "guga");
+    assert.match(strFromU8(archive["NOTICE.md"]), /not a license grant/i);
   } finally {
     await browser.close();
   }
