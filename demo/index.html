@@ -27,132 +27,231 @@
       FORM: Accepted runtime-refactor experience; behavior-first split stage; migration branch codex/runtime-refactor.
       FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, and DESIGN.md
     -->
-    <main class="app-shell">
-      <section class="intro" aria-labelledby="page-title">
-        <div class="intro-topline">
-          <p class="eyebrow">sprite-pet · behavior runtime</p>
-          <nav
-            id="language-switcher"
-            class="language-switcher"
-            aria-label="语言"
-            data-i18n-aria-label="languageLabel"
-          >
-            <button type="button" data-locale="zh-CN" aria-pressed="true">中文</button>
-            <button type="button" data-locale="en" aria-pressed="false">EN</button>
-          </nav>
-        </div>
-        <h1 id="page-title" data-i18n="headline">让旧雪碧图，拥有新的生活。</h1>
-        <p class="lede" data-i18n="lede">
-          不再依赖对话状态。它会观察鼠标、回应点击、跟随拖动，也会自己发呆、活跃和休息。
-        </p>
-
-        <div class="controls" aria-label="宠物互动" data-i18n-aria-label="interactionControls">
-          <button type="button" data-trigger="celebrate" data-i18n="celebrate">一起庆祝</button>
-          <button type="button" data-trigger="surprised" data-i18n="surprise">吓它一跳</button>
-          <button type="button" data-trigger="active" data-i18n="activate">让它活动</button>
-        </div>
-
-        <button
-          id="floating-toggle"
-          class="mode-toggle"
-          type="button"
-          role="switch"
-          aria-checked="false"
-        >
-          <span class="mode-toggle-copy">
-            <strong data-i18n="floatingTitle">页面悬浮</strong>
-            <small data-i18n="floatingDescription">让宠物覆盖在当前网页上方</small>
-          </span>
-          <span class="mode-toggle-switch" aria-hidden="true"><span></span></span>
-          <span id="floating-status" class="mode-toggle-status">关闭</span>
-        </button>
-
-        <section class="pet-library" aria-labelledby="pet-library-title">
-          <div class="pet-library-heading">
-            <h2 id="pet-library-title" data-i18n="petLibraryTitle">选择宠物</h2>
-            <span id="pet-count" data-i18n="discoveringPets">正在发现本机宠物…</span>
-          </div>
-          <div
-            id="pet-picker"
-            class="pet-picker"
-            aria-label="宠物列表"
-            data-i18n-aria-label="petList"
-          ></div>
-        </section>
-
-        <div class="mapping-card">
-          <div>
-            <span data-i18n="sourceAnimation">Codex 原动画</span>
-            <strong id="source-state">idle</strong>
-          </div>
-          <span class="mapping-arrow" aria-hidden="true">→</span>
-          <div>
-            <span data-i18n="webBehavior">Web 宠物行为</span>
-            <strong id="behavior-state">待机</strong>
-          </div>
-        </div>
-      </section>
-
-      <section
-        id="pet-card"
-        class="pet-card"
-        aria-label="互动宠物演示"
-        data-i18n-aria-label="petDemo"
-      >
-        <div class="ambient-orb ambient-orb-one"></div>
-        <div class="ambient-orb ambient-orb-two"></div>
-        <div id="pet-stage" class="pet-stage">
-          <div
-            id="pet-shell"
-            class="pet-shell"
-            role="group"
-            aria-label="宠物互动与大小调节"
-            data-i18n-aria-label="petControls"
-          >
-            <button
-              id="pet-interaction-target"
-              class="pet-interaction-target"
-              type="button"
-              aria-label="与宠物互动"
-              aria-describedby="pet-hint"
-              data-i18n-aria-label="petInteraction"
-            >
-              <span id="pet-sprite" class="pet-sprite"></span>
-            </button>
-            <span class="pet-resize-hit-target">
-              <button
-                id="pet-resize-handle"
-                class="pet-resize-handle"
-                type="button"
-                aria-label="调节宠物大小"
-                data-i18n-aria-label="petResize"
+    <main>
+      <div class="app-shell">
+        <section class="intro" aria-labelledby="page-title">
+          <div class="intro-topline">
+            <p class="eyebrow">sprite-pet · behavior runtime</p>
+            <div class="intro-actions">
+              <a
+                class="github-link"
+                href="https://github.com/cixiangtao/sprite-pet"
+                target="_blank"
+                rel="noreferrer"
+                aria-label="在 GitHub 上查看 sprite-pet 源码"
+                data-i18n-aria-label="githubLinkLabel"
               >
-                <svg viewBox="0 0 12 12" aria-hidden="true">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
                   <path
-                    d="M1.75 5V1.75H5M7 10.25h3.25V7M2 2l8 8"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="1.5"
+                    d="M12 2.75a9.25 9.25 0 0 0-2.93 18.03c.46.09.63-.2.63-.44v-1.8c-2.56.56-3.1-1.09-3.1-1.09-.42-1.07-1.03-1.35-1.03-1.35-.84-.58.06-.57.06-.57.93.07 1.42.96 1.42.96.83 1.42 2.17 1.01 2.7.77.08-.6.32-1.01.59-1.24-2.04-.23-4.19-1.02-4.19-4.57 0-1.01.36-1.84.95-2.49-.1-.23-.41-1.17.09-2.45 0 0 .78-.25 2.54.95A8.8 8.8 0 0 1 12 7.09a8.8 8.8 0 0 1 2.31.31c1.76-1.2 2.53-.95 2.53-.95.51 1.28.19 2.22.1 2.45.59.65.95 1.48.95 2.49 0 3.56-2.16 4.33-4.21 4.56.33.29.62.85.62 1.72v2.67c0 .24.17.53.63.44A9.25 9.25 0 0 0 12 2.75Z"
                   />
                 </svg>
-              </button>
+                <span>GitHub</span>
+              </a>
+              <nav
+                id="language-switcher"
+                class="language-switcher"
+                aria-label="语言"
+                data-i18n-aria-label="languageLabel"
+              >
+                <button type="button" data-locale="zh-CN" aria-pressed="true">中文</button>
+                <button type="button" data-locale="en" aria-pressed="false">EN</button>
+              </nav>
+            </div>
+          </div>
+          <h1 id="page-title" data-i18n="headline">让旧雪碧图，拥有新的生活。</h1>
+          <p class="lede" data-i18n="lede">
+            不再依赖对话状态。它会观察鼠标、回应点击、跟随拖动，也会自己发呆、活跃和休息。
+          </p>
+
+          <div class="controls" aria-label="宠物互动" data-i18n-aria-label="interactionControls">
+            <button type="button" data-trigger="celebrate" data-i18n="celebrate">一起庆祝</button>
+            <button type="button" data-trigger="surprised" data-i18n="surprise">吓它一跳</button>
+            <button type="button" data-trigger="active" data-i18n="activate">让它活动</button>
+          </div>
+
+          <button
+            id="floating-toggle"
+            class="mode-toggle"
+            type="button"
+            role="switch"
+            aria-checked="false"
+          >
+            <span class="mode-toggle-copy">
+              <strong data-i18n="floatingTitle">页面悬浮</strong>
+              <small data-i18n="floatingDescription">让宠物覆盖在当前网页上方</small>
             </span>
+            <span class="mode-toggle-switch" aria-hidden="true"><span></span></span>
+            <span id="floating-status" class="mode-toggle-status">关闭</span>
+          </button>
+
+          <section class="pet-library" aria-labelledby="pet-library-title">
+            <div class="pet-library-heading">
+              <h2 id="pet-library-title" data-i18n="petLibraryTitle">选择宠物</h2>
+              <span id="pet-count" data-i18n="discoveringPets">正在发现本机宠物…</span>
+            </div>
+            <div
+              id="pet-picker"
+              class="pet-picker"
+              aria-label="宠物列表"
+              data-i18n-aria-label="petList"
+            ></div>
+          </section>
+
+          <div class="mapping-card">
+            <div>
+              <span data-i18n="sourceAnimation">Codex 原动画</span>
+              <strong id="source-state">idle</strong>
+            </div>
+            <span class="mapping-arrow" aria-hidden="true">→</span>
+            <div>
+              <span data-i18n="webBehavior">Web 宠物行为</span>
+              <strong id="behavior-state">待机</strong>
+            </div>
           </div>
-        </div>
-        <div class="pet-meta">
-          <div class="pet-meta__identity">
-            <span class="status-dot"></span>
-            <strong id="pet-name">正在载入…</strong>
+        </section>
+
+        <section
+          id="pet-card"
+          class="pet-card"
+          aria-label="互动宠物演示"
+          data-i18n-aria-label="petDemo"
+        >
+          <div class="ambient-orb ambient-orb-one"></div>
+          <div class="ambient-orb ambient-orb-two"></div>
+          <div id="pet-stage" class="pet-stage">
+            <div
+              id="pet-shell"
+              class="pet-shell"
+              role="group"
+              aria-label="宠物互动与大小调节"
+              data-i18n-aria-label="petControls"
+            >
+              <button
+                id="pet-interaction-target"
+                class="pet-interaction-target"
+                type="button"
+                aria-label="与宠物互动"
+                aria-describedby="pet-hint"
+                data-i18n-aria-label="petInteraction"
+              >
+                <span id="pet-sprite" class="pet-sprite"></span>
+              </button>
+              <span class="pet-resize-hit-target">
+                <button
+                  id="pet-resize-handle"
+                  class="pet-resize-handle"
+                  type="button"
+                  aria-label="调节宠物大小"
+                  data-i18n-aria-label="petResize"
+                >
+                  <svg viewBox="0 0 12 12" aria-hidden="true">
+                    <path
+                      d="M1.75 5V1.75H5M7 10.25h3.25V7M2 2l8 8"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="1.5"
+                    />
+                  </svg>
+                </button>
+              </span>
+            </div>
           </div>
-          <div class="pet-meta__actions">
-            <p id="pet-hint">试试靠近、点击、拖动，或调节右下角大小</p>
-            <a id="pet-download" class="pet-download" href="" download hidden>
-              <span data-i18n="downloadPet">下载宠物包</span>
-              <span aria-hidden="true">↓</span>
+          <div class="pet-meta">
+            <div class="pet-meta__identity">
+              <span class="status-dot"></span>
+              <strong id="pet-name">正在载入…</strong>
+            </div>
+            <div class="pet-meta__actions">
+              <p id="pet-hint">试试靠近、点击、拖动，或调节右下角大小</p>
+              <a id="pet-download" class="pet-download" href="" download hidden>
+                <span data-i18n="downloadPet">下载宠物包</span>
+                <span aria-hidden="true">↓</span>
+              </a>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <section class="developer-guide" aria-labelledby="developer-guide-title">
+        <div class="guide-copy">
+          <h2 id="developer-guide-title" data-i18n="guideTitle">把它带进你的网页。</h2>
+          <p data-i18n="guideLede">
+            安装运行时，准备一个符合 8×9 契约的宠物包，然后用几行 TypeScript 启动。
+          </p>
+
+          <ol class="guide-steps">
+            <li>
+              <span class="step-index">1</span>
+              <div>
+                <strong data-i18n="installTitle">安装运行时</strong>
+                <span data-i18n="installDescription">使用 pnpm、npm 或你习惯的包管理器。</span>
+              </div>
+            </li>
+            <li>
+              <span class="step-index">2</span>
+              <div>
+                <strong data-i18n="bundleTitle">托管宠物包</strong>
+                <span data-i18n="bundleDescription"
+                  >把 pet.json 与 spritesheet.webp 放在同一目录。</span
+                >
+              </div>
+            </li>
+            <li>
+              <span class="step-index">3</span>
+              <div>
+                <strong data-i18n="createTitle">创建宠物</strong>
+                <span data-i18n="createDescription">加载清单并选择内联或页面悬浮模式。</span>
+              </div>
+            </li>
+          </ol>
+
+          <nav class="guide-links" aria-label="项目链接" data-i18n-aria-label="projectLinksLabel">
+            <a
+              class="repository-address"
+              href="https://github.com/cixiangtao/sprite-pet"
+              target="_blank"
+              rel="noreferrer"
+              aria-label="在 GitHub 上查看 sprite-pet 源码"
+              data-i18n-aria-label="githubLinkLabel"
+            >
+              <span>github.com/cixiangtao/sprite-pet</span>
+              <span aria-hidden="true">↗</span>
             </a>
+            <a
+              id="docs-link"
+              href="https://github.com/cixiangtao/sprite-pet#readme"
+              target="_blank"
+              rel="noreferrer"
+            >
+              <span data-i18n="fullDocumentation">完整文档</span>
+              <span aria-hidden="true">↗</span>
+            </a>
+            <a href="https://www.npmjs.com/package/sprite-pet" target="_blank" rel="noreferrer">
+              <span data-i18n="npmPackage">npm 包</span>
+              <span aria-hidden="true">↗</span>
+            </a>
+          </nav>
+        </div>
+
+        <div class="quick-start" aria-labelledby="quick-start-title">
+          <div class="quick-start-header">
+            <strong id="quick-start-title" data-i18n="quickStart">快速开始</strong>
+            <span>TypeScript</span>
           </div>
+          <pre><code><span class="code-command">pnpm add sprite-pet</span>
+<span class="code-keyword">import</span> { SpritePetWidget, loadSpritePet } <span class="code-keyword">from</span> <span class="code-string">"sprite-pet"</span>;
+
+<span class="code-keyword">const</span> source = <span class="code-keyword">await</span> loadSpritePet(<span class="code-string">"/pets/momo/pet.json"</span>);
+<span class="code-keyword">const</span> pet = <span class="code-keyword">new</span> SpritePetWidget({
+  source,
+  width: <span class="code-number">192</span>,
+  floating: <span class="code-keyword">true</span>,
+});
+
+pet.setState(<span class="code-string">"working"</span>);</code></pre>
         </div>
       </section>
     </main>

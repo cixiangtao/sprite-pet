@@ -38,6 +38,9 @@ local pet directory without bundling their artwork.
   higher-level Canvas widget.
 - Visitors choose an included pet, trigger semantic behavior, observe the source-state mapping, and
   switch the same pet between staged and page-floating presentation.
+- After trying the live runtime, visitors can follow a three-step quick start, copy the exact
+  integration shape, and continue to the visible GitHub repository, full documentation, or npm
+  package.
 - Repository and npm documentation use English as the default entry with a complete Chinese
   translation. The Pages demo preserves its Chinese default and offers a complete English switch
   through the `lang` query parameter and remembered preference.

@@ -52,6 +52,7 @@ const behaviorState = getElement<HTMLElement>("behavior-state");
 const sourceState = getElement<HTMLElement>("source-state");
 const languageSwitcher = getElement<HTMLElement>("language-switcher");
 const descriptionMeta = document.querySelector<HTMLMetaElement>('meta[name="description"]');
+const docsLink = getElement<HTMLAnchorElement>("docs-link");
 let position: PetPosition = { x: 0, y: 0 };
 let runtime: PetRuntime | undefined;
 let activationSequence = 0;
@@ -97,6 +98,7 @@ const applyLocale = (nextLocale: DemoLocale, persist = true) => {
   document.documentElement.lang = locale;
   document.title = messages.title;
   descriptionMeta?.setAttribute("content", messages.description);
+  docsLink.href = messages.documentationUrl;
 
   for (const element of document.querySelectorAll<HTMLElement>("[data-i18n]")) {
     const key = element.dataset.i18n;

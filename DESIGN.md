@@ -16,6 +16,12 @@ colors:
   accent-soft: "#efeeff"
   green: "#21865a"
   green-soft: "#eaf8f1"
+  code-surface: "#202939"
+  code-text: "#d8dee9"
+  code-muted: "#abb6c8"
+  code-green: "#b7e4c7"
+  code-purple: "#c4b5fd"
+  code-orange: "#fdba74"
 typography:
   display:
     fontFamily: 'Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif'
@@ -77,6 +83,30 @@ typography:
     fontWeight: 400
     lineHeight: "normal"
     letterSpacing: "normal"
+  guide-display:
+    fontFamily: 'Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif'
+    fontSize: "clamp(2.8rem, 5.4vw, 5.3rem)"
+    fontWeight: 750
+    lineHeight: 0.98
+    letterSpacing: "-0.04em"
+  guide-display-mobile:
+    fontFamily: 'Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif'
+    fontSize: "clamp(2.75rem, 13vw, 4.2rem)"
+    fontWeight: 750
+    lineHeight: 0.98
+    letterSpacing: "-0.04em"
+  code:
+    fontFamily: 'ui-monospace, "SFMono-Regular", Consolas, monospace'
+    fontSize: "clamp(0.72rem, 1.25vw, 0.82rem)"
+    fontWeight: 400
+    lineHeight: 1.8
+    letterSpacing: "normal"
+  code-mobile:
+    fontFamily: 'ui-monospace, "SFMono-Regular", Consolas, monospace'
+    fontSize: "0.69rem"
+    fontWeight: 400
+    lineHeight: 1.8
+    letterSpacing: "normal"
 rounded:
   handle: "6px"
   compact: "8px"
@@ -84,6 +114,7 @@ rounded:
   control: "18px"
   mobile-card: "26px"
   habitat: "34px"
+  project-link: "10px"
   pill: "999px"
 spacing:
   xs: "0.25rem"
@@ -151,8 +182,9 @@ centered in the first viewport.
 
 Below 880px, the experience becomes a single column. The complete operating story stays in order:
 promise, triggers, floating mode, picker, source mapping, then habitat. The pet library scrolls
-horizontally rather than widening the page. Below 520px, metadata stacks and the habitat uses the
-mobile corner token.
+horizontally rather than widening the page. A developer handoff follows the live stage with setup
+steps, a real TypeScript example, and public project links. Below 520px, metadata stacks, project
+links become full-width, and the habitat uses the mobile corner token.
 
 ### Named rules
 
@@ -164,6 +196,9 @@ are navigation, not secondary stages.
 
 **No Horizontal Page Drift.** Narrow screens may scroll the pet picker, but the document itself must
 remain within the viewport.
+
+**Demo Before Documentation.** The first viewport proves the runtime. Installation, source, npm,
+and complete documentation appear immediately after it as a concise developer handoff.
 
 ## Type
 
@@ -231,6 +266,13 @@ alive without competing with the sprite. Metadata stays attached below the stage
 The pet shell owns hover, click, and drag input. A bottom-right resize handle becomes visible on
 hover, keyboard focus, touch devices, or during resizing. Floating mode removes the habitat chrome,
 keeps the page readable below, and makes only the pet accept pointer input.
+
+### Developer handoff
+
+The handoff pairs three short integration steps with one truthful TypeScript example. The full
+GitHub address remains visible instead of hiding behind a generic icon, while documentation and npm
+links provide the next actions. A dark code surface is the only technical contrast field and stays
+below the daylight behavior stage.
 
 ## Motion and accessibility
 

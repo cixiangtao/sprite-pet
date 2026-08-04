@@ -134,12 +134,32 @@ test("switches every public demo control between Chinese and English", async () 
       await page.getByRole("link", { name: "Download the 咕嘎 pet bundle" }).isVisible(),
       true,
     );
+    const githubLinks = page.getByRole("link", { name: "View the sprite-pet source on GitHub" });
+    assert.equal(await githubLinks.count(), 2);
+    assert.equal(
+      await githubLinks.first().getAttribute("href"),
+      "https://github.com/cixiangtao/sprite-pet",
+    );
+    assert.equal(
+      await page.getByRole("heading", { name: "Bring it to your own webpage." }).isVisible(),
+      true,
+    );
+    assert.match(await page.locator(".quick-start").textContent(), /pnpm add sprite-pet/);
+    assert.equal(
+      await page.getByRole("link", { name: "Full documentation" }).getAttribute("href"),
+      "https://github.com/cixiangtao/sprite-pet#readme",
+    );
 
     await page.getByRole("button", { name: "中文" }).click();
     assert.equal(await page.locator("html").getAttribute("lang"), "zh-CN");
     assert.equal(new URL(page.url()).searchParams.get("lang"), "zh-CN");
     assert.equal(await page.locator("#behavior-state").textContent(), "待机");
     assert.equal(await page.evaluate(() => localStorage.getItem("sprite-pet-locale")), "zh-CN");
+    assert.equal(await page.getByRole("heading", { name: "把它带进你的网页。" }).isVisible(), true);
+    assert.equal(
+      await page.getByRole("link", { name: "完整文档" }).getAttribute("href"),
+      "https://github.com/cixiangtao/sprite-pet/blob/main/README.zh-CN.md",
+    );
   } finally {
     await browser.close();
   }
@@ -231,10 +251,19 @@ test("keeps the complete demo inside a narrow viewport", async () => {
       true,
     );
     assert.equal(await page.getByRole("region", { name: "互动宠物演示" }).isVisible(), true);
+    assert.equal(await page.getByRole("heading", { name: "把它带进你的网页。" }).isVisible(), true);
+    assert.equal(
+      await page.getByRole("link", { name: "在 GitHub 上查看 sprite-pet 源码" }).count(),
+      2,
+    );
 
     await page.getByRole("button", { name: "EN" }).click();
     assert.equal(
       await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth),
+      true,
+    );
+    assert.equal(
+      await page.getByRole("heading", { name: "Bring it to your own webpage." }).isVisible(),
       true,
     );
     assert.equal(

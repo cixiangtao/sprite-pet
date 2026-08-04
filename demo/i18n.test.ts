@@ -14,5 +14,7 @@ describe("demo i18n", () => {
     expect(getDemoMessages("zh-CN").discoveredPets(14)).toBe("已发现 14 只");
     expect(getDemoMessages("en").discoveredPets(14)).toBe("14 pets found");
     expect(getDemoMessages("en").behaviorLabels.celebrate).toBe("Celebrating");
+    expect(getDemoMessages("zh-CN").staticText.guideTitle).toBe("把它带进你的网页。");
+    expect(getDemoMessages("en").staticText.guideTitle).toBe("Bring it to your own webpage.");
   });
 });

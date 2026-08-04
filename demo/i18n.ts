@@ -29,6 +29,19 @@ export interface DemoStaticMessages {
   petControls: string;
   petInteraction: string;
   petResize: string;
+  githubLinkLabel: string;
+  guideTitle: string;
+  guideLede: string;
+  installTitle: string;
+  installDescription: string;
+  bundleTitle: string;
+  bundleDescription: string;
+  createTitle: string;
+  createDescription: string;
+  projectLinksLabel: string;
+  fullDocumentation: string;
+  npmPackage: string;
+  quickStart: string;
 }
 
 interface DemoMessages {
@@ -44,6 +57,7 @@ interface DemoMessages {
   discoveredPets: (count: number) => string;
   loadFailure: string;
   emptyCatalog: string;
+  documentationUrl: string;
 }
 
 const demoMessages = {
@@ -72,6 +86,19 @@ const demoMessages = {
       petControls: "宠物互动与大小调节",
       petInteraction: "与宠物互动",
       petResize: "调节宠物大小",
+      githubLinkLabel: "在 GitHub 上查看 sprite-pet 源码",
+      guideTitle: "把它带进你的网页。",
+      guideLede: "安装运行时，准备一个符合 8×9 契约的宠物包，然后用几行 TypeScript 启动。",
+      installTitle: "安装运行时",
+      installDescription: "使用 pnpm、npm 或你习惯的包管理器。",
+      bundleTitle: "托管宠物包",
+      bundleDescription: "把 pet.json 与 spritesheet.webp 放在同一目录。",
+      createTitle: "创建宠物",
+      createDescription: "加载清单并选择内联或页面悬浮模式。",
+      projectLinksLabel: "项目链接",
+      fullDocumentation: "完整文档",
+      npmPackage: "npm 包",
+      quickStart: "快速开始",
     },
     behaviorLabels: {
       idle: "待机",
@@ -91,6 +118,7 @@ const demoMessages = {
     discoveredPets: (count) => `已发现 ${count} 只`,
     loadFailure: "宠物加载失败。",
     emptyCatalog: "没有发现可用的 Codex Pet 资源。",
+    documentationUrl: "https://github.com/cixiangtao/sprite-pet/blob/main/README.zh-CN.md",
   },
   en: {
     title: "sprite-pet · behavior runtime",
@@ -117,6 +145,20 @@ const demoMessages = {
       petControls: "Pet interaction and resize controls",
       petInteraction: "Interact with the pet",
       petResize: "Resize the pet",
+      githubLinkLabel: "View the sprite-pet source on GitHub",
+      guideTitle: "Bring it to your own webpage.",
+      guideLede:
+        "Install the runtime, prepare a pet bundle that follows the 8×9 contract, and start it with a few lines of TypeScript.",
+      installTitle: "Install the runtime",
+      installDescription: "Use pnpm, npm, or your preferred package manager.",
+      bundleTitle: "Host a pet bundle",
+      bundleDescription: "Keep pet.json and spritesheet.webp in the same directory.",
+      createTitle: "Create the pet",
+      createDescription: "Load the manifest and choose inline or page-floating mode.",
+      projectLinksLabel: "Project links",
+      fullDocumentation: "Full documentation",
+      npmPackage: "npm package",
+      quickStart: "Quick start",
     },
     behaviorLabels: {
       idle: "Idle",
@@ -136,6 +178,7 @@ const demoMessages = {
     discoveredPets: (count) => `${count} pets found`,
     loadFailure: "Unable to load this pet.",
     emptyCatalog: "No usable Codex Pet resources were found.",
+    documentationUrl: "https://github.com/cixiangtao/sprite-pet#readme",
   },
 } as const satisfies Record<DemoLocale, DemoMessages>;
 
