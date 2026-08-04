@@ -7,6 +7,12 @@ import {
   type PetCatalogEntry,
 } from "./catalog.js";
 import {
+  getDemoMessages,
+  parseDemoLocale,
+  type DemoLocale,
+  type DemoStaticMessages,
+} from "./i18n.js";
+import {
   clampPetPosition,
   getFloatingDockPosition,
   movePetPosition,
@@ -15,6 +21,7 @@ import {
 import { clampPetWidth, getResizedPetWidth, type PetResizeSession } from "./pet-resize";
 
 const FLOATING_MODE_STORAGE_KEY = "sprite-pet-page-floating";
+const LOCALE_STORAGE_KEY = "sprite-pet-locale";
 const FLOATING_VIEWPORT_MARGIN = 24;
 const PET_SCALE_STORAGE_KEY = "sprite-pet-scale";
 const DEFAULT_PET_SCALE = 1;
@@ -27,17 +34,6 @@ const getElement = <ElementType extends HTMLElement>(id: string) => {
   if (element === null) throw new Error(`Missing demo element #${id}.`);
   return element as ElementType;
 };
-
-const behaviorLabels = {
-  idle: "待机",
-  active: "活动",
-  hover: "关注你",
-  click: "回应点击",
-  drag: "跟随拖动",
-  sleep: "休息",
-  surprised: "受惊",
-  celebrate: "庆祝",
-} as const satisfies Record<PetBehavior, string>;
 
 const petCard = getElement<HTMLElement>("pet-card");
 const petStage = getElement<HTMLDivElement>("pet-stage");
@@ -54,6 +50,8 @@ const floatingToggle = getElement<HTMLButtonElement>("floating-toggle");
 const floatingStatus = getElement<HTMLElement>("floating-status");
 const behaviorState = getElement<HTMLElement>("behavior-state");
 const sourceState = getElement<HTMLElement>("source-state");
+const languageSwitcher = getElement<HTMLElement>("language-switcher");
+const descriptionMeta = document.querySelector<HTMLMetaElement>('meta[name="description"]');
 let position: PetPosition = { x: 0, y: 0 };
 let runtime: PetRuntime | undefined;
 let activationSequence = 0;
@@ -61,6 +59,86 @@ let floatingMode = false;
 let petScale = DEFAULT_PET_SCALE;
 let resizeSession: (PetResizeSession & { pointerId: number }) | undefined;
 let bundledPetsById = new Map<string, PetCatalogEntry>();
+let locale: DemoLocale = "zh-CN";
+let messages = getDemoMessages(locale);
+let currentBehavior: PetBehavior = "idle";
+let currentPetName: string | undefined;
+let discoveredPetCount: number | undefined;
+let petHintState: "ready" | "loading" | "error" = "ready";
+
+const storeLocale = (nextLocale: DemoLocale) => {
+  try {
+    window.localStorage.setItem(LOCALE_STORAGE_KEY, nextLocale);
+  } catch {
+    // The explicit language switch still works when storage is unavailable.
+  }
+};
+
+const readStoredLocale = () => {
+  try {
+    return parseDemoLocale(window.localStorage.getItem(LOCALE_STORAGE_KEY));
+  } catch {
+    return undefined;
+  }
+};
+
+const renderPetHint = () => {
+  petHint.textContent =
+    petHintState === "loading" && currentPetName !== undefined
+      ? messages.wakingPet(currentPetName)
+      : petHintState === "error"
+        ? messages.loadFailure
+        : messages.staticText.readyHint;
+};
+
+const applyLocale = (nextLocale: DemoLocale, persist = true) => {
+  locale = nextLocale;
+  messages = getDemoMessages(locale);
+  document.documentElement.lang = locale;
+  document.title = messages.title;
+  descriptionMeta?.setAttribute("content", messages.description);
+
+  for (const element of document.querySelectorAll<HTMLElement>("[data-i18n]")) {
+    const key = element.dataset.i18n;
+    if (key !== undefined && key in messages.staticText) {
+      element.textContent = messages.staticText[key as keyof DemoStaticMessages];
+    }
+  }
+  for (const element of document.querySelectorAll<HTMLElement>("[data-i18n-aria-label]")) {
+    const key = element.dataset.i18nAriaLabel;
+    if (key !== undefined && key in messages.staticText) {
+      element.setAttribute("aria-label", messages.staticText[key as keyof DemoStaticMessages]);
+    }
+  }
+  for (const button of languageSwitcher.querySelectorAll<HTMLButtonElement>("[data-locale]")) {
+    button.setAttribute("aria-pressed", String(button.dataset.locale === locale));
+  }
+
+  floatingStatus.textContent = messages.floatingStatus(floatingMode);
+  behaviorState.textContent = messages.behaviorLabels[currentBehavior];
+  petCount.textContent =
+    discoveredPetCount === undefined
+      ? messages.staticText.discoveringPets
+      : messages.discoveredPets(discoveredPetCount);
+  const renderedWidth = Math.round(petScale * CODEX_ATLAS.frameWidth);
+  petResizeHandle.setAttribute("aria-label", messages.resizeLabel(renderedWidth));
+  if (currentPetName !== undefined) {
+    petInteractionTarget.setAttribute("aria-label", messages.petInteractionLabel(currentPetName));
+    if (!petDownload.hidden) {
+      petDownload.setAttribute("aria-label", messages.petDownloadLabel(currentPetName));
+    }
+  } else {
+    petName.textContent = messages.staticText.loadingPet;
+  }
+  renderPetHint();
+
+  if (persist) {
+    storeLocale(locale);
+    const pageUrl = new URL(window.location.href);
+    pageUrl.searchParams.set("lang", locale);
+    window.history.replaceState(null, "", pageUrl);
+  }
+};
 
 const getStageAndPetSizes = () => {
   const stageRect = petStage.getBoundingClientRect();
@@ -113,7 +191,7 @@ const setFloatingMode = (enabled: boolean, persist = true) => {
   floatingMode = enabled;
   document.body.classList.toggle("page-floating-mode", enabled);
   floatingToggle.setAttribute("aria-checked", String(enabled));
-  floatingStatus.textContent = enabled ? "开启" : "关闭";
+  floatingStatus.textContent = messages.floatingStatus(enabled);
   if (persist) storeFloatingMode(enabled);
   requestAnimationFrame(resetPetPosition);
 };
@@ -146,7 +224,7 @@ const readPetScale = () => {
 const setPetScale = (scale: number, persist = true) => {
   petScale = clampPetScale(scale);
   const renderedWidth = Math.round(petScale * CODEX_ATLAS.frameWidth);
-  petResizeHandle.setAttribute("aria-label", `调节宠物大小，当前 ${renderedWidth} 像素`);
+  petResizeHandle.setAttribute("aria-label", messages.resizeLabel(renderedWidth));
   petResizeHandle.title = `${renderedWidth}px`;
   if (persist) storePetScale(petScale);
   if (runtime === undefined) return;
@@ -176,13 +254,15 @@ const updatePetDownload = (entry: PetCatalogEntry) => {
 
   petDownload.href = getCatalogDownloadUrl(entry, window.location.href);
   petDownload.download = `${entry.id}.zip`;
-  petDownload.setAttribute("aria-label", `下载 ${entry.displayName} 宠物包`);
+  petDownload.setAttribute("aria-label", messages.petDownloadLabel(entry.displayName));
 };
 
 const activatePet = async (entry: PetCatalogEntry) => {
   const sequence = ++activationSequence;
   petCard.dataset.loading = "true";
-  petHint.textContent = `正在唤醒 ${entry.displayName}…`;
+  currentPetName = entry.displayName;
+  petHintState = "loading";
+  renderPetHint();
 
   try {
     const manifestUrl = new URL(entry.manifestPath, window.location.href).toString();
@@ -192,11 +272,14 @@ const activatePet = async (entry: PetCatalogEntry) => {
     runtime?.destroy();
     petSprite.removeAttribute("style");
     petName.textContent = spec.displayName;
-    petInteractionTarget.setAttribute("aria-label", `与 ${spec.displayName} 互动`);
+    currentPetName = spec.displayName;
+    petInteractionTarget.setAttribute("aria-label", messages.petInteractionLabel(spec.displayName));
     updatePetDownload(entry);
-    petHint.textContent = "试试靠近、点击、拖动，或调节右下角大小";
+    petHintState = "ready";
+    renderPetHint();
     sourceState.textContent = "idle";
-    behaviorState.textContent = behaviorLabels.idle;
+    currentBehavior = "idle";
+    behaviorState.textContent = messages.behaviorLabels.idle;
 
     runtime = new PetRuntime({
       spec,
@@ -206,7 +289,8 @@ const activatePet = async (entry: PetCatalogEntry) => {
       scale: petScale,
       onDragMove: ({ deltaX, deltaY }) => updatePosition(deltaX, deltaY),
       onStateChange: ({ behavior }) => {
-        behaviorState.textContent = behaviorLabels[behavior];
+        currentBehavior = behavior;
+        behaviorState.textContent = messages.behaviorLabels[behavior];
         requestAnimationFrame(() => {
           sourceState.textContent = petSprite.dataset.sourceState ?? "idle";
         });
@@ -222,7 +306,8 @@ const activatePet = async (entry: PetCatalogEntry) => {
     Object.assign(window, { petRuntime: runtime });
   } catch (error) {
     if (sequence !== activationSequence) return;
-    petHint.textContent = error instanceof Error ? error.message : "宠物加载失败。";
+    petHintState = "error";
+    renderPetHint();
     console.error(error);
   } finally {
     if (sequence === activationSequence) delete petCard.dataset.loading;
@@ -235,7 +320,7 @@ const createPetOption = (entry: PetCatalogEntry) => {
   button.className = "pet-option";
   button.dataset.petId = entry.id;
   button.setAttribute("aria-pressed", "false");
-  button.title = entry.description;
+  button.title = entry.displayName;
 
   const preview = document.createElement("span");
   preview.className = "pet-option-preview";
@@ -257,6 +342,14 @@ const loadOptionalCatalog = async (url: string) => {
     return [];
   }
 };
+
+const requestedLocale = parseDemoLocale(new URL(window.location.href).searchParams.get("lang"));
+applyLocale(requestedLocale ?? readStoredLocale() ?? "zh-CN", false);
+languageSwitcher.addEventListener("click", (event) => {
+  const button = (event.target as HTMLElement).closest<HTMLButtonElement>("[data-locale]");
+  const nextLocale = parseDemoLocale(button?.dataset.locale);
+  if (nextLocale !== undefined) applyLocale(nextLocale);
+});
 
 setFloatingMode(readFloatingMode(), false);
 floatingToggle.addEventListener("click", () => setFloatingMode(!floatingMode));
@@ -337,11 +430,12 @@ const [localCatalog, bundledCatalog] = await Promise.all([
   loadOptionalCatalog(new URL("./pets/index.json", window.location.href).toString()),
 ]);
 const catalog = mergePetCatalogs(bundledCatalog, localCatalog);
-if (catalog.length === 0) throw new Error("没有发现可用的 Codex Pet 资源。");
+if (catalog.length === 0) throw new Error(messages.emptyCatalog);
 
 bundledPetsById = new Map(bundledCatalog.map((entry) => [entry.id, entry]));
 petPicker.replaceChildren(...catalog.map(createPetOption));
-petCount.textContent = `已发现 ${catalog.length} 只`;
+discoveredPetCount = catalog.length;
+petCount.textContent = messages.discoveredPets(discoveredPetCount);
 
 const requestedPetId = new URL(window.location.href).searchParams.get("pet");
 const initialPet =

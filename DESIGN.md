@@ -139,7 +139,7 @@ workday. That makes the light field intentional rather than theme-dependent. The
 
 - Cool daylight page field with low-opacity indigo and green atmosphere.
 - White glass-like controls with cool gray borders and restrained shadows.
-- Near-black typography with a very large, tightly tracked Chinese headline.
+- Near-black typography with a very large, tightly tracked headline in the selected language.
 - Indigo for action, focus, and selection; green only for live and enabled state.
 - Pixel artwork remains crisp and colorful without a dark inspection stage.
 
@@ -168,9 +168,18 @@ remain within the viewport.
 ## Type
 
 The system uses the native UI sans stack so Chinese and Latin text share one practical voice. The
-headline supplies character through scale, weight, and tight tracking instead of a separate display
-family. Uppercase product labeling uses wide tracking; source states remain ordinary sans text so
-they stay approachable rather than turning the page into a diagnostic console.
+localized headline supplies character through scale, weight, and tight tracking instead of a
+separate display family. Uppercase product labeling uses wide tracking; source states remain
+ordinary sans text so they stay approachable rather than turning the page into a diagnostic
+console.
+
+## Language
+
+The Pages experience defaults to Chinese to preserve its established voice and offers a compact
+Chinese/English switch beside the product label. `?lang=zh-CN` and `?lang=en` provide shareable
+language URLs, while a remembered preference keeps repeat visits stable. Switching language updates
+visible copy, accessible names, live behavior labels, metadata, and the document language without
+restarting the pet runtime.
 
 The three responsive display sizes are intentional tokens because line breaks are part of the
 composition. Supporting copy uses generous leading; controls and facts remain compact.

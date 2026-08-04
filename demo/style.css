@@ -63,13 +63,54 @@ button {
   max-width: 610px;
 }
 
+.intro-topline {
+  display: flex;
+  gap: 18px;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 22px;
+}
+
 .eyebrow {
-  margin: 0 0 22px;
+  margin: 0;
   color: var(--accent-dark);
   font-size: 0.78rem;
   font-weight: 720;
   letter-spacing: 0.16em;
   text-transform: uppercase;
+}
+
+.language-switcher {
+  display: inline-flex;
+  flex: none;
+  gap: 3px;
+  padding: 3px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: rgb(255 255 255 / 88%);
+}
+
+.language-switcher button {
+  min-width: 42px;
+  padding: 5px 9px;
+  color: var(--quiet);
+  font-size: 0.7rem;
+  font-weight: 650;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  cursor: pointer;
+}
+
+.language-switcher button:hover,
+.language-switcher button:focus-visible {
+  color: var(--accent-dark);
+  outline: none;
+}
+
+.language-switcher button[aria-pressed="true"] {
+  color: var(--accent-dark);
+  background: var(--accent-soft);
 }
 
 h1 {
@@ -614,6 +655,14 @@ h1 {
 }
 
 @media (max-width: 520px) {
+  .intro-topline {
+    align-items: flex-start;
+  }
+
+  .eyebrow {
+    padding-top: 7px;
+  }
+
   h1 {
     font-size: clamp(3rem, 13.2vw, 4.8rem);
     letter-spacing: -0.06em;

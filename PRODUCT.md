@@ -38,6 +38,9 @@ local pet directory without bundling their artwork.
   higher-level Canvas widget.
 - Visitors choose an included pet, trigger semantic behavior, observe the source-state mapping, and
   switch the same pet between staged and page-floating presentation.
+- Repository and npm documentation use English as the default entry with a complete Chinese
+  translation. The Pages demo preserves its Chinese default and offers a complete English switch
+  through the `lang` query parameter and remembered preference.
 - Local development merges bundled demo pets with valid packages from `~/.codex/pets`; the static
   Pages build contains only the already-authorized demo assets.
 
@@ -56,6 +59,8 @@ local pet directory without bundling their artwork.
   repository owner's direction, but pet artwork remains excluded from the npm package and carries
   its own rights notice.
 - Public APIs remain typed and documented with JSDoc.
+- Public user guidance, security reporting, contribution guidance, and release procedure remain
+  available in both English and Chinese.
 
 ## Brand Commitments
 

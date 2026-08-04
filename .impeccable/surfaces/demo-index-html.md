@@ -27,6 +27,8 @@ related_targets: ["demo/main.ts", "demo/style.css"]
 - Bundled pets come only from root `pets/`. Local development may merge `~/.codex/pets`, but local
   pets never enter the static build.
 - Every website ZIP contains `pet.json`, `spritesheet.webp`, and `NOTICE.md`.
+- The experience defaults to Chinese and exposes complete English copy through a visible language
+  switch, shareable `lang` query, and remembered preference.
 
 ## Chosen direction
 
@@ -46,6 +48,7 @@ related_targets: ["demo/main.ts", "demo/style.css"]
 | Source mapping      | Read-only live facts               | Keep source state and semantic behavior truthful      |
 | Habitat             | CSS sprite runtime                 | Keep the pet crisp, draggable, and resizable          |
 | Pet download        | Native download link               | Show only for root bundled pets and serve a named ZIP |
+| Language switch     | Accessible two-option control      | Translate visible, live, metadata, and ARIA copy      |
 | Responsive behavior | CSS grid and contained overflow    | Keep the document inside narrow viewports             |
 | Rights notice       | ZIP member and documentation links | Download availability never implies an asset license  |
 

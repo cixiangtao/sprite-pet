@@ -52,13 +52,16 @@ after(() => {
   server?.kill("SIGTERM");
 });
 
-const openGugaDemo = async (browser, viewport = { width: 1280, height: 900 }) => {
+const openGugaDemo = async (browser, viewport = { width: 1280, height: 900 }, locale) => {
   const page = await browser.newPage({ viewport, colorScheme: "dark" });
   const localCatalogRequests = [];
   page.on("request", (request) => {
     if (request.url().includes("/@local-pets/")) localCatalogRequests.push(request.url());
   });
-  await page.goto(`${demoUrl}/?pet=guga`);
+  const pageUrl = new URL(demoUrl);
+  pageUrl.searchParams.set("pet", "guga");
+  if (locale !== undefined) pageUrl.searchParams.set("lang", locale);
+  await page.goto(pageUrl.toString());
   await page.waitForFunction(
     () => document.querySelector("#pet-sprite")?.dataset.sourceState !== undefined,
   );
@@ -104,7 +107,39 @@ test("keeps the behavior demo light and selects guga from the query", async () =
       "spritesheet.webp",
     ]);
     assert.equal(JSON.parse(strFromU8(archive["pet.json"])).id, "guga");
-    assert.match(strFromU8(archive["NOTICE.md"]), /not a license grant/i);
+    assert.match(strFromU8(archive["NOTICE.md"]), /not a downstream license grant/i);
+    assert.match(strFromU8(archive["NOTICE.md"]), /项目获得.*公开展示与分发的明确授权/s);
+  } finally {
+    await browser.close();
+  }
+});
+
+test("switches every public demo control between Chinese and English", async () => {
+  const browser = await chromium.launch({ headless: true });
+  try {
+    const page = await openGugaDemo(browser, { width: 1280, height: 900 }, "en");
+    assert.equal(await page.locator("html").getAttribute("lang"), "en");
+    assert.equal(await page.title(), "sprite-pet · behavior runtime");
+    assert.equal(
+      await page.getByRole("heading", { name: "Give old sprite sheets a new life." }).isVisible(),
+      true,
+    );
+    assert.equal(await page.getByRole("button", { name: "Get it moving" }).isVisible(), true);
+    assert.equal(
+      await page.getByRole("region", { name: "Interactive pet demo" }).isVisible(),
+      true,
+    );
+    assert.equal(await page.locator("#pet-count").textContent(), "14 pets found");
+    assert.equal(
+      await page.getByRole("link", { name: "Download the 咕嘎 pet bundle" }).isVisible(),
+      true,
+    );
+
+    await page.getByRole("button", { name: "中文" }).click();
+    assert.equal(await page.locator("html").getAttribute("lang"), "zh-CN");
+    assert.equal(new URL(page.url()).searchParams.get("lang"), "zh-CN");
+    assert.equal(await page.locator("#behavior-state").textContent(), "待机");
+    assert.equal(await page.evaluate(() => localStorage.getItem("sprite-pet-locale")), "zh-CN");
   } finally {
     await browser.close();
   }
@@ -196,6 +231,16 @@ test("keeps the complete demo inside a narrow viewport", async () => {
       true,
     );
     assert.equal(await page.getByRole("region", { name: "互动宠物演示" }).isVisible(), true);
+
+    await page.getByRole("button", { name: "EN" }).click();
+    assert.equal(
+      await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth),
+      true,
+    );
+    assert.equal(
+      await page.getByRole("heading", { name: "Give old sprite sheets a new life." }).isVisible(),
+      true,
+    );
   } finally {
     await browser.close();
   }

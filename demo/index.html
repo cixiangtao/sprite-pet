@@ -5,10 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="color-scheme" content="light" />
     <meta name="theme-color" content="#f7f8fb" />
-    <meta
-      name="description"
-      content="Try the behavior-driven sprite-pet runtime with local and bundled 8×9 pet atlases."
+    <meta name="description" content="体验支持中英文的 sprite-pet 行为运行时与 8×9 宠物图集。" />
+    <link rel="canonical" href="https://cixiangtao.github.io/sprite-pet/" />
+    <link
+      rel="alternate"
+      hreflang="zh-CN"
+      href="https://cixiangtao.github.io/sprite-pet/?lang=zh-CN"
     />
+    <link rel="alternate" hreflang="en" href="https://cixiangtao.github.io/sprite-pet/?lang=en" />
+    <link rel="alternate" hreflang="x-default" href="https://cixiangtao.github.io/sprite-pet/" />
     <link rel="icon" href="./favicon.svg" />
     <link rel="stylesheet" href="./style.css" />
     <title>sprite-pet · behavior runtime</title>
@@ -24,16 +29,27 @@
     -->
     <main class="app-shell">
       <section class="intro" aria-labelledby="page-title">
-        <p class="eyebrow">sprite-pet · behavior runtime</p>
-        <h1 id="page-title">让旧雪碧图，拥有新的生活。</h1>
-        <p class="lede">
+        <div class="intro-topline">
+          <p class="eyebrow">sprite-pet · behavior runtime</p>
+          <nav
+            id="language-switcher"
+            class="language-switcher"
+            aria-label="语言"
+            data-i18n-aria-label="languageLabel"
+          >
+            <button type="button" data-locale="zh-CN" aria-pressed="true">中文</button>
+            <button type="button" data-locale="en" aria-pressed="false">EN</button>
+          </nav>
+        </div>
+        <h1 id="page-title" data-i18n="headline">让旧雪碧图，拥有新的生活。</h1>
+        <p class="lede" data-i18n="lede">
           不再依赖对话状态。它会观察鼠标、回应点击、跟随拖动，也会自己发呆、活跃和休息。
         </p>
 
-        <div class="controls" aria-label="宠物互动">
-          <button type="button" data-trigger="celebrate">一起庆祝</button>
-          <button type="button" data-trigger="surprised">吓它一跳</button>
-          <button type="button" data-trigger="active">让它活动</button>
+        <div class="controls" aria-label="宠物互动" data-i18n-aria-label="interactionControls">
+          <button type="button" data-trigger="celebrate" data-i18n="celebrate">一起庆祝</button>
+          <button type="button" data-trigger="surprised" data-i18n="surprise">吓它一跳</button>
+          <button type="button" data-trigger="active" data-i18n="activate">让它活动</button>
         </div>
 
         <button
@@ -44,8 +60,8 @@
           aria-checked="false"
         >
           <span class="mode-toggle-copy">
-            <strong>页面悬浮</strong>
-            <small>让宠物覆盖在当前网页上方</small>
+            <strong data-i18n="floatingTitle">页面悬浮</strong>
+            <small data-i18n="floatingDescription">让宠物覆盖在当前网页上方</small>
           </span>
           <span class="mode-toggle-switch" aria-hidden="true"><span></span></span>
           <span id="floating-status" class="mode-toggle-status">关闭</span>
@@ -53,36 +69,53 @@
 
         <section class="pet-library" aria-labelledby="pet-library-title">
           <div class="pet-library-heading">
-            <h2 id="pet-library-title">选择宠物</h2>
-            <span id="pet-count">正在发现本机宠物…</span>
+            <h2 id="pet-library-title" data-i18n="petLibraryTitle">选择宠物</h2>
+            <span id="pet-count" data-i18n="discoveringPets">正在发现本机宠物…</span>
           </div>
-          <div id="pet-picker" class="pet-picker" aria-label="宠物列表"></div>
+          <div
+            id="pet-picker"
+            class="pet-picker"
+            aria-label="宠物列表"
+            data-i18n-aria-label="petList"
+          ></div>
         </section>
 
         <div class="mapping-card">
           <div>
-            <span>Codex 原动画</span>
+            <span data-i18n="sourceAnimation">Codex 原动画</span>
             <strong id="source-state">idle</strong>
           </div>
           <span class="mapping-arrow" aria-hidden="true">→</span>
           <div>
-            <span>Web 宠物行为</span>
+            <span data-i18n="webBehavior">Web 宠物行为</span>
             <strong id="behavior-state">待机</strong>
           </div>
         </div>
       </section>
 
-      <section id="pet-card" class="pet-card" aria-label="互动宠物演示">
+      <section
+        id="pet-card"
+        class="pet-card"
+        aria-label="互动宠物演示"
+        data-i18n-aria-label="petDemo"
+      >
         <div class="ambient-orb ambient-orb-one"></div>
         <div class="ambient-orb ambient-orb-two"></div>
         <div id="pet-stage" class="pet-stage">
-          <div id="pet-shell" class="pet-shell" role="group" aria-label="宠物互动与大小调节">
+          <div
+            id="pet-shell"
+            class="pet-shell"
+            role="group"
+            aria-label="宠物互动与大小调节"
+            data-i18n-aria-label="petControls"
+          >
             <button
               id="pet-interaction-target"
               class="pet-interaction-target"
               type="button"
               aria-label="与宠物互动"
               aria-describedby="pet-hint"
+              data-i18n-aria-label="petInteraction"
             >
               <span id="pet-sprite" class="pet-sprite"></span>
             </button>
@@ -92,6 +125,7 @@
                 class="pet-resize-handle"
                 type="button"
                 aria-label="调节宠物大小"
+                data-i18n-aria-label="petResize"
               >
                 <svg viewBox="0 0 12 12" aria-hidden="true">
                   <path
@@ -115,7 +149,7 @@
           <div class="pet-meta__actions">
             <p id="pet-hint">试试靠近、点击、拖动，或调节右下角大小</p>
             <a id="pet-download" class="pet-download" href="" download hidden>
-              <span>下载宠物包</span>
+              <span data-i18n="downloadPet">下载宠物包</span>
               <span aria-hidden="true">↓</span>
             </a>
           </div>
