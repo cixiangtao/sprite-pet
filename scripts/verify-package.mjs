@@ -22,7 +22,10 @@ try {
   const packed = packResult[0];
   assert.ok(packed.files.some(({ path }) => path === "dist/index.js"));
   assert.ok(packed.files.some(({ path }) => path === "dist/index.d.ts"));
+  assert.ok(packed.files.some(({ path }) => path === "CHANGELOG.md"));
   assert.ok(packed.files.some(({ path }) => path === "LICENSE"));
+  assert.ok(packed.files.some(({ path }) => path === "README.md"));
+  assert.ok(packed.files.some(({ path }) => path === "README.zh-CN.md"));
   assert.ok(!packed.files.some(({ path }) => path.startsWith("demo/")));
   assert.ok(!packed.files.some(({ path }) => path.startsWith("pets/")));
 
@@ -56,6 +59,14 @@ assert.equal(typeof SpritePetWidget, "function");
   assert.equal(packedManifest.name, sourceManifest.name);
   assert.equal(packedManifest.license, "MIT");
   assert.equal(packedManifest.version, sourceManifest.version);
+  assert.match(
+    await readFile(join(consumerRoot, "node_modules", "sprite-pet", "CHANGELOG.md"), "utf8"),
+    /Compatibility: there are no runtime API or atlas contract changes/,
+  );
+  assert.match(
+    await readFile(join(consumerRoot, "node_modules", "sprite-pet", "README.zh-CN.md"), "utf8"),
+    /框架无关的 TypeScript 浏览器宠物运行时/,
+  );
 } finally {
   await rm(temporaryRoot, { recursive: true, force: true });
 }
