@@ -1,13 +1,15 @@
 # sprite-pet
 
+[English](./README.md) · [简体中文](./README.zh-CN.md)
+
 A small, framework-agnostic TypeScript runtime for animated pets on the web. It separates semantic
 browser behavior from source-atlas state names, preserves exact frame timing, and includes both a
 CSS sprite runtime and the original high-DPI Canvas renderer.
 
-The npm package ships no character artwork. The repository keeps optional downloadable pets under
-`pets/`; their artwork is excluded from the MIT License and from the npm package. See
-[THIRD_PARTY_ASSETS.md](./THIRD_PARTY_ASSETS.md). You remain responsible for permission to use and
-distribute pet assets.
+The npm package ships no character artwork. The repository owner has confirmed explicit permission
+for this project to display and distribute the downloadable files under `pets/`; that project-level
+authorization does not place the artwork under the MIT License or grant downstream reuse rights.
+See [THIRD_PARTY_ASSETS.md](./THIRD_PARTY_ASSETS.md).
 
 [Open the live demo](https://cixiangtao.github.io/sprite-pet/) to choose a pet, trigger behavior,
 inspect its source-state mapping, and try floating, dragging, and resizing.
@@ -50,8 +52,9 @@ character artwork.
 | Trump             | [trump.zip](https://cixiangtao.github.io/sprite-pet/pets/downloads/trump.zip)                         |
 | Usagi             | [usagi.zip](https://cixiangtao.github.io/sprite-pet/pets/downloads/usagi.zip)                         |
 
-The source folders are available in [`pets/`](./pets/). Download availability is not a license
-grant; review the included notice before reuse.
+The source folders are available in [`pets/`](./pets/). The project is authorized to serve these
+specific files, but download availability is not a downstream license grant; review the included
+notice before reuse.
 
 ## Install
 
@@ -281,11 +284,16 @@ artwork is not copied into `demo-dist` or the npm package.
 `pnpm release:check` runs the full local readiness gate. The project uses tsdown, TypeScript,
 Oxlint, Oxfmt, Vitest, Vite, and a real Chromium smoke test.
 
-Contributions are welcome. Read [CONTRIBUTING.md](./CONTRIBUTING.md), and report vulnerabilities
-through [SECURITY.md](./SECURITY.md).
+Maintainers should follow the bilingual [release procedure](./RELEASING.md) before changing the
+package version, creating a tag, or publishing to npm. Published changes are recorded in the
+[changelog](./CHANGELOG.md).
+
+Contributions are welcome. Read [CONTRIBUTING.md](./CONTRIBUTING.md) or its
+[Chinese translation](./CONTRIBUTING.zh-CN.md), and report vulnerabilities through
+[SECURITY.md](./SECURITY.md) or [SECURITY.zh-CN.md](./SECURITY.zh-CN.md).
 
 ## License
 
-The renderer source is available under the [MIT License](./LICENSE). Downloadable pet artwork is not
-covered by that license; read [THIRD_PARTY_ASSETS.md](./THIRD_PARTY_ASSETS.md) before publishing or
-reusing it.
+The renderer source is available under the [MIT License](./LICENSE). Downloadable pet artwork is
+authorized for this project's public distribution but is not covered by that license; read
+[THIRD_PARTY_ASSETS.md](./THIRD_PARTY_ASSETS.md) before publishing or reusing it elsewhere.

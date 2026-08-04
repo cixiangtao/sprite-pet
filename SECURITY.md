@@ -1,5 +1,7 @@
 # Security
 
+[English](./SECURITY.md) · [简体中文](./SECURITY.zh-CN.md)
+
 ## Reporting a vulnerability
 
 Please do not disclose suspected vulnerabilities in public issues.

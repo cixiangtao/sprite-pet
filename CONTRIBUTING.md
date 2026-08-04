@@ -1,5 +1,7 @@
 # Contributing
 
+[English](./CONTRIBUTING.md) · [简体中文](./CONTRIBUTING.zh-CN.md)
+
 Thanks for helping improve `sprite-pet`.
 
 ## Development
@@ -28,3 +30,5 @@ for runtime changes, and do not commit third-party pet artwork or generated pack
 - Call out changes to the atlas or manifest contract.
 
 For security issues, follow [SECURITY.md](./SECURITY.md) instead of opening a public issue.
+
+Maintainers preparing a version should also follow [RELEASING.md](./RELEASING.md).
