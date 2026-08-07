@@ -27,5 +27,7 @@ GitHub Actions 是 npm 与 GitHub Release 的唯一正式发布者。Release Ple
 读写权限的 GitHub App。使用 App token 可让自动发版 PR 的必需 CI 无人值守运行；默认
 `GITHUB_TOKEN` 创建的 PR 目前需要维护者另行批准工作流。
 
-远端步骤失败时，先检查已合并发版 PR、工作流、tag、GitHub Release、npm 版本和 dist-tag，再重跑
-同一工作流。不要复用或覆盖已经公开的版本。
+远端步骤失败时，先检查已合并发版 PR、工作流、tag、GitHub Release、npm 版本和 dist-tag，然后从
+`main` 手动运行发版工作流并填入该 Release Please PR 编号。恢复流程会重新验证准确的 PR、合并
+commit、发版专属 diff、版本、祖先关系、tag 与 registry 状态，再继续补齐缺失步骤。不要复用或
+覆盖已经公开的版本。
