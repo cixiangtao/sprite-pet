@@ -150,7 +150,7 @@ pnpm verify:package
 
 `pnpm dev` 会把内置目录与 `${CODEX_HOME:-~/.codex}/pets` 下的有效本地宠物合并。该本地路由仅存在于开发服务器中，本地素材不会复制到 `demo-dist` 或 npm 包。
 
-`pnpm release:check` 是完整的本地发布门禁。维护者在修改版本、创建 Tag 或发布 npm 包前，还应遵循[双语发布流程](./RELEASING.zh-CN.md)。已发布变化记录在[更新日志](./CHANGELOG.md)中。
+`pnpm release:check` 是完整的本地发布门禁。Release Please 会自动维护发版 PR；维护者按照[双语发布流程](./RELEASING.zh-CN.md)检查建议版本、更新日志和 CI，准备发布时再合并。Tag 与 npm 发布均由 GitHub Actions 完成。
 
 欢迎贡献。请阅读 [CONTRIBUTING.zh-CN.md](./CONTRIBUTING.zh-CN.md)，安全问题请通过 [SECURITY.zh-CN.md](./SECURITY.zh-CN.md) 中的私密渠道报告。
 

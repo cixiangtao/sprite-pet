@@ -284,9 +284,9 @@ artwork is not copied into `demo-dist` or the npm package.
 `pnpm release:check` runs the full local readiness gate. The project uses tsdown, TypeScript,
 Oxlint, Oxfmt, Vitest, Vite, and a real Chromium smoke test.
 
-Maintainers should follow the bilingual [release procedure](./RELEASING.md) before changing the
-package version, creating a tag, or publishing to npm. Published changes are recorded in the
-[changelog](./CHANGELOG.md).
+Release Please maintains the release PR automatically. Maintainers should follow the bilingual
+[release procedure](./RELEASING.md), review its version, changelog, and CI, and merge it when ready.
+GitHub Actions owns the tag and npm publication.
 
 Contributions are welcome. Read [CONTRIBUTING.md](./CONTRIBUTING.md) or its
 [Chinese translation](./CONTRIBUTING.zh-CN.md), and report vulnerabilities through
