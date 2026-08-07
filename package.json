@@ -61,7 +61,7 @@
     "verify:package": "pnpm build && node scripts/verify-package.mjs"
   },
   "devDependencies": {
-    "@types/node": "^24.10.0",
+    "@types/node": "^26.1.2",
     "fflate": "^0.8.3",
     "oxfmt": "^0.61.0",
     "oxlint": "^1.76.0",
