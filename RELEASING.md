@@ -31,4 +31,7 @@ permissions. Its token lets required CI run unattended; PR checks created with t
 `GITHUB_TOKEN` currently wait for separate workflow approval.
 
 If a remote step fails, inspect the merged release PR, workflow, tag, GitHub Release, npm version,
-and dist-tags before retrying the same workflow. Never reuse or overwrite a published version.
+and dist-tags first. Then manually run the release workflow from `main` with that merged Release
+Please PR number. Recovery revalidates the exact PR, merge commit, release-only diff, version,
+ancestry, tag, and registry state before it resumes any missing steps. Never reuse or overwrite a
+published version.
