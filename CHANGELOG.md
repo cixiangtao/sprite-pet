@@ -3,6 +3,13 @@
 All notable changes to `sprite-pet` are documented here. Releases follow [Semantic
 Versioning](https://semver.org/).
 
+## [0.5.1](https://github.com/cixiangtao/sprite-pet/compare/v0.5.0...v0.5.1) (2026-08-10)
+
+
+### Bug Fixes
+
+* **deps:** keep risky upgrades manual ([#15](https://github.com/cixiangtao/sprite-pet/issues/15)) ([c1717a9](https://github.com/cixiangtao/sprite-pet/commit/c1717a9076860e692e999c305861e029f9eb7813))
+
 ## [0.5.0](https://github.com/cixiangtao/sprite-pet/compare/v0.4.0...v0.5.0) (2026-08-07)
 
 
